@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Dimensions, StyleSheet, View, Image, Text } from 'react-native';
+import { Dimensions, StyleSheet, View, Image, Text, ScrollView } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { Swiper, SwiperRef } from '../components/Swiper';
 
@@ -26,7 +26,7 @@ export default function SwiperExample() {
   const [horizontal, setHorizontal] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Swiper
         ref={ref}
         interval={1000}
@@ -69,7 +69,33 @@ export default function SwiperExample() {
           <Text>Next</Text>
         </RectButton>
       </View>
-    </View>
+      <Swiper
+        interval={1000}
+        dataSource={card}
+        renderItem={(item) => {
+          return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
+        }}
+        auto={true}
+        horizontal={true}
+        style={{
+          width,
+          height: 200,
+        }}
+      />
+      <Swiper
+        interval={1000}
+        dataSource={card}
+        renderItem={(item) => {
+          return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
+        }}
+        auto={true}
+        horizontal={false}
+        style={{
+          width,
+          height: 200,
+        }}
+      />
+    </ScrollView>
   );
 }
 

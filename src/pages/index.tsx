@@ -24,16 +24,6 @@ export default function ComponentScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <Card 
-            title={'Swiper'}
-            style={{ width: CardWidth }}
-            content={
-              <Text>轮播</Text>
-            }
-            onPress={() => { navigate("SwiperExample"); }}
-          />
-        </View>
-        <View style={styles.card}>
-          <Card 
             title={'Button'}
             style={{ width: HalfCardWidth }}
             content={
@@ -92,7 +82,7 @@ export default function ComponentScreen() {
             title={'Divider'}
             style={{ width: HalfCardWidth }}
             content={
-              <Divider start={10} end={HalfCardWidth-10} width={3} />
+              <Text>分割线</Text>
             }
             onPress={() => { navigate("DividerExample"); }}
           />
@@ -125,6 +115,16 @@ export default function ComponentScreen() {
               <Text>浮层</Text>
             }
             onPress={() => { navigate("OverlayExample"); }}
+          />
+        </View>
+        <View style={styles.card}>
+          <Card 
+            title={'Swiper'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Text>轮播</Text>
+            }
+            onPress={() => { navigate("SwiperExample"); }}
           />
         </View>
       </ScrollView>

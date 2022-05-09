@@ -1,74 +1,85 @@
-import React, {useState, useCallback, useEffect, useMemo} from 'react'
-import Panel from './panel';
+import React from "react";
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import Animated, {
+  useAnimatedRef,
+  measure,
+  useSharedValue,
+  useAnimatedStyle,
+  useDerivedValue,
+  withSpring,
+  withTiming,
+  runOnUI,
+} from "react-native-reanimated";
 
-interface CollapseParams {
-  defaultActive?: Array<number>; // 默认展开
-  onChange?: (index: number, isOpen: boolean) => void; // 每次展开或者关闭的时候回掉
-  accordion?: boolean; // 手风琴模式
+interface CollapseProps {
+  title: string;
 }
 
-const Collapse: React.FC<CollapseParams> = (props) => {
-  const {children, defaultActive, onChange, accordion = false} = props;
-  const [activeArray, setActiveArray] = useState<Array<boolean>>([]);
+const Collapse: React.FC<CollapseProps> = props => {
+  const {children, title} = props
 
-  useEffect(() => {
-    children && React.Children.forEach(children, (child: any) => {
-      if (child && child.type !== Panel) {
-        console.warn('[maui warning]: Only Panel can be used as a child component of Collapse');
-      }
-    })
-  }, []);
+  const open = useSharedValue(false);
+  const aref = useAnimatedRef<View>();
+  const height = useSharedValue(0);
+  const transition = useDerivedValue(() => {
+    return open.value === true ? withSpring(1) : withTiming(0);
+  });
 
-  // 过滤除了Panel的其他子组件
-  const validChildren = useMemo(() => {
-    return React.Children.map(children, (child: any) => {
-      if (child && child.type === Panel) {
-        return child;
-      }
-    })
-  }, [children]);
-
- useEffect(() => {
-    const activeArray = new Array(validChildren?.length).fill(false);
-    defaultActive && defaultActive.length > 0 && defaultActive.forEach((key) => {
-      if (key >= activeArray.length) {
-        console.warn('[maui warning]: defaultActive key out of range');
-      } else {
-        activeArray[key] = true;
-      }
-    });
-    setActiveArray(activeArray);
-  }, [defaultActive, validChildren]);
-
-  // 手风琴模式处理当前展开的子组件
-  const handleChildPress = useCallback((index: number) => {
-    if (accordion) {
-      const activeArray = new Array(validChildren?.length).fill(false);
-      activeArray[index] = true;
-      setActiveArray(activeArray);
-    }
-  }, []);
+  const style = useAnimatedStyle(() => ({
+    height: 1 + transition.value * height.value,
+    opacity: transition.value === 0 ? 0 : 1,
+  }));
 
   return (
     <>
-      {validChildren?.map((child, index) => {
-        const childOnChange = child.props.onChange;
-        const clildOnPress = child.props.onPress;
-        return React.cloneElement(child, {
-          key: `collapse_item_${index}`,
-          isOpen: activeArray[index],
-          onPress: () => {
-            clildOnPress && clildOnPress();
-            handleChildPress(index);
-          },
-          onChange: (isOpen: boolean) => {
-            childOnChange && childOnChange(isOpen);
-            onChange && onChange(index, isOpen);
+      <TouchableWithoutFeedback
+        onPress={() => {
+          if(height.value === 0) {
+            runOnUI(() => {
+              "worklet";
+              height.value = measure(aref).height;
+            })();
           }
-        });
-      })}
+          open.value = !open.value;
+        }}
+      >
+        <Animated.View style={styles.container}>
+          <Text style={styles.title}>{title}</Text>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+      <Animated.View style={[styles.items, style]}>
+        <View 
+          ref={aref}
+          onLayout={({
+            nativeEvent: {
+              layout: { height: h },
+            },
+          }) => console.log({ h })}
+        >
+          {children}
+        </View>
+      </Animated.View>
     </>
-  )
-}
+  );
+};
 
-export { Collapse, Panel };
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    padding: 16,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  items: {
+    overflow: "hidden",
+  },
+});
+
+export default Collapse;
