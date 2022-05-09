@@ -1,0 +1,144 @@
+import React from 'react';
+import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
+
+import Card from '../components/Card'
+import Button from '../components/Button';
+import Badge from '../components/Badge';
+import SliderSelect from '../components/SliderSelect';
+import Switch from '../components/Switch';
+import Divider from '../components/Divider';
+import Avatar from '../components/Avatar';
+
+import useTheme from '../hooks/useTheme';
+import {navigate} from '../navigate';
+
+const Margin = 15;
+const HalfCardWidth = (Dimensions.get('window').width - 3 * Margin) / 2;
+const CardWidth = Dimensions.get('window').width - 2 * Margin;
+
+export default function ComponentScreen() {
+  const {theme} = useTheme();
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.card}>
+          <Card 
+            title={'Swiper'}
+            style={{ width: CardWidth }}
+            content={
+              <Text>轮播</Text>
+            }
+            onPress={() => { navigate("SwiperExample"); }}
+          />
+        </View>
+        <View style={styles.card}>
+          <Card 
+            title={'Button'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Button onPress={() => {}}>
+                <Text>按钮</Text>
+              </Button>  
+            }
+            onPress={() => { 
+              navigate("ButtonExample");
+            }}
+          />
+          <View style={{ width: Margin }} />
+          <Card
+            title={'Badge'}
+            style={{ width: HalfCardWidth }}        
+            content={
+              <Badge number={2} />      
+            }
+            onPress={() => { navigate("BadgeExample"); }}
+          />
+        </View>
+        <View style={styles.card}>
+          <Card 
+            title={'SliderSelect'}
+            style={{ width: CardWidth }}
+            content={
+              <SliderSelect items={['选项一', '选项二', '选项三', '选项四']} />
+            }
+            onPress={() => { navigate("SliderSelectExample"); }}
+          />
+        </View>
+        <View style={styles.card}>
+          <Card 
+            title={'Switch'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Switch />
+            }
+            onPress={() => { navigate("SwitchExample"); }}
+          />
+          <View style={{width: Margin}} />
+          <Card 
+            title={'Theme'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <View style={{flexDirection: 'row'}}>
+                <View style={{width: 20, height: 40, backgroundColor: '#fff'}}/>
+                <View style={{width: 20, height: 40, backgroundColor: '#000'}}/>
+              </View>
+            }
+            onPress={() => { navigate("ThemeExample"); }}
+          />
+        </View>
+        <View style={styles.card}>
+          <Card 
+            title={'Divider'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Divider start={10} end={HalfCardWidth-10} width={3} />
+            }
+            onPress={() => { navigate("DividerExample"); }}
+          />
+          <View style={{width: Margin}} />
+          <Card 
+            title={'Avatar'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Avatar
+                url={'https://avatars.githubusercontent.com/u/16695567?s=400&u=fd8d6249fa408e1e606015a06868a99993171938&v=4'}
+              />
+            }
+            onPress={() => { navigate("AvatarExample"); }}
+          />
+        </View>
+        <View style={styles.card}>
+          <Card 
+            title={'Collapse'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Text>折叠面板</Text>
+            }
+            onPress={() => { navigate("CollapseExample"); }}
+          />
+          <View style={{width: Margin}} />
+          <Card 
+            title={'Overlay'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Text>浮层</Text>
+            }
+            onPress={() => { navigate("OverlayExample"); }}
+          />
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  card: {
+    flexDirection: 'row',
+    marginTop: Margin,
+  }
+});
