@@ -10,7 +10,7 @@ export default function OverlayExample() {
   return (
     <View style={styles.container}>
       <Button onPress={() => {
-        const index = add(<Text>子视图{elementIndex.current}</Text>);
+        const index = add(<Text style={{ marginTop: 100, fontSize: 24 }}>子视图{elementIndex.current}</Text>);
         console.log('当前添加的元素', index);
         elementIndex.current++;
       }}>

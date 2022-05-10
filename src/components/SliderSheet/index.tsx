@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useImperativeHandle, useMemo, forwardRef, useCallback } from 'react';
 import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { clamp, snapPoint } from 'react-native-redash';
@@ -10,7 +10,12 @@ interface SliderSheetProps {
   children: React.ReactNode;
 };
 
-const SliderSheet: React.FC<SliderSheetProps> = props => {
+export interface SliderSheetRef {
+  show: () => void;
+  hidden: () => void;
+};
+
+const SliderSheet = forwardRef<SliderSheetRef, SliderSheetProps>((props, ref) => {
   const {maxHeight, minHeight, position, children} = props;
   const translateY = useSharedValue(0);
 
@@ -24,6 +29,11 @@ const SliderSheet: React.FC<SliderSheetProps> = props => {
     return [0 , 0];
   }, [maxHeight, minHeight, position]);
 
+  const setDest = useCallback((dest: number) => {
+    'worklet';
+    translateY.value = withSpring(dest, {overshootClamping: true});
+  }, [snapPoints]);
+
   const onGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, {y: number}>({
     onStart: (_, ctx) => {
       ctx.y = translateY.value;
@@ -33,10 +43,20 @@ const SliderSheet: React.FC<SliderSheetProps> = props => {
     },
     onEnd: ({velocityY}) => {
       const dest = snapPoint(translateY.value, velocityY, snapPoints);
-      translateY.value = withSpring(dest, {overshootClamping: true});
+      setDest(dest);
     }
   }, [snapPoints]);
   
+  useImperativeHandle(ref, () => ({
+    show: () => {
+      const dest = snapPoints[0] + snapPoints[1];
+      setDest(dest);
+    },
+    hidden: () => {
+      setDest(0);
+    },
+  }), [setDest, snapPoints]);
+
   const style = useAnimatedStyle(() => {
     let positionStyle = {};
     if (position === 'top') {
@@ -74,6 +94,6 @@ const SliderSheet: React.FC<SliderSheetProps> = props => {
     </PanGestureHandler>
 
   )
-};
+});
 
 export default SliderSheet;
