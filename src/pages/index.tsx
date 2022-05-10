@@ -126,6 +126,15 @@ export default function ComponentScreen() {
             }
             onPress={() => { navigate("SwiperExample"); }}
           />
+          <View style={{width: Margin}} />
+          <Card 
+            title={'SliderSheet'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Text>下拉窗口</Text>
+            }
+            onPress={() => { navigate("SliderSheetExample"); }}
+          />
         </View>
       </ScrollView>
     </View>

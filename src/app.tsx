@@ -13,6 +13,7 @@ import AvatarExample from './pages/AvatarExample';
 import CollapseExample from './pages/CollapseExample';
 import OverlayExample from './pages/OverlayExample';
 import SwiperExample from './pages/SwiperExample';
+import SliderSheetExample from './pages/SliderSheetExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -26,6 +27,7 @@ export type RootStackParamList = {
   CollapseExample: undefined;
   OverlayExample: undefined;
   SwiperExample: undefined;
+  SliderSheetExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -101,6 +103,11 @@ const App: React.FC<{}> = () => {
         name="SwiperExample"
         component={SwiperExample}
         options={{ headerTitle: 'Swiper', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="SliderSheetExample"
+        component={SliderSheetExample}
+        options={{ headerTitle: 'SliderSheet', ...headerOptions }}
       />
     </Stack.Navigator>
   );
