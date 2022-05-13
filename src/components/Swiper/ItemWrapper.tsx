@@ -5,7 +5,6 @@ import Animated, {
   useAnimatedReaction, 
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import Pagination from '../Pagination';
 import {useItemOffset, useJudgeRange} from './hook';
 import { ItemWrapperProps } from './type';
 

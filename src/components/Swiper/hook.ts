@@ -78,9 +78,9 @@ const useStep = (distance: number, range: DerivedValue<TurnRange>): number => {
 
 /**
  * 判断当前index是否处于渲染范围内
- * @param index 
- * @param size 
- * @param now 
+ * @param index 子视图索引
+ * @param size 数据规模
+ * @param now 当前指向
  * @returns boolean
  */
 const useJudgeRange = (index: number, size: number, now: number, options: SwiperDefaultOptions): boolean => {
@@ -92,14 +92,13 @@ const useJudgeRange = (index: number, size: number, now: number, options: Swiper
   let leftIndx = leftEdge < 0 ? size + leftEdge : leftEdge;
   let rightIndx = rightEdge < 0 ? size + rightEdge : rightEdge;
 
-  if (leftIndx < rightEdge) {
+  if(leftIndx < rightIndx) {
     if (!(index >= leftIndx && index <= rightIndx)) {
       return false;
-    }
+    }  
   }
-
-  if (leftIndx > rightEdge) {
-    if (!( index >= leftIndx || index <= rightIndx)) {
+  if (leftIndx > rightIndx) {
+    if (!((index >= 0 && index <= rightIndx) || (index >= leftIndx && index <= size - 1))) {
       return false;
     }
   }
