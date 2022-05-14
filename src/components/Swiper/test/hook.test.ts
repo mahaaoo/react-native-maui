@@ -1,5 +1,4 @@
 import {renderHook} from '@testing-library/react-hooks';
-import Animated from 'react-native-reanimated';
 import {
   withReanimatedTimer
 } from 'react-native-reanimated/src/reanimated2/jestUtils'
@@ -8,6 +7,7 @@ import {
   useRange,
   useJudgeRange,
   useItemOffset,
+  useAutoScroll
 } from '../hook';
 
 test('Test:Swiper->hook/useJudgeRange', () => {
@@ -84,20 +84,23 @@ test('Test:Swiper->hook/useJudgeRange', () => {
 
 test('Test:Swiper->hook/useRange', async () => {
   withReanimatedTimer(() => {
-    let range: Animated.DerivedValue<{
+    let range: {
       inputRange: number[],
       outputRange: number[],
-    }>;
+    } = {
+      inputRange: [],
+      outputRange: [],
+    };
 
     renderHook(() => {
       range = useRange({
         value: 1,
-      })
+      }).value;
     });
 
-    if (range) {
-      expect(range.value.inputRange).toEqual([0.5, 1, 1.5]);
-      expect(range.value.outputRange).toEqual([0, 1, 2])    
+    if (!!range) {
+      expect(range.inputRange).toEqual([0.5, 1, 1.5]);
+      expect(range.outputRange).toEqual([0, 1, 2])    
     }
   })
 });
@@ -149,4 +152,18 @@ test('Test:Swiper->hook/useItemOffset', () => {
   expect(case1(0, 2, 3, 0)).toBe(-1);
   expect(case1(2, 0, 3, -2)).toBe(1);
   expect(case1(-1, 0, 3, 1)).toBe(0);
+});
+
+test('Test:Swiper->hook/useAutoScroll', () => {
+  const next = (callback: any) => {
+    callback();
+  };
+
+  renderHook(() => {
+    const case1 = useAutoScroll(next, true, 1000);
+    expect(case1.isRuning).toBe(true);
+
+    const case2 = useAutoScroll(next, false, 1000);
+    expect(case2.isRuning).toBe(false);
+  });
 });
