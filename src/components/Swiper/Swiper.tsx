@@ -123,7 +123,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   }), [currentIndex, scrollTo, dataSource]);
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, style]} testID={"test-swiper"}>
       <PanGestureHandler onGestureEvent={onGestureEvent}>
         <Animated.View style={{flex: 1}}>
           <View style={[styles.swiper , {

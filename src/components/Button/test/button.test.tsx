@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import Button from '../index';
 
 describe('Test:Button', () => {
-  it('base button', () => {
+  it('base button',  async () => {
     const onPressMock = jest.fn();
     const { queryByText: queryByText1  } = render(
       <Button onPress={onPressMock}>
@@ -18,7 +18,7 @@ describe('Test:Button', () => {
     expect(onPressMock).toHaveBeenCalled();
   });
 
-  it('button disabled', () => {
+  it('button disabled',  async () => {
     const onPressMock2 = jest.fn();
     const { queryByText: queryByText2  } = render(
       <Button onPress={onPressMock2} disabled>
