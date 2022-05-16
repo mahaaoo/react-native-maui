@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Dimensions, StyleSheet, View, Image, Text, ScrollView } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { Dimensions, StyleSheet, View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Swiper, SwiperRef } from '../components/Swiper';
 
 const {width} = Dimensions.get('window');
@@ -48,26 +47,26 @@ export default function SwiperExample() {
         }}
       />
       <View style={{ flexDirection: 'row', marginTop: 100 }}>
-        <RectButton onPress={() => {
+        <TouchableOpacity onPress={() => {
           ref.current?.previous();
         }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Pre</Text>
-        </RectButton>
-        <RectButton onPress={() => {
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
           setAutoplay(auto => !auto);
         }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>{`isAuto: ${autoplay}`}</Text>
-        </RectButton>
-        <RectButton onPress={() => {
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
           setHorizontal(auto => !auto);
         }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>{`isHorizontal: ${horizontal}`}</Text>
-        </RectButton>
-        <RectButton onPress={() => {
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
           ref.current?.next();
         }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Next</Text>
-        </RectButton>
+        </TouchableOpacity>
       </View>
       <Swiper
         interval={1000}
