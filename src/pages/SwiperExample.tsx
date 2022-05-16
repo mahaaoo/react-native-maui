@@ -23,7 +23,7 @@ const card = [
 export default function SwiperExample() {
   const ref = useRef<SwiperRef>(null);
   const [autoplay, setAutoplay] = useState(false);
-  const [horizontal, setHorizontal] = useState(false);
+  const [horizontal, setHorizontal] = useState(true);
 
   return (
     <ScrollView style={styles.container}>

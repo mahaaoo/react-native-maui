@@ -1,10 +1,9 @@
 import React, {useCallback, forwardRef, useImperativeHandle, useMemo} from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { 
   interpolate,
   runOnJS, 
-  useAnimatedGestureHandler, 
   useDerivedValue, 
   useSharedValue, 
   withSpring
@@ -31,6 +30,8 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   const translate = useSharedValue(0);
   const currentIndex = useSharedValue(0);
   const touching = useSharedValue<boolean>(false);
+  const offset = useSharedValue(0);
+
   const container = useMemo(() => {
     if (style) {
       return {
@@ -93,28 +94,26 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   const {start, stop} = useAutoScroll(next, auto, interval);
   useTouching(start, stop, touching);
 
-  const onGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, {t: number}>({
-    onStart: (_, ctx) => {
+  const panGesture = Gesture.Pan()
+    .onBegin(() => {
       runOnJS(handleScollStart)();
       touching.value = true;
-      ctx.t = translate.value;
-    },
-    onActive: ({translationX, translationY}, ctx) => {
+      offset.value = translate.value;
+    })
+    .onUpdate(({translationX, translationY}) => {
       if (horizontal) {
-        translate.value = translationX + ctx.t;
+        translate.value = translationX + offset.value;
       } else {
-        translate.value = translationY + ctx.t;
+        translate.value = translationY + offset.value;
       }
-    },
-    onEnd: ({velocityX, velocityY}) => {
+    })
+    .onEnd(({velocityX, velocityY}) => {
       const velocity = horizontal ? velocityX : velocityY;
       const distance = (translate.value + 0.2 * velocity) / stepDistance;
       const step = useStep(distance, range);
       touching.value = false;
       scrollTo(step, handleScollEnd);
-    }
-  }, [scrollTo, stepDistance]);
-
+    })
 
   useImperativeHandle(ref, () => ({
     previous,
@@ -124,7 +123,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
 
   return (
     <View style={[styles.container, style]} testID={"test-swiper"}>
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
+      <GestureDetector gesture={panGesture}>
         <Animated.View style={{flex: 1}}>
           <View style={[styles.swiper , {
             flexDirection: horizontal ? 'row' : 'column',
@@ -152,7 +151,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
             </View>
           </View>
         </Animated.View>
-      </PanGestureHandler>
+      </GestureDetector>
     </View>
   );
 });
