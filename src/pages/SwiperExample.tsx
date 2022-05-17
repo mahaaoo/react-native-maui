@@ -68,7 +68,7 @@ export default function SwiperExample() {
           <Text>Next</Text>
         </TouchableOpacity>
       </View>
-      <Swiper
+      {/* <Swiper
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -93,7 +93,7 @@ export default function SwiperExample() {
           width,
           height: 200,
         }}
-      />
+      /> */}
     </ScrollView>
   );
 }

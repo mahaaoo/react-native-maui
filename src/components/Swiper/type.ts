@@ -57,9 +57,14 @@ export interface UseAutoScrollReturn {
 export interface ItemWrapperProps {
   currentIndex: Animated.SharedValue<number>;
   index: number;
+  size: number;
+  options: SwiperDefaultOptions;
+};
+
+export interface BaseLayoutProps {
+  currentIndex: Animated.SharedValue<number>;
+  index: number;
   translate: Animated.SharedValue<number>;
-  renderItem: (item: any) => React.ReactNode;
-  item: any;
   size: number;
   options: SwiperDefaultOptions;
   stepDistance: number;

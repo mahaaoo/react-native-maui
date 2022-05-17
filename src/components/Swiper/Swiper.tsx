@@ -13,6 +13,8 @@ import {useRange, useStep, useAutoScroll, useTouching, useProps} from './hook';
 import ItemWrapper from './ItemWrapper';
 import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
 
+import BaseLayout from './BaseLayout';
+
 const {width} = Dimensions.get('window');
 
 const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
@@ -54,7 +56,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     return container.height;
   }, [horizontal, container])
 
-  const index = useDerivedValue(() => {
+  const indexAtData = useDerivedValue(() => {
     const group = currentIndex.value % dataSource.length;
     return interpolate(group, [-1, 0, 1], [1, 0, dataSource.length - 1]);
   });
@@ -79,7 +81,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     handleScollStart();
     scrollTo(currentIndex.value + 1, () => {
       handleScollEnd();
-      callback && callback(index.value);
+      callback && callback(indexAtData.value);
     });
   }, [scrollTo]);
 
@@ -87,7 +89,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     handleScollStart();
     scrollTo(currentIndex.value - 1, () => {
       handleScollEnd();
-      callback && callback(index.value);
+      callback && callback(indexAtData.value);
     });
   }, [scrollTo]);
 
@@ -118,7 +120,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   useImperativeHandle(ref, () => ({
     previous,
     next,
-    getCurrentIndex: () => index.value,
+    getCurrentIndex: () => indexAtData.value,
   }), [currentIndex, scrollTo, dataSource]);
 
   return (
@@ -132,12 +134,16 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
               return (
                 <ItemWrapper 
                   size={dataSource.length}
-                  item={item}
-                  renderItem={renderItem}
-                  index={index} 
-                  key={`LazyWrapper${index}`} 
-                  {...{currentIndex, translate, options, stepDistance, horizontal}}
-                />
+                  key={`LazyWrapper${index}`}
+                  {...{index, currentIndex, options}}
+                >
+                  <BaseLayout
+                    size={dataSource.length}
+                    {...{index, currentIndex, translate, options, stepDistance, horizontal}}
+                  >
+                    {renderItem && renderItem(item)}
+                  </BaseLayout>
+                </ItemWrapper>
               )
             })}
             <View style={{
@@ -147,7 +153,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
               bottom: 0,
               height: 30,
             }}>
-              <Pagination currentIndex={index} dataNumber={dataSource.length} />
+              <Pagination currentIndex={indexAtData} dataNumber={dataSource.length} />
             </View>
           </View>
         </Animated.View>
