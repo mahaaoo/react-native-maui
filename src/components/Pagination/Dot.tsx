@@ -10,8 +10,9 @@ const Dot: React.FC<DotProps> = (props) => {
   const {currentIndex, index} = props;
 
   const style = useAnimatedStyle(() => {
-    const opacity = interpolate(currentIndex.value, [index - 1, index, index + 1], [0.5, 1, 0.5], Extrapolate.CLAMP);
-    const scale = interpolate(currentIndex.value, [index - 1, index, index + 1], [1, 1.25, 1], Extrapolate.CLAMP);
+    const inputRange = [index - 1, index, index + 1];
+    const opacity = interpolate(currentIndex.value, inputRange, [0.5, 1, 0.5], Extrapolate.CLAMP);
+    const scale = interpolate(currentIndex.value, inputRange, [1, 1.25, 1], Extrapolate.CLAMP);
   
     return {
       opacity,

@@ -1,11 +1,20 @@
 import { ViewStyle } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { Layout } from "react-native-reanimated";
+import BaseLayout from './BaseLayout';
+import ScaleLayout from './ScaleLayout';
 
 export type SwiperCallBack = (index: number) => void;
 export type SwiperCallBackFunction = (callback?: SwiperCallBack) => void
 export interface SwiperOptions {
   maxComputed?: number; // 最大计算范围
   maxRender?: number; // 最大渲染范围
+}
+
+export type SwiperLayout = typeof BaseLayout | typeof ScaleLayout;
+
+export interface LayoutOption {
+  layout?: SwiperLayout;
+  options?: any;
 }
 
 export interface SwiperProps {
@@ -17,7 +26,8 @@ export interface SwiperProps {
   interval?: number;
   options?: SwiperOptions;
   horizontal?: boolean;
-  style?: ViewStyle
+  style?: ViewStyle;
+  layoutOption?: LayoutOption
 };
 
 export interface SwiperDefaultOptions {
@@ -34,7 +44,8 @@ export interface SwiperDefaultProps {
   interval?: number;
   horizontal?: boolean;
   options: SwiperDefaultOptions;
-  style?: ViewStyle
+  style?: ViewStyle;
+  layoutOption?: LayoutOption;
 };
 
 export interface SwiperRef {
@@ -69,4 +80,9 @@ export interface BaseLayoutProps {
   options: SwiperDefaultOptions;
   stepDistance: number;
   horizontal: boolean;
+  layoutOption?: LayoutOption;
+  indexAtData: Animated.DerivedValue<number>;
 };
+
+export interface ScaleLayoutProps extends BaseLayoutProps {
+}

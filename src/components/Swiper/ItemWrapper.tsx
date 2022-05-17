@@ -18,12 +18,12 @@ const ItemWrapper: React.FC<ItemWrapperProps> = props => {
 
   if (hidden) {
     // TODO: 需要返回空View，此处暂时简单返回一个空View站位
-    // 返回空View需要重新计算排列方式作为feature
+    // 返回空View需要重新计算排列方式
     return <View style={{ width: '100%', height: '100%' }} />
   }
 
   return (
-    <View style={{ width: '100%', height: '100%' }}>
+    <View>
       {children}
     </View>
   );};

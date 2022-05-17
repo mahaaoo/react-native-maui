@@ -2,6 +2,7 @@ import React, {useCallback, forwardRef, useImperativeHandle, useMemo} from 'reac
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { 
+  Extrapolate,
   interpolate,
   runOnJS, 
   useDerivedValue, 
@@ -14,6 +15,7 @@ import ItemWrapper from './ItemWrapper';
 import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
 
 import BaseLayout from './BaseLayout';
+import ScaleLayout from './ScaleLayout';
 
 const {width} = Dimensions.get('window');
 
@@ -27,7 +29,8 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     interval = 1000, 
     horizontal = false,
     options,
-    style
+    style,
+    layoutOption,
   } = useProps(props);
   const translate = useSharedValue(0);
   const currentIndex = useSharedValue(0);
@@ -50,15 +53,27 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   const stepDistance = useMemo<number>(() => {
     currentIndex.value = 0;
     translate.value = 0;
-    if (horizontal) {
-      return container.width;
+    if (layoutOption?.layout === ScaleLayout) {
+      if (horizontal) {
+        return container.width - (container.width - layoutOption?.options.width - 2 * layoutOption?.options.margin);
+      }
+      return container.height;  
+    } else {
+      if (horizontal) {
+        return container.width;
+      }
+      return container.height;  
     }
-    return container.height;
-  }, [horizontal, container])
+  }, [horizontal, container, layoutOption])
 
   const indexAtData = useDerivedValue(() => {
-    const group = currentIndex.value % dataSource.length;
-    return interpolate(group, [-1, 0, 1], [1, 0, dataSource.length - 1]);
+    let group = currentIndex.value % dataSource.length;
+    if (group < 0) {      
+      group = Math.abs(group);
+    } else if (group > 0) {
+      group = dataSource.length - group;
+    }    
+    return group;
   });
 
   const range = useRange(currentIndex);
@@ -123,6 +138,25 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     getCurrentIndex: () => indexAtData.value,
   }), [currentIndex, scrollTo, dataSource]);
 
+  const renderSwiperItem = useCallback((item: any, index: number) => {
+    const Layout = layoutOption?.layout || BaseLayout;
+
+    return (
+      <ItemWrapper 
+        size={dataSource.length}
+        key={`LazyWrapper${index}`}
+        {...{index, currentIndex, options}}
+      >
+        <Layout
+          size={dataSource.length}
+          {...{index, indexAtData, currentIndex, translate, options, stepDistance, horizontal, layoutOption}}
+        >
+          {renderItem && renderItem(item)}
+        </Layout>
+      </ItemWrapper>
+    )
+  }, [layoutOption]);
+
   return (
     <View style={[styles.container, style]} testID={"test-swiper"}>
       <GestureDetector gesture={panGesture}>
@@ -130,22 +164,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
           <View style={[styles.swiper , {
             flexDirection: horizontal ? 'row' : 'column',
           }]}>
-            {dataSource.map((item: any, index: number) => {
-              return (
-                <ItemWrapper 
-                  size={dataSource.length}
-                  key={`LazyWrapper${index}`}
-                  {...{index, currentIndex, options}}
-                >
-                  <BaseLayout
-                    size={dataSource.length}
-                    {...{index, currentIndex, translate, options, stepDistance, horizontal}}
-                  >
-                    {renderItem && renderItem(item)}
-                  </BaseLayout>
-                </ItemWrapper>
-              )
-            })}
+            {dataSource.map(renderSwiperItem)}
             <View style={{
               position: 'absolute',
               left: 0,

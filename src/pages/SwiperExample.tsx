@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Dimensions, StyleSheet, View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Swiper, SwiperRef } from '../components/Swiper';
+import { Swiper, SwiperRef, ScaleLayout } from '../components/Swiper';
 
 const {width} = Dimensions.get('window');
 
@@ -68,6 +68,26 @@ export default function SwiperExample() {
           <Text>Next</Text>
         </TouchableOpacity>
       </View>
+      <Swiper
+        interval={1000}
+        dataSource={card}
+        renderItem={(item) => {
+          return <Image source={item.source} style={{ width: width - 60, marginHorizontal: 10,  height: '100%'}} />
+        }}
+        layoutOption={{
+          layout: ScaleLayout,
+          options: {
+            width: width - 60,
+            margin: 10,
+          }
+        }}
+        auto={false}
+        horizontal={true}
+        style={{
+          width,
+          height: 200,
+        }}
+      />
       {/* <Swiper
         interval={1000}
         dataSource={card}
