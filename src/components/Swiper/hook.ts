@@ -216,6 +216,26 @@ const useTouching = (start: () => void, stop: () => void, touching: Animated.Sha
   });
 }
 
+/**
+ * 获取当前所处数据源中的索引
+ * @param currentIndex 当前位置
+ * @param size 数据源
+ * @returns 当前位置在数据源中的索引
+ */
+const useIndexAtData = (currentIndex: Animated.SharedValue<number>, size: number) => {
+  const index = useDerivedValue(() => {
+    let group = currentIndex.value % size;
+    if (group < 0) {      
+      group = Math.abs(group);
+    } else if (group > 0) {
+      group = size - group;
+    }    
+    return group;
+  });
+
+  return index;
+}
+
 export {
   useProps,
   useRange,
@@ -224,4 +244,5 @@ export {
   useJudgeRange,
   useAutoScroll,
   useTouching,
+  useIndexAtData,
 }

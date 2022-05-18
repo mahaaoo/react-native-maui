@@ -2,15 +2,12 @@ import React, {useCallback, forwardRef, useImperativeHandle, useMemo} from 'reac
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { 
-  Extrapolate,
-  interpolate,
   runOnJS, 
-  useDerivedValue, 
   useSharedValue, 
   withSpring
 } from 'react-native-reanimated';
 import Pagination from '../Pagination';
-import {useRange, useStep, useAutoScroll, useTouching, useProps} from './hook';
+import {useRange, useStep, useAutoScroll, useTouching, useProps, useIndexAtData} from './hook';
 import ItemWrapper from './ItemWrapper';
 import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
 
@@ -55,7 +52,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     translate.value = 0;
     if (layoutOption?.layout === ScaleLayout) {
       if (horizontal) {
-        return container.width - (container.width - layoutOption?.options.width - 2 * layoutOption?.options.margin);
+        return layoutOption?.options.width + 2 * layoutOption?.options.margin;
       }
       return container.height;  
     } else {
@@ -66,15 +63,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     }
   }, [horizontal, container, layoutOption])
 
-  const indexAtData = useDerivedValue(() => {
-    let group = currentIndex.value % dataSource.length;
-    if (group < 0) {      
-      group = Math.abs(group);
-    } else if (group > 0) {
-      group = dataSource.length - group;
-    }    
-    return group;
-  });
+  const indexAtData = useIndexAtData(currentIndex, dataSource.length);
 
   const range = useRange(currentIndex);
 
