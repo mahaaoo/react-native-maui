@@ -82,6 +82,10 @@ export interface BaseLayoutProps {
   horizontal: boolean;
   layoutOption?: LayoutOption;
   indexAtData: Animated.DerivedValue<number>;
+  container: {
+    width: number;
+    height: number;
+  }
 };
 
 export interface ScaleLayoutProps extends BaseLayoutProps {

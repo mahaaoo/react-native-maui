@@ -72,12 +72,32 @@ export default function SwiperExample() {
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
-          return <Image source={item.source} style={{ width: width - 60, marginHorizontal: 10,  height: '100%'}} />
+          return <Image source={item.source} style={{ width: '100%', height: '100%' }} />
         }}
         layoutOption={{
           layout: ScaleLayout,
           options: {
-            width: width - 60,
+            mainAxisSize: 200,
+            margin: 10,
+          }
+        }}
+        auto={false}
+        horizontal={false}
+        style={{
+          width,
+          height: 260,
+        }}
+      />
+      <Swiper
+        interval={1000}
+        dataSource={card}
+        renderItem={(item) => {
+          return <Image source={item.source} style={{ width: '100%', height: '100%' }} />
+        }}
+        layoutOption={{
+          layout: ScaleLayout,
+          options: {
+            mainAxisSize: width - 60,
             margin: 10,
           }
         }}
@@ -86,6 +106,8 @@ export default function SwiperExample() {
         style={{
           width,
           height: 200,
+          marginTop: 40,
+          marginBottom: 100,
         }}
       />
       {/* <Swiper

@@ -51,10 +51,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     currentIndex.value = 0;
     translate.value = 0;
     if (layoutOption?.layout === ScaleLayout) {
-      if (horizontal) {
-        return layoutOption?.options.width + 2 * layoutOption?.options.margin;
-      }
-      return container.height;  
+      return layoutOption?.options.mainAxisSize + 2 * layoutOption?.options.margin;
     } else {
       if (horizontal) {
         return container.width;
@@ -138,7 +135,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
       >
         <Layout
           size={dataSource.length}
-          {...{index, indexAtData, currentIndex, translate, options, stepDistance, horizontal, layoutOption}}
+          {...{index, indexAtData, currentIndex, translate, options, stepDistance, horizontal, layoutOption, container}}
         >
           {renderItem && renderItem(item)}
         </Layout>

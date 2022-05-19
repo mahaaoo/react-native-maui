@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Dimensions } from 'react-native';
 import Animated, { 
   Extrapolate,
@@ -8,8 +8,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useItemOffset} from './hook';
 import { ScaleLayoutProps } from './type';
-
-const {width} = Dimensions.get('window');
 
 const ScaleLayout: React.FC<ScaleLayoutProps> = props => {
   const {
@@ -23,14 +21,14 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = props => {
     horizontal,
     layoutOption,
     indexAtData,
+    container
   } = props;
 
   const style = useAnimatedStyle(() => {
     const itemOffset = useItemOffset(-currentIndex.value, index, size, currentIndex.value, options);
     const scale = interpolate(indexAtData.value, [index - 1, index, index + 1], [0.9, 1, 0.9], Extrapolate.CLAMP);
-    const offset = (width - layoutOption?.options.width) / 2 - layoutOption?.options.margin || 0;
-
     if (horizontal) {
+      const offset = (container.width - layoutOption?.options.mainAxisSize) / 2 - layoutOption?.options.margin || 0;
       return {
         transform: [{
           translateX: translate.value + (itemOffset * size * stepDistance) + offset,
@@ -41,19 +39,38 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = props => {
         }]
       };  
     } else {
+      const offset = (container.height - layoutOption?.options.mainAxisSize) / 2 - layoutOption?.options.margin || 0;
       return {
         transform: [{
-          translateY: translate.value + (itemOffset * size * stepDistance),
+          translateY: translate.value + (itemOffset * size * stepDistance) + offset,
         }, {
           translateX: 0,
+        }, {
+          scaleX: withTiming(scale),
         }]
       };  
     } 
-  }, [currentIndex, horizontal, layoutOption, indexAtData]);
+  }, [currentIndex, horizontal, layoutOption, indexAtData, container]);
+
+  const defaultStyle = useMemo(() => {
+    if (horizontal) {
+      return {
+        width: layoutOption?.options.mainAxisSize,
+        height: container.height,
+        marginHorizontal: layoutOption?.options.margin,
+      }
+    }
+    return {
+      width: container.width,
+      height: layoutOption?.options.mainAxisSize,
+      marginVertical: layoutOption?.options.margin,
+    }
+
+  }, [container, horizontal, layoutOption])
 
   return (
     <Animated.View 
-      style={[style]}
+      style={[defaultStyle, style]}
     >
       {children}
     </Animated.View>
