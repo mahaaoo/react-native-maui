@@ -222,7 +222,7 @@ const useTouching = (start: () => void, stop: () => void, touching: Animated.Sha
  * @param size 数据源
  * @returns 当前位置在数据源中的索引
  */
-const useIndexAtData = (currentIndex: Animated.SharedValue<number>, size: number) => {
+const useIndexAtData = (currentIndex: Animated.SharedValue<number>, size: number): Animated.DerivedValue<number> => {
   const index = useDerivedValue(() => {
     let group = currentIndex.value % size;
     if (group < 0) {      

@@ -7,7 +7,9 @@ import {
   useRange,
   useJudgeRange,
   useItemOffset,
-  useAutoScroll
+  useAutoScroll,
+  useIndexAtData,
+  useTouching
 } from '../hook';
 
 describe('Test:Swiper->hook/useJudgeRange', () => {
@@ -168,7 +170,7 @@ describe('Test:Swiper->hook/useItemOffset', () => {
   
     expect(useItemOffsetOption(0, 2, 3, 0)).toBe(-1);
     expect(useItemOffsetOption(2, 0, 3, -2)).toBe(1);
-    expect(useItemOffsetOption(-1, 0, 3, 1)).toBe(0);  
+    expect(useItemOffsetOption(-1, 0, 3, 1)).toBe(0);
   });
 });
 
@@ -187,3 +189,49 @@ describe('Test:Swiper->hook/useAutoScroll', () => {
     });  
   });
 });
+
+describe('Test:Swiper->hook/useTouching', () => {
+  it('is touching', () => {
+    withReanimatedTimer(() => {  
+      renderHook(() => {
+        const startMock = jest.fn();
+        const endMock = jest.fn();
+
+        useTouching(startMock, endMock, { value: true });
+        expect(startMock).toHaveBeenCalled();
+      });
+    })
+  });
+  it('not touching', () => {
+    withReanimatedTimer(() => {  
+      renderHook(() => {
+        const startMock = jest.fn();
+        const endMock = jest.fn();
+
+        useTouching(startMock, endMock, { value: false });
+        expect(endMock).toHaveBeenCalled();
+      });
+    })
+  });
+});
+
+describe('Test:Swiper->hook/useIndexAtData', () => {
+  it('index at dataSource', () => {
+    withReanimatedTimer(() => {  
+      renderHook(() => {
+        const case1 = useIndexAtData({value: 1}, 4);
+        expect(case1.value).toBe(3);
+    
+        const case2 = useIndexAtData({value: -1}, 4);
+        expect(case2.value).toBe(1);
+    
+        const case3 = useIndexAtData({value: -5}, 4);
+        expect(case3.value).toBe(1);
+
+        const case4 = useIndexAtData({value: 0}, 4);
+        expect(case4.value).toBe(0);
+      });
+    })
+  });
+});
+
