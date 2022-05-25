@@ -136,6 +136,16 @@ export default function ComponentScreen() {
             onPress={() => { navigate("SliderSheetExample"); }}
           />
         </View>
+        <View style={styles.card}>
+          <Card 
+            title={'Picker'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Text>Picker</Text>
+            }
+            onPress={() => { navigate("PickerExample"); }}
+          />
+        </View>
       </ScrollView>
     </View>
   );
