@@ -27,8 +27,8 @@ const PickerItem: React.FC<PickerItemProps> = props => {
       transform: [
         {perspective: 1500},
         {rotateX: `${rotateX}deg`},
-        {scaleX: interpolate(panIndex, visibleIndex, [0.9, 0.92, 0.95, 1.03, 0.95, 0.92, 0.9])},
-        {scaleY: interpolate(panIndex, visibleIndex, [0.9, 0.92, 0.95, 1.03, 0.95, 0.92, 0.9])}
+        {scaleX: interpolate(panIndex, visibleIndex, [0.9, 0.92, 0.95, 1.02, 0.95, 0.92, 0.9])},
+        {scaleY: interpolate(panIndex, visibleIndex, [0.9, 0.92, 0.95, 1.02, 0.95, 0.92, 0.9])}
       ]
     };
   });
