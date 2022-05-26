@@ -28,6 +28,8 @@ const Picker: React.FC<PickerProps> = props => {
 
   const panGesture = Gesture.Pan()
   .onBegin(() => {
+    console.log('tttt');
+    
     offset.value = translateY.value;
   })
   .onUpdate(({translationY}) => {
