@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
-
+        
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -24,4 +24,5 @@ jobs:
       - name: Install dependencies
         run: npm install
       - run: npm run test
-      - run: expo publish
+      - name: Expo GitHub Action
+        uses: expo/expo-github-action@7.2.0
