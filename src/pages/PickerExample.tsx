@@ -16,10 +16,12 @@ const PickerExample: React.FC<PickerExampleProps> = props => {
   return (
     <View style={{
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
     }}>
       <Picker data={data} />
+      <View style={{ flexDirection: 'row' }}>
+        <Picker style={{flex: 1}} data={data} />
+        <Picker style={{flex: 1}} data={data} />
+      </View>
     </View>
   )
 };

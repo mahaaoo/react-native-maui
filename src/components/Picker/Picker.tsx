@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Dimensions} from 'react-native';
+import {View, Dimensions, StyleSheet, ViewStyle} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { Easing, Extrapolate, interpolate, runOnJS, useAnimatedStyle, useDerivedValue, useSharedValue, withDecay, withSpring, withTiming } from 'react-native-reanimated';
 import { snapPoint } from 'react-native-redash';
@@ -12,10 +12,11 @@ const INIT_INDEX = 3;
 
 interface PickerProps {
   data: any[],
+  style?: ViewStyle,
 };
 
 const Picker: React.FC<PickerProps> = props => {
-  const {data} = props;
+  const {data, style} = props;
 
   const translateY = useSharedValue(3*ITEM_HEIGHT); 
   const offset = useSharedValue(0);
@@ -42,7 +43,7 @@ const Picker: React.FC<PickerProps> = props => {
     });
   })
 
-  const style = useAnimatedStyle(() => {
+  const aninmatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
@@ -54,8 +55,8 @@ const Picker: React.FC<PickerProps> = props => {
 
   return (
     <GestureDetector gesture={panGesture}>
-      <View style={{ width, height: ITEM_HEIGHT * 7, backgroundColor: 'white', overflow: 'hidden' }}>
-        <Animated.View style={[{flex: 1}, style]}>
+      <View style={[{ height: ITEM_HEIGHT * 7, backgroundColor: 'white', overflow: 'hidden' }, style]}>
+        <Animated.View style={[{flex: 1}, aninmatedStyle]}>
           {data?.map((res, index) => {
             return <PickerItem key={`key_${index}`} {...{index, res, currentIndex, translateY}} />
           })}
