@@ -26,3 +26,6 @@ jobs:
       - run: npm run test
       - name: Expo GitHub Action
         uses: expo/expo-github-action@7.2.0
+        with: 
+          expo-version: latest
+          token: ${{ expo.TOKEN }}
