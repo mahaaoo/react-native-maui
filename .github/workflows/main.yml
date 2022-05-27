@@ -17,21 +17,23 @@ jobs:
     environment: expo
     steps:
       - uses: actions/checkout@v3
+      
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          
       - name: Install dependencies
         run: npm install
       - run: npm run test
       
-      - name: Expo GitHub Action
+      - name: Expo Init
         uses: expo/expo-github-action@7.2.0
         with: 
           expo-version: 5.4.3
           token: ${{ secrets.TOKEN }}
           packager: npm
           
-      - name: 🚀 Publish app
+      - name: Expo Publish app
         run: expo publish --non-interactive
  
