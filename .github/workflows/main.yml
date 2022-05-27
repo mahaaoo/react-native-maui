@@ -28,4 +28,4 @@ jobs:
         uses: expo/expo-github-action@7.2.0
         with: 
           expo-version: latest
-          token: ${{ TOKEN }}
+          token: ${{ secrets.TOKEN }}
