@@ -27,5 +27,6 @@ jobs:
       - name: Expo GitHub Action
         uses: expo/expo-github-action@7.2.0
         with: 
-          expo-version: latest
+          expo-version: 5.4.3
           token: ${{ secrets.TOKEN }}
+          username: mah22
