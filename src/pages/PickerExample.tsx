@@ -9,7 +9,7 @@ for(let i = 0; i<20; i++) {
 }
 
 const data2: string[] = [];
-for(let i = 0; i<12; i++) {
+for(let i = 0; i<2; i++) {
   if (i < 9) {
     data2.push(`0${i+1}`);
   } else {
