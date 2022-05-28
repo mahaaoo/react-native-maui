@@ -1,21 +1,12 @@
 import React from 'react';
-import {Text} from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
-
-const ITEM_HEIGHT = 30;
-const INIT_INDEX = 3;
-
-interface PickerItemProps {
-  index: number;
-  currentIndex: Animated.SharedValue<number>;
-  translateY: Animated.SharedValue<number>;
-}
+import {PickerItemProps} from './type';
 
 const PickerItem: React.FC<PickerItemProps> = props => {
-  const {index, currentIndex, translateY, children} = props;
+  const {index, currentIndex, translateY, children, options} = props;
 
   const style = useAnimatedStyle(() => {
-    const panIndex = INIT_INDEX - translateY.value / ITEM_HEIGHT;
+    const panIndex = options.maxRender - translateY.value / options.itemHeight;
 
     const visibleRotateX = [50, 30, 20, 0, -20, -30, -50];
     const visibleIndex = [index-3, index-2, index - 1, index, index + 1, index + 2, index + 3];
@@ -34,7 +25,7 @@ const PickerItem: React.FC<PickerItemProps> = props => {
 
   return (
     <Animated.View style={[{ 
-      height: ITEM_HEIGHT, 
+      height: options.itemHeight, 
       width: '100%', 
       justifyContent: 'center', 
       alignItems: 'center',

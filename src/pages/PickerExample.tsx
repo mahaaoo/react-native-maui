@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, Text} from 'react-native';
 import { Picker } from '../components/Picker';
 
@@ -23,6 +23,10 @@ interface PickerExampleProps {
 
 const PickerExample: React.FC<PickerExampleProps> = props => {
   const {} = props;
+
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+
   return (
     <View style={{
       flex: 1,
@@ -32,13 +36,19 @@ const PickerExample: React.FC<PickerExampleProps> = props => {
         renderItem={(item) => {
           return <Text style={{ fontSize: 20 }}>{item}</Text>
         }}
+        onChange={(item) => {
+          console.log('current pick:', item);
+        }}
       />
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', marginTop: 20 }}>
         <Picker 
           style={{flex: 1}} 
           dataSource={data}
           renderItem={(item) => {
             return <Text style={{ fontSize: 20 }}>{item}</Text>
+          }}  
+          onChange={(item) => {
+            setYear(item)
           }}  
         />
         <Picker 
@@ -47,7 +57,15 @@ const PickerExample: React.FC<PickerExampleProps> = props => {
           renderItem={(item) => {
             return <Text style={{ fontSize: 20 }}>{item}</Text>
           }}  
+          onChange={(item) => {
+            console.log(item);
+            
+            setMonth(item)
+          }}  
         />
+      </View>
+      <View style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>{`当前选择日期：${year}年-${month}月`}</Text>
       </View>
     </View>
   )
