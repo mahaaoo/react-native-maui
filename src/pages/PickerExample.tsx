@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import { Picker } from '../components/Picker';
 
 
@@ -27,10 +27,27 @@ const PickerExample: React.FC<PickerExampleProps> = props => {
     <View style={{
       flex: 1,
     }}>
-      <Picker data={data} />
+      <Picker 
+        dataSource={data} 
+        renderItem={(item) => {
+          return <Text style={{ fontSize: 20 }}>{item}</Text>
+        }}
+      />
       <View style={{ flexDirection: 'row' }}>
-        <Picker style={{flex: 1}} data={data} />
-        <Picker style={{flex: 1}} data={data2} />
+        <Picker 
+          style={{flex: 1}} 
+          dataSource={data}
+          renderItem={(item) => {
+            return <Text style={{ fontSize: 20 }}>{item}</Text>
+          }}  
+        />
+        <Picker 
+          style={{flex: 1}} 
+          dataSource={data2}
+          renderItem={(item) => {
+            return <Text style={{ fontSize: 20 }}>{item}</Text>
+          }}  
+        />
       </View>
     </View>
   )

@@ -7,13 +7,12 @@ const INIT_INDEX = 3;
 
 interface PickerItemProps {
   index: number;
-  res: number;
   currentIndex: Animated.SharedValue<number>;
   translateY: Animated.SharedValue<number>;
 }
 
 const PickerItem: React.FC<PickerItemProps> = props => {
-  const {index, res, currentIndex, translateY} = props;
+  const {index, currentIndex, translateY, children} = props;
 
   const style = useAnimatedStyle(() => {
     const panIndex = INIT_INDEX - translateY.value / ITEM_HEIGHT;
@@ -40,7 +39,7 @@ const PickerItem: React.FC<PickerItemProps> = props => {
       justifyContent: 'center', 
       alignItems: 'center',
     }, style]}>
-      <Text style={{ fontSize: 20 }}>{res}</Text>
+      {children}
     </Animated.View>
   )
 }

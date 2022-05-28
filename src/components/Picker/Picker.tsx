@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Dimensions, StyleSheet, ViewStyle} from 'react-native';
+import {View, Dimensions, ViewStyle} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { Easing, Extrapolate, interpolate, runOnJS, useAnimatedStyle, useDerivedValue, useSharedValue, withDecay, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { snapPoint } from 'react-native-redash';
 import PickerItem from './PickerItem';
 
@@ -11,18 +11,19 @@ const ITEM_HEIGHT = 30;
 const INIT_INDEX = 3;
 
 interface PickerProps {
-  data: any[],
+  dataSource: any[],
   style?: ViewStyle,
+  renderItem: (item: any, index: number) => React.ReactNode,
 };
 
 const Picker: React.FC<PickerProps> = props => {
-  const {data, style} = props;
+  const {dataSource, style, renderItem} = props;
 
   const translateY = useSharedValue(3*ITEM_HEIGHT); 
   const offset = useSharedValue(0);
   const currentIndex = useSharedValue(INIT_INDEX);
 
-  const snapPoints = data.map((_, index) => -index * ITEM_HEIGHT + 3*ITEM_HEIGHT);
+  const snapPoints = dataSource.map((_, index) => -index * ITEM_HEIGHT + 3*ITEM_HEIGHT);
   console.log(snapPoints);
   
 
@@ -57,8 +58,12 @@ const Picker: React.FC<PickerProps> = props => {
     <GestureDetector gesture={panGesture}>
       <View style={[{ height: ITEM_HEIGHT * 7, backgroundColor: 'white', overflow: 'hidden' }, style]}>
         <Animated.View style={[{flex: 1}, aninmatedStyle]}>
-          {data?.map((res, index) => {
-            return <PickerItem key={`key_${index}`} {...{index, res, currentIndex, translateY}} />
+          {dataSource?.map((item, index) => {
+            return (
+              <PickerItem key={`key_${index}`} {...{index, currentIndex, translateY}}>
+                {renderItem && renderItem(item, index)}
+              </PickerItem>
+            )
           })}
         </Animated.View>
         <View style={{
