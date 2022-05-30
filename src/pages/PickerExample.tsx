@@ -39,6 +39,9 @@ const PickerExample: React.FC<PickerExampleProps> = props => {
         onChange={(item) => {
           console.log('current pick:', item);
         }}
+        options={{
+          maxRender: 3,
+        }}
       />
       <View style={{ flexDirection: 'row', marginTop: 20 }}>
         <Picker 

@@ -14,7 +14,7 @@ const PickerItem: React.FC<PickerItemProps> = props => {
   }, [offWindow]);
 
   const style = useAnimatedStyle(() => {
-    if (index < paningIndex.value - options.maxRender - 1 || index > paningIndex.value + options.maxRender + 1) {
+    if (index < paningIndex.value - 2 * options.maxRender  || index > paningIndex.value + 2 * options.maxRender) {
       const upOrDown = index < paningIndex.value - options.maxRender - 1;
       const rotateX = upOrDown ? 50 : -50;
 
