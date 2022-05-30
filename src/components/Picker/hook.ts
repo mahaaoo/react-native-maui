@@ -33,7 +33,7 @@ const useInitialValue = (options: PickDefaultOptions, dataSource: any[]) => {
     offset,
     currentIndex,
     snapPoints,
-    timingOptions
+    timingOptions,
   }
 }
 

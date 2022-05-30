@@ -1,16 +1,13 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
 import {View, Dimensions, ViewStyle} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { runOnJS, useDerivedValue, withTiming } from 'react-native-reanimated';
 import { snapPoint } from 'react-native-redash';
 import PickerItem from './PickerItem';
 import { PickerProps } from './type';
 import { useProps, useInitialValue } from './hook';
 
 const {width} = Dimensions.get('window');
-
-const ITEM_HEIGHT = 30;
-const INIT_INDEX = 2;
 
 const Picker: React.FC<PickerProps> = props => {
   const {dataSource, style, renderItem, onChange, options} = useProps(props);
@@ -19,8 +16,12 @@ const Picker: React.FC<PickerProps> = props => {
     offset,
     currentIndex,
     snapPoints,
-    timingOptions
+    timingOptions,
   } = useInitialValue(options, dataSource);
+
+  const paningIndex = useDerivedValue(() => {
+    return options.maxRender - translateY.value / options.itemHeight;
+  })
 
   useEffect(() => {
     // 立即执行一次onChange，保证父组件第一次也能拿到值
@@ -40,53 +41,55 @@ const Picker: React.FC<PickerProps> = props => {
   })
   .onEnd(({velocityY}) => {
     const dest = snapPoint(translateY.value, velocityY, snapPoints);
-    currentIndex.value = options.maxRender - dest / options.itemHeight;
+    // currentIndex.value = options.maxRender - dest / options.itemHeight;
             
     translateY.value = withTiming(dest, timingOptions, () => {
       runOnJS(handleChange)(currentIndex.value)
     });
   });
 
-  const aninmatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: translateY.value
-        },
-      ]
-    }
-  });
-  
+
   const mustStyle: ViewStyle = useMemo(() => {
     return {
+      width,
       overflow: 'hidden',
       height: options.itemHeight * (options.maxRender * 2 + 1)
     }
   }, [options]);
 
+  const renderPickerItem = useCallback((item: any, index: number) => {
+    return (
+      <PickerItem key={`key_${index}`} {...{index, currentIndex, translateY, options, paningIndex}}>
+        {renderItem && renderItem(item, index)}
+      </PickerItem>
+    )
+  }, []);
+
   return (
     <GestureDetector gesture={panGesture}>
-      <View style={[{ backgroundColor: 'white' }, style, mustStyle]}>
-        <Animated.View style={[{flex: 1}, aninmatedStyle]}>
-          {dataSource?.map((item, index) => {
-            return (
-              <PickerItem key={`key_${index}`} {...{index, currentIndex, translateY, options}}>
-                {renderItem && renderItem(item, index)}
-              </PickerItem>
-            )
-          })}
-        </Animated.View>
-        <View style={{
-          position: 'absolute',
-          top: INIT_INDEX * ITEM_HEIGHT,
-          left: 0,
-          right: 0,
-          width,
-          height: ITEM_HEIGHT,
-          borderWidth: 1,
-          borderColor: 'red',
-          backgroundColor: 'transparent',
-        }} />
+      <View style={{ 
+        width,
+        height: options.itemHeight * (options.maxRender * 2 + 1) * 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'cyan'
+      }}>
+        <View style={[{ backgroundColor: 'white' }, style, mustStyle]}>
+          <Animated.View style={[{flex: 1}]}>
+            {dataSource?.map(renderPickerItem)}
+          </Animated.View>
+          <View style={{
+            position: 'absolute',
+            top: options.maxRender * options.itemHeight,
+            left: 0,
+            right: 0,
+            width,
+            height: options.itemHeight,
+            borderWidth: 1,
+            borderColor: 'red',
+            backgroundColor: 'transparent',
+          }} />
+        </View>
       </View>
     </GestureDetector>
   )

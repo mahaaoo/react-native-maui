@@ -31,5 +31,6 @@ export interface PickerItemProps {
   index: number;
   currentIndex: Animated.SharedValue<number>;
   translateY: Animated.SharedValue<number>;
-  options: PickDefaultOptions
+  options: PickDefaultOptions,
+  paningIndex: Animated.DerivedValue<number>;
 }
