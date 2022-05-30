@@ -41,7 +41,7 @@ const Picker: React.FC<PickerProps> = props => {
   })
   .onEnd(({velocityY}) => {
     const dest = snapPoint(translateY.value, velocityY, snapPoints);
-    // currentIndex.value = options.maxRender - dest / options.itemHeight;
+    currentIndex.value = options.maxRender - dest / options.itemHeight;
             
     translateY.value = withTiming(dest, timingOptions, () => {
       runOnJS(handleChange)(currentIndex.value)
@@ -67,29 +67,21 @@ const Picker: React.FC<PickerProps> = props => {
 
   return (
     <GestureDetector gesture={panGesture}>
-      <View style={{ 
-        width,
-        height: options.itemHeight * (options.maxRender * 2 + 1) * 3,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'cyan'
-      }}>
-        <View style={[{ backgroundColor: 'white' }, style, mustStyle]}>
-          <Animated.View style={[{flex: 1}]}>
-            {dataSource?.map(renderPickerItem)}
-          </Animated.View>
-          <View style={{
-            position: 'absolute',
-            top: options.maxRender * options.itemHeight,
-            left: 0,
-            right: 0,
-            width,
-            height: options.itemHeight,
-            borderWidth: 1,
-            borderColor: 'red',
-            backgroundColor: 'transparent',
-          }} />
-        </View>
+      <View style={[{ backgroundColor: 'white' }, style, mustStyle]}>
+        <Animated.View style={[{flex: 1}]}>
+          {dataSource?.map(renderPickerItem)}
+        </Animated.View>
+        <View style={{
+          position: 'absolute',
+          top: options.maxRender * options.itemHeight,
+          left: 0,
+          right: 0,
+          width,
+          height: options.itemHeight,
+          borderWidth: 1,
+          borderColor: 'red',
+          backgroundColor: 'transparent',
+        }} />
       </View>
     </GestureDetector>
   )

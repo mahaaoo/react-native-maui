@@ -1,10 +1,9 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { View, ScrollView } from 'react-native';
-import Animated, { interpolate, runOnJS, useAnimatedReaction, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { interpolate, runOnJS, useAnimatedStyle } from 'react-native-reanimated';
 import {PickerItemProps} from './type';
 
 const PickerItem: React.FC<PickerItemProps> = props => {
-  const {index, currentIndex, translateY, children, options, paningIndex} = props;
+  const {index, translateY, children, options, paningIndex} = props;
   const [offWindow, setOffWindow] = useState(true);
   const componentRef = useRef(children);
 
@@ -14,16 +13,10 @@ const PickerItem: React.FC<PickerItemProps> = props => {
     }
   }, [offWindow]);
 
-  // useAnimatedReaction(() => options.maxRender - translateY.value / options.itemHeight, (paningIndex) => {
-  //   let shouldMount = !(index < paningIndex - 2 * options.maxRender || index > paningIndex + 2 * options.maxRender);
-  //   runOnJS(changeState)(shouldMount);
-  // })
-
   const style = useAnimatedStyle(() => {
     if (index < paningIndex.value - options.maxRender - 1 || index > paningIndex.value + options.maxRender + 1) {
       const upOrDown = index < paningIndex.value - options.maxRender - 1;
       const rotateX = upOrDown ? 50 : -50;
-      const outOfY = upOrDown ? -options.itemHeight * (index+1) : 5 *  options.itemHeight
 
       runOnJS(changeState)(false);
 
