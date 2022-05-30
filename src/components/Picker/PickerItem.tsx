@@ -13,8 +13,13 @@ const PickerItem: React.FC<PickerItemProps> = props => {
     }
   }, [offWindow]);
 
+  const isRange = () => {
+    'worklet';
+    return index < paningIndex.value - 1.5 * options.maxRender || index > paningIndex.value + 1.5 * options.maxRender;
+  }
+
   const style = useAnimatedStyle(() => {
-    if (index < paningIndex.value - 2 * options.maxRender  || index > paningIndex.value + 2 * options.maxRender) {
+    if (isRange()) {
       const upOrDown = index < paningIndex.value - options.maxRender - 1;
       const rotateX = upOrDown ? 50 : -50;
 
@@ -35,17 +40,19 @@ const PickerItem: React.FC<PickerItemProps> = props => {
     runOnJS(changeState)(true);
 
     const visibleRotateX = [50, 30, 20, 0, -20, -30, -50];
+    const visibleOffsetY = [-15, -5, 0, 0, 0, 5, 15];
     const visibleIndex = [index-3, index-2, index - 1, index, index + 1, index + 2, index + 3];
     const rotateX = interpolate(paningIndex.value, visibleIndex, visibleRotateX);
+    const offsetY = interpolate(paningIndex.value, visibleIndex, visibleOffsetY);
 
     return {
       opacity: interpolate(paningIndex.value, visibleIndex, [0.2, 0.4, 0.6, 1, 0.6, 0.4, 0.2]),
       transform: [
-        {translateY: translateY.value},
+        {translateY: translateY.value + offsetY},
         {perspective: 1500},
         {rotateX: `${rotateX}deg`},
-        {scaleX: interpolate(paningIndex.value, visibleIndex, [0.9, 0.92, 0.95, 1.05, 0.95, 0.92, 0.9])},
-        {scaleY: interpolate(paningIndex.value, visibleIndex, [0.9, 0.92, 0.95, 1.05, 0.95, 0.92, 0.9])}
+        {scaleX: interpolate(paningIndex.value, visibleIndex, [0.9, 0.92, 0.95, 1, 0.95, 0.92, 0.9])},
+        {scaleY: interpolate(paningIndex.value, visibleIndex, [0.9, 0.92, 0.95, 1, 0.95, 0.92, 0.9])}
       ]
     };
   });

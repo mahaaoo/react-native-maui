@@ -42,7 +42,7 @@ const Picker: React.FC<PickerProps> = props => {
   .onEnd(({velocityY}) => {
     const dest = snapPoint(translateY.value, velocityY, snapPoints);
     currentIndex.value = options.maxRender - dest / options.itemHeight;
-            
+
     translateY.value = withTiming(dest, timingOptions, () => {
       runOnJS(handleChange)(currentIndex.value)
     });
