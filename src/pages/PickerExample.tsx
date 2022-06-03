@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import {View, Text} from 'react-native';
 import { Picker } from '../components/Picker';
-import Wheel from './Wheel/Wheel';
 
 const data: number[] = [];
 for(let i = 0; i<50; i++) {
-  data.push(1990 + i);
+  data.push(i);
 }
 
 const data2: string[] = [];
@@ -70,18 +69,7 @@ const PickerExample: React.FC<PickerExampleProps> = props => {
       <View style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
         <Text>{`当前选择日期：${year}年-${month}月`}</Text>
       </View> */}
-
-      <View style={{backgroundColor: 'white', padding: 20, flexDirection: 'row', justifyContent: 'center'}}>
-        <Wheel
-          style={{height: 200, width: 80}}
-          itemStyle={{textAlign: 'center'}}
-          items={data}
-          onChange={() => {
-
-          }}
-        />
-      </View>
-
+      <Text>TODO：该组件在大数据范围下，性能待优化</Text>
     </View>
   )
 };

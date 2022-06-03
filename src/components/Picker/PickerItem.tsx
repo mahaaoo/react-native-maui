@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react';
-import Animated, { interpolate, runOnJS, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { interpolate, runOnJS, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated';
 import {PickerItemProps} from './type';
 
 const PickerItem: React.FC<PickerItemProps> = props => {
   const {index, translateY, children, options, paningIndex} = props;
-  const [offWindow, setOffWindow] = useState(true);
+  const [offWindow, setOffWindow] = useState(false);
   const componentRef = useRef(children);
 
   const changeState = useCallback((mount: boolean) => {
@@ -13,27 +13,26 @@ const PickerItem: React.FC<PickerItemProps> = props => {
     }
   }, [offWindow]);
 
-  const isRange = () => {
-    'worklet';
-    return index < paningIndex.value - 1.5 * options.maxRender || index > paningIndex.value + 1.5 * options.maxRender;
-  }
+  const outOffWindow = useDerivedValue(() => {
+    return Math.abs(index - paningIndex.value) > Math.round(1.2 * options.maxRender);
+  })
 
   const style = useAnimatedStyle(() => {
-    if (isRange()) {
-      const upOrDown = index < paningIndex.value - options.maxRender - 1;
-      const rotateX = upOrDown ? 50 : -50;
+    if (outOffWindow.value) {
+      // const upOrDown = index < paningIndex.value - options.maxRender - 1;
+      // const rotateX = upOrDown ? 50 : -50;
 
       runOnJS(changeState)(false);
 
       return {
-        opacity: 0.2,
-        transform: [
-          {translateY: translateY.value},
-          {perspective: 1500},
-          {rotateX: `${rotateX}deg`},
-          {scaleX: 0.9},
-          {scaleY: 0.9}
-        ]  
+        // opacity: 0.2,
+        // transform: [
+        //   {translateY: translateY.value},
+        //   {perspective: 1500},
+        //   {rotateX: `${rotateX}deg`},
+        //   {scaleX: 0.9},
+        //   {scaleY: 0.9}
+        // ]  
       }
     }
 
