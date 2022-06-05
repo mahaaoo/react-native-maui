@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Swiper, SwiperRef, ScaleLayout } from '../components/Swiper';
 
@@ -19,26 +19,43 @@ const card = [
   },
 ]
 
+const card2 = new Array(100).fill(0);
+card2.forEach((_, i) => {
+  card2[i] = i;
+})
+
 export default function SwiperExample() {
   const ref = useRef<SwiperRef>(null);
   const [autoplay, setAutoplay] = useState(false);
   const [horizontal, setHorizontal] = useState(true);
+  const [curIndx, setCurrent] = useState<number>(0);
+
+  const handeEnd = useCallback(() => {
+    const nowIndex = ref.current?.getCurrentIndex();
+    // setCurrent(nowIndex);
+    // console.log(index);
+    setCurrent(nowIndex);
+  }, []);
+
+  const handeStart = useCallback(() => {
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
       <Swiper
         ref={ref}
         interval={1000}
-        dataSource={card}
+        dataSource={card2}
         renderItem={(item) => {
-          return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
+          // return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
+          return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text>{item}</Text>
+            </View>
+          )
         }}
-        onScollStart={() => {
-          // console.log('滚动开始');
-        }}
-        onScollEnd={() => {
-          // console.log('滚动结束');
-        }}
+        onScollStart={handeStart}
+        onScollEnd={handeEnd}
         auto={autoplay}
         horizontal={horizontal}
         style={{
@@ -46,7 +63,10 @@ export default function SwiperExample() {
           height: 200,
         }}
       />
-      <View style={{ flexDirection: 'row', marginTop: 100 }}>
+      <View style={{ flexDirection: 'row', marginTop: 20, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>{curIndx}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', marginTop: 20 }}>
         <TouchableOpacity onPress={() => {
           ref.current?.previous();
         }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -68,7 +88,7 @@ export default function SwiperExample() {
           <Text>Next</Text>
         </TouchableOpacity>
       </View>
-      <Swiper
+      {/* <Swiper
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -109,7 +129,7 @@ export default function SwiperExample() {
           marginTop: 40,
           marginBottom: 100,
         }}
-      />
+      /> */}
       {/* <Swiper
         interval={1000}
         dataSource={card}

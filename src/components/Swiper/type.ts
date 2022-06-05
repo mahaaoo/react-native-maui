@@ -1,5 +1,5 @@
 import { ViewStyle } from "react-native";
-import Animated, { Layout } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import BaseLayout from './BaseLayout';
 import ScaleLayout from './ScaleLayout';
 

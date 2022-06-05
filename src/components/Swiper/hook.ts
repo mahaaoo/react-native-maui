@@ -60,7 +60,7 @@ const useRange = (index: Animated.SharedValue<number>): DerivedValue<TurnRange> 
       index.value + 1, 
     ];
     return {inputRange, outputRange}
-  }, [index]);
+  });
 
   return range;
 }
@@ -232,7 +232,7 @@ const useIndexAtData = (currentIndex: Animated.SharedValue<number>, size: number
     }    
     return group;
   });
-
+  
   return index;
 }
 
