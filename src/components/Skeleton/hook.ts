@@ -1,29 +1,36 @@
-import { interpolateColor, useAnimatedStyle, useSharedValue, withSequence, withTiming } from "react-native-reanimated";
+import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withSequence, withTiming } from "react-native-reanimated";
 
-export const useBreath = () => {
-  const initialValue = 1;
-  const toValue = 0;
+const initialValue = 1;
+const toValue = 0;
 
-  const animationValue = useSharedValue(1);
+export const useBreath = (animationProgress: Animated.SharedValue<number>) => {
   const animationStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor: interpolateColor(animationValue.value, [toValue,initialValue], ['white', '#D8D8D8'])
+      backgroundColor: interpolateColor(animationProgress.value, [toValue, initialValue], ['white', '#D8D8D8'])
     }
   });
 
-  const animation = withSequence(withTiming(toValue, {duration: 1000}), withTiming(initialValue, {duration: 1000}));
   const reverse = true;
 
   return {
-    animationValue,
-    animation,
     animationStyle,
-    initialValue,
-    toValue,
     reverse
   }
 }
 
-export const useShine = () => {
+export const useShine = (animationProgress: Animated.SharedValue<number>) => {
+  const animationStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{
+        translateX: interpolateColor(animationProgress.value, [toValue, initialValue], [0, 100])
+      }]
+    }
+  });
 
+  const reverse = false;
+
+  return {
+    animationStyle,
+    reverse
+  }
 }

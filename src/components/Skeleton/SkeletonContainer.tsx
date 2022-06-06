@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import {ViewStyle} from 'react-native';
-import { withRepeat } from 'react-native-reanimated';
+import { useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import {useBreath} from './hook';
 
 interface SkeletonContextProps {
@@ -18,15 +18,18 @@ interface SkeletonContainerProps {
 
 const SkeletonContainer: React.FC<SkeletonContainerProps> = props => {
   const {children, finished = false} = props;
-  const {animationStyle, animation, animationValue, initialValue, reverse} = useBreath();
+  const initialValue = 1;
+  const toValue = 0;
+  const animationProgress = useSharedValue(initialValue);
+
+  const {animationStyle, reverse} = useBreath(animationProgress);
 
   useEffect(() => {
     if (finished) {
-      animationValue.value = initialValue;
+      animationProgress.value = initialValue;
     } else {
-      animationValue.value = withRepeat(
-        animation , -1, reverse, () => {
-      });
+      animationProgress.value = withRepeat(
+        withSequence(withTiming(toValue, {duration: 1000}), withTiming(initialValue, {duration: 1000})) , -1, reverse);
     }
   }, [finished])
 
