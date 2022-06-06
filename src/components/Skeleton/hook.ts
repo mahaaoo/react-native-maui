@@ -12,12 +12,18 @@ export const useBreath = () => {
   });
 
   const animation = withSequence(withTiming(toValue, {duration: 1000}), withTiming(initialValue, {duration: 1000}));
-  
+  const reverse = true;
+
   return {
     animationValue,
     animation,
     animationStyle,
     initialValue,
     toValue,
+    reverse
   }
+}
+
+export const useShine = () => {
+
 }

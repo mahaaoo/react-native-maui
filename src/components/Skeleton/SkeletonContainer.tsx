@@ -18,14 +18,14 @@ interface SkeletonContainerProps {
 
 const SkeletonContainer: React.FC<SkeletonContainerProps> = props => {
   const {children, finished = false} = props;
-  const {animationStyle, animation, animationValue, initialValue} = useBreath();
+  const {animationStyle, animation, animationValue, initialValue, reverse} = useBreath();
 
   useEffect(() => {
     if (finished) {
       animationValue.value = initialValue;
     } else {
       animationValue.value = withRepeat(
-        animation , -1, true, () => {
+        animation , -1, reverse, () => {
       });
     }
   }, [finished])
