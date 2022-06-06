@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import {View, StyleSheet, ViewStyle} from 'react-native';
-import Animated, { interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
+import {ViewStyle} from 'react-native';
+import { withRepeat } from 'react-native-reanimated';
+import {useBreath} from './hook';
 
 interface SkeletonContextProps {
   animationStyle: ViewStyle,
@@ -17,26 +18,17 @@ interface SkeletonContainerProps {
 
 const SkeletonContainer: React.FC<SkeletonContainerProps> = props => {
   const {children, finished = false} = props;
-  const fade = useSharedValue(1);
+  const {animationStyle, animation, animationValue, initialValue} = useBreath();
 
   useEffect(() => {
-    // progress.value = withRepeat(withTiming(1, { duration: 1000 }), -1, true);
     if (finished) {
-      fade.value = 1;
+      animationValue.value = initialValue;
     } else {
-      fade.value = withRepeat(
-        withSequence(withTiming(0, {duration: 1000}), withTiming(1, {duration: 1000})), -1, true, () => {
-      })  
+      animationValue.value = withRepeat(
+        animation , -1, true, () => {
+      });
     }
   }, [finished])
-
-
-  const animationStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: interpolateColor(fade.value, [0,1], ['white', '#D8D8D8'])
-    }
-  });
-
 
   return (
     <SkeletonContext.Provider value={{
