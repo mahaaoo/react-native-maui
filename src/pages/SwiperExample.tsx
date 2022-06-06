@@ -34,7 +34,7 @@ export default function SwiperExample() {
     const nowIndex = ref.current?.getCurrentIndex();
     // setCurrent(nowIndex);
     // console.log(index);
-    setCurrent(nowIndex);
+    // setCurrent(nowIndex);
   }, []);
 
   const handeStart = useCallback(() => {
