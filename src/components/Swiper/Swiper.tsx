@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import Pagination from '../Pagination';
+import Pagination from './Pagination';
 import {useRange, useStep, useAutoScroll, useTouching, useProps} from './hook';
 import ItemWrapper from './ItemWrapper';
 import {SwiperRef, SwiperProps, SwiperCallBack} from './type';

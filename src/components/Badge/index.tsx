@@ -12,7 +12,7 @@ interface BadgeProps {
 const Badge: React.FC<BadgeProps> = props => {
   const {
     number, 
-    size = 12, 
+    size = 15, 
     fontSize = 0.8 * size,
     color = '#fc4840',
   } = props;
@@ -22,17 +22,23 @@ const Badge: React.FC<BadgeProps> = props => {
       return {
         title: '99+',
         width: 2 * size,
+        height: 2 * size * 0.61,
+        borderRadius: 2 * size * 0.61 / 2  
       };
     }
     if (number > 9) {
       return {
         title: number,
         width: 1.5 * size,
+        height: 1.5 * size * 0.61,
+        borderRadius: 1.5 * size * 0.61 / 2  
       };
     }
     return {
       title: number,
       width: size,
+      height: size,
+      borderRadius: size / 2
     };
   }, [number, size]);
 
@@ -44,7 +50,7 @@ const Badge: React.FC<BadgeProps> = props => {
     <View
       style={[
         styles.container,
-        {height: size, borderRadius: size / 2, width: content.width},
+        {height: content.height, borderRadius: content.borderRadius, width: content.width},
         {backgroundColor: color}
       ]}>
       <Text style={{fontSize: fontSize, color: '#fff'}}>

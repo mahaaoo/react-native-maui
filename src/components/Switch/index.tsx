@@ -1,5 +1,6 @@
-import React, {useRef, useCallback, useState, useMemo, useEffect} from 'react';
-import {StyleSheet, Animated, TouchableOpacity, ViewStyle} from 'react-native';
+import React, {useCallback, useState, useMemo, useEffect} from 'react';
+import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
+import Animated, {interpolateColor, runOnJS, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
 
 interface SwitchProps {
   style?: ViewStyle;
@@ -21,7 +22,7 @@ const Switch: React.FC<SwitchProps> = props => {
     disabled
   } = props;
   const [on, setOn] = useState<boolean>(value || false);
-  const switchTranslateX = useRef(new Animated.Value(0)).current;
+  const translateX = useSharedValue(0);
 
   const containerStyle = useMemo(() => {
     return {
@@ -40,19 +41,17 @@ const Switch: React.FC<SwitchProps> = props => {
     } else {
       value = containerStyle.width - containerStyle.height;
     }
-    Animated.timing(switchTranslateX, {
-      toValue: value,
-      duration: 200,
-      useNativeDriver: false
-    }).start(() => {
-      onChange && onChange(on);
-    });
+    translateX.value = withTiming(value, {duration: 200}, () => runOnJS(handleOnChange)())
   }, [on]);
+
+  const handleOnChange = useCallback(() => {
+    onChange && onChange(on);
+  }, [on])
 
   const handlePress = useCallback(() => {
     if (disabled) return;
-    setOn(!on);
-  }, [disabled, on, value]);
+    setOn(on => !on);
+  }, [disabled, value]);
 
   useEffect(() => {
     if (!!value) {
@@ -60,23 +59,28 @@ const Switch: React.FC<SwitchProps> = props => {
     }
   }, [value]);
 
+  const animationBackground = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(translateX.value, [0, containerStyle.height - containerStyle.padding * 2], [inactiveBackgroundColor, activeBackgroundColor])
+    }
+  });
+
+  const animationStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{
+        translateX: translateX.value,
+      }]
+    }
+  })
+
   return (
-    <TouchableOpacity activeOpacity={1} onPress={handlePress}>
-      <Animated.View style={[styles.container,containerStyle, {
-        backgroundColor: switchTranslateX.interpolate({
-          inputRange: [0, containerStyle.height - containerStyle.padding * 2],
-          outputRange: [inactiveBackgroundColor, activeBackgroundColor],
-        })
-      }]}>
+    <TouchableOpacity activeOpacity={1} onPress={handlePress} testID={'test-switch'}>
+      <Animated.View style={[styles.container,containerStyle, animationBackground]}>
         <Animated.View style={[styles.switch, {
           height: containerStyle.height - containerStyle.padding * 2,
           width: containerStyle.height - containerStyle.padding * 2,
           borderRadius: (containerStyle.height - containerStyle.padding * 2) / 2
-        },{
-          transform: [{
-            translateX: switchTranslateX,
-          }]
-        }]} />
+        }, animationStyle]} />
       </Animated.View>
     </TouchableOpacity>
   )

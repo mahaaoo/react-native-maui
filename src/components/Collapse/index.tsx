@@ -54,7 +54,7 @@ const Collapse: React.FC<CollapseProps> = props => {
             nativeEvent: {
               layout: { height: h },
             },
-          }) => console.log({ h })}
+          }) => height.value = h}
         >
           {children}
         </View>
