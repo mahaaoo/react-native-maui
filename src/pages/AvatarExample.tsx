@@ -1,45 +1,27 @@
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import Avatar from '../components/Avatar';
 
 export default function AvatarExample() {
   return (
     <View style={styles.container}>
       <Avatar
+        style={{ width: 60, height: 60 }}
         url={'https://avatars.githubusercontent.com/u/16695567?s=400&u=fd8d6249fa408e1e606015a06868a99993171938&v=4'}
       />
       <Avatar
-        size={60}
+        style={{ width: 60, height: 60, borderRadius: 30 }}
         url={'https://avatars.githubusercontent.com/u/16695567?s=400&u=fd8d6249fa408e1e606015a06868a99993171938&v=4'}
       />
       <Avatar
-        square
-        size={60}
+        style={{ width: 60, height: 60, borderRadius: 30 }}
         url={'https://avatars.githubusercontent.com/u/16695567?s=400&u=fd8d6249fa408e1e606015a06868a99993171938&v=4'}
+        placeholder={<Text>加载中</Text>}
       />
       <Avatar
-        square
-        size={60}
-        borderRadius={10}
+        style={{ width: 60, height: 60 }}
         url={'https://avatars.githubusercontent.com/u/16695567?s=400&u=fd8d6249fa408e1e606015a06868a99993171938&v=4'}
-      />
-      <Avatar
-        placeholder={<Text>M</Text>}
-      />
-      <Avatar
-        size={60}
-        placeholder={<Text>A</Text>}
-      />
-      <Avatar
-        square
-        size={60}      
-        placeholder={<Text>U</Text>}
-      />
-      <Avatar
-        square
-        size={60}
-        borderRadius={10}      
-        placeholder={<Text>I</Text>}
+        placeholder={<ActivityIndicator />}
       />
     </View>
   );

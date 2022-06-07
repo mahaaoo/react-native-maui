@@ -92,6 +92,7 @@ export default function ComponentScreen() {
             style={{ width: HalfCardWidth }}
             content={
               <Avatar
+                style={{ width: 40, height: 40, borderRadius: 20 }}
                 url={'https://avatars.githubusercontent.com/u/16695567?s=400&u=fd8d6249fa408e1e606015a06868a99993171938&v=4'}
               />
             }

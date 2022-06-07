@@ -14,7 +14,7 @@ const SkeletonRect: React.FC<SkeletonRectProps> = props => {
 
   const fadeStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(finished ? 1 : 0, {duration: 500})
+      opacity: finished ? withTiming(1, {duration: 500}) : 0
     }
   })
 
