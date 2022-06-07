@@ -155,6 +155,16 @@ export default function ComponentScreen() {
             onPress={() => { navigate("SkeletonExample"); }}
           />
         </View>
+        <View style={styles.card}>
+          <Card 
+            title={'Refresh'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Text>Refresh</Text>
+            }
+            onPress={() => { navigate("Refresh"); }}
+          />
+        </View>
       </ScrollView>
     </View>
   );
@@ -164,6 +174,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    paddingBottom: 30,
   },
   card: {
     flexDirection: 'row',
