@@ -1,26 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
-import Animated, { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
-import {Breath, Shine, Normal, Loading, ShineOver} from './Animation';
-
-type ChildAnimationType = typeof Breath | typeof Shine | typeof Normal;
-type ContainerAnimationType = typeof Loading | typeof ShineOver;
-
-interface SkeletonContextProps {
-  animationProgress: Animated.SharedValue<number>,
-  finished: boolean,
-  childAnimation: ContainerAnimationType
-}
-
-export const SkeletonContext = React.createContext<SkeletonContextProps>({} as SkeletonContextProps);
-export const useSkeletonStyle = () => useContext(SkeletonContext);
-
-interface SkeletonContainerProps {
-  childAnimation?: ChildAnimationType;
-  containerAnimation?: ContainerAnimationType;
-  finished?: boolean;
-  reverse?: boolean;
-};
+import { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import {Normal} from './Animation';
+import {SkeletonContext, SkeletonContainerProps} from './type';
 
 const SkeletonContainer: React.FC<SkeletonContainerProps> = props => {
   const {children, finished = false, reverse = true, childAnimation = Normal, containerAnimation} = props;

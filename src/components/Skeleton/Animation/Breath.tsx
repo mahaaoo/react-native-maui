@@ -1,13 +1,13 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import Animated, { interpolateColor, useAnimatedStyle } from 'react-native-reanimated';
-import { useSkeletonStyle } from '../SkeletonContainer';
+import { useSkeletonStyle, BaseChildAnimationProps } from '../type';
 
-interface BreathProps {
+interface BreathProps extends BaseChildAnimationProps {
 };
 
 const Breath: React.FC<BreathProps> = props => {
-  const {} = props;
+  const {style} = props;
   const {animationProgress} = useSkeletonStyle();
 
   const animationStyle = useAnimatedStyle(() => {
@@ -17,7 +17,7 @@ const Breath: React.FC<BreathProps> = props => {
   });
 
   return (
-    <Animated.View style={[styles.mask, animationStyle]} />
+    <Animated.View style={[style, styles.mask, animationStyle]} />
   )
 };
 

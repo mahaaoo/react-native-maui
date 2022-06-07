@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import Animated, { interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { useSkeletonStyle } from '../SkeletonContainer';
+import { useSkeletonStyle } from '../type';
 
 const {width: Wwidth} = Dimensions.get('window');
 

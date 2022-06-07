@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, ViewStyle} from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import {useSkeletonStyle} from './SkeletonContainer';
+import {BaseChildAnimationProps, useSkeletonStyle} from './type';
 import {Normal} from './Animation';
 
 interface SkeletonRectProps {
@@ -18,7 +18,7 @@ const SkeletonRect: React.FC<SkeletonRectProps> = props => {
     }
   })
 
-  const Animation = childAnimation || Normal;
+  const Animation: React.FC<BaseChildAnimationProps> = childAnimation || Normal;
 
   return (
     <View style={style}>
@@ -26,7 +26,7 @@ const SkeletonRect: React.FC<SkeletonRectProps> = props => {
         {children}
       </Animated.View>
       {
-        !finished && <Animation />
+        !finished && <Animation style={style} />
       }
     </View>
   )

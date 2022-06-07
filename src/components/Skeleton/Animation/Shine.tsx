@@ -1,15 +1,15 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import Animated, { interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { useSkeletonStyle } from '../SkeletonContainer';
+import { useSkeletonStyle, BaseChildAnimationProps } from '../type';
 
 const {width: Wwidth} = Dimensions.get('window');
 
-interface ShineProps {
+interface ShineProps extends BaseChildAnimationProps {
 };
 
 const Shine: React.FC<ShineProps> = props => {
-  const {} = props;
+  const {style} = props;
   const {animationProgress} = useSkeletonStyle();
   const width = useSharedValue(Wwidth);
 
@@ -23,7 +23,7 @@ const Shine: React.FC<ShineProps> = props => {
 
   return (
     <View 
-      style={[styles.mask]}
+      style={[style, styles.mask]}
       onLayout={({
         nativeEvent: {
           layout: { width: w },
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#D8D8D8',
     flex: 1,
+    overflow: 'hidden',
   },
   shineSlider: {
     height: '100%',

@@ -1,14 +1,15 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
+import { BaseChildAnimationProps } from '../type'
 
-interface NormalProps {
+interface NormalProps extends BaseChildAnimationProps{
 };
 
 const Normal: React.FC<NormalProps> = props => {
-  const {} = props;
+  const {style} = props;
 
   return (
-    <View style={styles.mask} />
+    <View style={[style, styles.mask]} />
   )
 };
 

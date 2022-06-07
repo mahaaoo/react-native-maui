@@ -45,14 +45,9 @@ export default function SwiperExample() {
       <Swiper
         ref={ref}
         interval={1000}
-        dataSource={card2}
+        dataSource={card}
         renderItem={(item) => {
-          // return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
-          return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <Text>{item}</Text>
-            </View>
-          )
+          return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
         }}
         onScollStart={handeStart}
         onScollEnd={handeEnd}
@@ -88,7 +83,7 @@ export default function SwiperExample() {
           <Text>Next</Text>
         </TouchableOpacity>
       </View>
-      {/* <Swiper
+      <Swiper
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -129,33 +124,7 @@ export default function SwiperExample() {
           marginTop: 40,
           marginBottom: 100,
         }}
-      /> */}
-      {/* <Swiper
-        interval={1000}
-        dataSource={card}
-        renderItem={(item) => {
-          return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
-        }}
-        auto={true}
-        horizontal={true}
-        style={{
-          width,
-          height: 200,
-        }}
       />
-      <Swiper
-        interval={1000}
-        dataSource={card}
-        renderItem={(item) => {
-          return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
-        }}
-        auto={true}
-        horizontal={false}
-        style={{
-          width,
-          height: 200,
-        }}
-      /> */}
     </ScrollView>
   );
 }
