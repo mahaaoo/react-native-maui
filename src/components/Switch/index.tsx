@@ -74,7 +74,7 @@ const Switch: React.FC<SwitchProps> = props => {
   })
 
   return (
-    <TouchableOpacity activeOpacity={1} onPress={handlePress}>
+    <TouchableOpacity activeOpacity={1} onPress={handlePress} testID={'test-switch'}>
       <Animated.View style={[styles.container,containerStyle, animationBackground]}>
         <Animated.View style={[styles.switch, {
           height: containerStyle.height - containerStyle.padding * 2,
