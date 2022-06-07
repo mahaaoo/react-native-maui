@@ -145,6 +145,15 @@ export default function ComponentScreen() {
             }
             onPress={() => { navigate("PickerExample"); }}
           />
+          <View style={{width: Margin}} />
+          <Card 
+            title={'Skeleton'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Text>骨架屏</Text>
+            }
+            onPress={() => { navigate("SkeletonExample"); }}
+          />
         </View>
       </ScrollView>
     </View>

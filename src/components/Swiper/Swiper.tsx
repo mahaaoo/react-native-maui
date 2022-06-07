@@ -6,10 +6,9 @@ import Animated, {
   useDerivedValue, 
   useSharedValue,
   withSpring,
-  withDelay,
 } from 'react-native-reanimated';
 import Pagination from '../Pagination';
-import {useRange, useStep, useAutoScroll, useTouching, useProps, useIndexAtData} from './hook';
+import {useRange, useStep, useAutoScroll, useTouching, useProps} from './hook';
 import ItemWrapper from './ItemWrapper';
 import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
 
@@ -87,6 +86,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   }, []);
 
   const handleScollEnd = useCallback(() => {
+    // 100ms后再次检查滚动状态
     setTimeout(() => {
       if (scrolling.value <= 0) {
         onScollEnd && onScollEnd();
