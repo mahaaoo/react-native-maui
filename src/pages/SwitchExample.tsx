@@ -11,8 +11,8 @@ export default function SwitchExample() {
     <View style={styles.container}>
       <Switch />
       <Switch activeBackgroundColor={'cyan'} inactiveBackgroundColor={'pink'} />
-      <Switch value={on} onChange={() => {
-        
+      <Switch value={on} onChange={(value) => {
+        console.log('switch,',value);
       }} />
     </View>
   );

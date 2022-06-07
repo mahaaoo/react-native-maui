@@ -1,5 +1,6 @@
 import React, {useState, useRef, useCallback, useMemo} from 'react';
-import {View, StyleSheet, Text, Animated, TouchableOpacity, ViewStyle, TextStyle} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, ViewStyle, TextStyle} from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 interface SliderSelectProps {
   items: Array<string>;
@@ -32,6 +33,7 @@ const SliderSelect: React.FC<SliderSelectProps> = (props) => {
   } = props;
   const [current, setCurrent] = useState(0);
   const sliderTranslateX = useRef(new Animated.Value(0)).current;
+  const translateX = useSharedValue(0);
 
   const silderSize = useMemo(() => {
     let height: number = SLIDER_DEFAULT_HEIGHT;
@@ -51,22 +53,23 @@ const SliderSelect: React.FC<SliderSelectProps> = (props) => {
   const handlePress = useCallback((item: string, index: number) => {
     setCurrent(index);
     onChange && onChange(item, index);
-    Animated.spring(sliderTranslateX, {
-      toValue: index * silderSize.width / items.length,
-      friction: 9,
-      useNativeDriver: true,
-    }).start(() => {
+    const dest = index * silderSize.width / items.length;
+    translateX.value = withSpring(dest, {overshootClamping: true}, () => {
       didChange && didChange(item, index);
     });
   }, [silderSize]);
 
+  const animationStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{
+        translateX: translateX.value,
+      }]
+    }
+  })
+
   return (
     <View style={[styles.container, {...silderSize}, style]}>
-      <Animated.View style={[styles.item, styles.slider,{
-        transform: [{
-          translateX: sliderTranslateX,
-        }]
-      }, {
+      <Animated.View style={[styles.item, styles.slider, animationStyle, {
         top: sliderMargin,
         left: sliderMargin,
         width: silderSize.width / items.length - 2 * sliderMargin,
