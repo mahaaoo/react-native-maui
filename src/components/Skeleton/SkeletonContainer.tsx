@@ -1,42 +1,39 @@
 import React, { useContext, useEffect } from 'react';
-import {ViewStyle} from 'react-native';
-import { useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
-import {useBreath} from './hook';
+import Animated, { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import {Breath, Shine, Normal} from './Animation';
+
+type AnimatedType = typeof Breath | typeof Shine | typeof Normal;
 
 interface SkeletonContextProps {
-  animationStyle: ViewStyle,
-  finished: boolean
+  animationProgress: Animated.SharedValue<number>,
+  finished: boolean,
+  animatedType: AnimatedType
 }
 
 export const SkeletonContext = React.createContext<SkeletonContextProps>({} as SkeletonContextProps);
 export const useSkeletonStyle = () => useContext(SkeletonContext);
 
 interface SkeletonContainerProps {
-  animatedType?: string;
+  animatedType?: AnimatedType;
   finished?: boolean;
+  reverse?: boolean;
 };
 
 const SkeletonContainer: React.FC<SkeletonContainerProps> = props => {
-  const {children, finished = false} = props;
-  const initialValue = 1;
-  const toValue = 0;
+  const {children, finished = false, reverse = true, animatedType = Breath} = props;
+  const initialValue = 0;
+  const toValue = 1;
   const animationProgress = useSharedValue(initialValue);
 
-  const {animationStyle, reverse} = useBreath(animationProgress);
-
   useEffect(() => {
-    if (finished) {
-      animationProgress.value = initialValue;
-    } else {
-      animationProgress.value = withRepeat(
-        withSequence(withTiming(toValue, {duration: 1000}), withTiming(initialValue, {duration: 1000})) , -1, reverse);
-    }
-  }, [finished])
+    animationProgress.value = withRepeat(withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.65, 0, 0.35, 1)}) , -1, reverse);
+  }, [reverse])
 
   return (
     <SkeletonContext.Provider value={{
-      animationStyle,
-      finished
+      finished,
+      animationProgress,
+      animatedType
     }}>
       {children}
     </SkeletonContext.Provider>

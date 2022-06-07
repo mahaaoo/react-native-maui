@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, ViewStyle, StyleSheet} from 'react-native';
+import {View, ViewStyle} from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import {useSkeletonStyle} from './SkeletonContainer';
+import {Breath} from './Animation';
 
 interface SkeletonRectProps {
   style?: ViewStyle
@@ -9,7 +10,7 @@ interface SkeletonRectProps {
 
 const SkeletonRect: React.FC<SkeletonRectProps> = props => {
   const {children, style} = props;
-  const {animationStyle, finished} = useSkeletonStyle();
+  const {finished, animatedType} = useSkeletonStyle();
 
   const fadeStyle = useAnimatedStyle(() => {
     return {
@@ -17,23 +18,18 @@ const SkeletonRect: React.FC<SkeletonRectProps> = props => {
     }
   })
 
+  const Animation = animatedType || Breath;
+
   return (
     <View style={style}>
       <Animated.View style={fadeStyle}>
         {children}
       </Animated.View>
       {
-        !finished &&  <Animated.View style={[styles.mask, animationStyle]} />
+        !finished && <Animation />
       }
     </View>
   )
 };
-
-const styles = StyleSheet.create({
-  mask: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'white'
-  }
-})
 
 export default SkeletonRect;
