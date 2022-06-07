@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import Animated, { Easing, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
-import {Breath, Shine, Normal, Loading} from './Animation';
+import {Breath, Shine, Normal, Loading, ShineOver} from './Animation';
 
 type ChildAnimationType = typeof Breath | typeof Shine | typeof Normal;
-type ContainerAnimationType = typeof Loading;
+type ContainerAnimationType = typeof Loading | typeof ShineOver;
 
 interface SkeletonContextProps {
   animationProgress: Animated.SharedValue<number>,
