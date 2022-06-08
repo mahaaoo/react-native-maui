@@ -2,8 +2,22 @@ import React, {useState, createContext, useCallback, useContext, useRef, useImpe
 import {Animated, View, StyleSheet} from 'react-native';
 
 export interface OverlayRef {
+  /**
+   * add a componet to window, 
+   * if you set key, this components is unique, 
+   * if not the key assigned by the system and return, this key can used to remove itself
+   */
   add: (node: React.ReactNode, key?: string) => string,
+  /**
+   * remove a componet from window,
+   * if you set key, this function will remove the key component
+   * if not this function will remove the newest one
+   * and if the component which will be removed has 'unMount' function, the unMount will be called before it be removed
+   */
   remove: (key?: string) => void,
+  /**
+   * remove all components without any animation
+   */
   removeAll: () => void,
 }
 
@@ -41,7 +55,6 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
         }
       }
       if (addElement) {
-        console.log('this componet didMount');
         return key;
       };
     }

@@ -1,3 +1,8 @@
+/**
+ * if use this componet wrapper overlay componet 
+ * onAppear will be called when it mount,
+ * onDisappear will be called when it unMount
+ */
 import React, {forwardRef, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 

@@ -1,3 +1,10 @@
+/**
+ * if use this componet wrapper overlay componet 
+ * onAppear will be called when it mount,
+ * onDisappear will be called when it unMount
+ * when it mount, will play translate animation
+ * when it unmount, will play translate animation reversedly
+ */
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import {StyleSheet, Dimensions, View} from 'react-native';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';

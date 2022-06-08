@@ -1,3 +1,9 @@
+/**
+ * if use this componet wrapper overlay componet 
+ * onAppear will be called when it mount,
+ * onDisappear will be called when it unMount
+ * when it mount, will play opacity animation
+ */
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle} from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
