@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import Button from "../components/Button";
-import { useOverlay, OverlayUtil, TranslateContainer, NormalContainer } from '../components/Overlay';
+import { useOverlay, OverlayUtil, TranslateContainer, NormalContainer, OpacityContainer } from '../components/Overlay';
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 export default function OverlayExample() {
   const {add, remove, removeAll} = useOverlay();
@@ -36,9 +36,26 @@ export default function OverlayExample() {
         <Text>添加一个子视图-NormalContainer</Text>
       </Button>
       <Button onPress={() => {
+        add(
+          <OpacityContainer
+            onAppear={() => {
+              console.log('子视图已弹出');
+            }}
+            onDisappear={() => {
+              console.log('子视图已消失');
+            }}
+          >
+            <Text style={{ marginTop: 100, fontSize: 24 }}>子视图{elementIndex.current}</Text>
+          </OpacityContainer>
+        );
+        elementIndex.current++;
+      }}>
+        <Text>添加一个子视图-OpacityContainer</Text>
+      </Button>
+      <Button onPress={() => {
         remove();
       }}>
-        <Text>删除一个子视图</Text>
+        <Text>删除最近添加的一个子视图</Text>
       </Button>
       <Button onPress={() => {
         removeAll();
@@ -53,23 +70,55 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer
-            onAppear={() => {
-              console.log('子视图已弹出');
-            }}
-            onDisappear={() => {
-              console.log('子视图已消失');
-            }}
-          >
+          <TranslateContainer>
             <View style={{ height: 200, width, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
           </TranslateContainer>,
-          'pop-view'
+          'pop-view-bottom'
         )
         elementIndex.current++;
       }}>
-        <Text>添加一个子视图-Function</Text>
+        <Text>从Bottom弹出</Text>
+      </Button>
+      <Button onPress={() => {
+        OverlayUtil.add(
+          <TranslateContainer from="top">
+            <View style={{ height: 200, width, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+            </View>
+          </TranslateContainer>,
+          'pop-view-top'
+        )
+        elementIndex.current++;
+      }}>
+        <Text>从Top弹出</Text>
+      </Button>
+      <Button onPress={() => {
+        OverlayUtil.add(
+          <TranslateContainer from='left'>
+            <View style={{ width: 200, height, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+            </View>
+          </TranslateContainer>,
+          'pop-view-left'
+        )
+        elementIndex.current++;
+      }}>
+        <Text>从Left弹出</Text>
+      </Button>
+      <Button onPress={() => {
+        OverlayUtil.add(
+          <TranslateContainer from='right'>
+            <View style={{ width: 200, height, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+            </View>
+          </TranslateContainer>,
+          'pop-view-right'
+        )
+        elementIndex.current++;
+      }}>
+        <Text>从Right弹出</Text>
       </Button>
     </View>
   );

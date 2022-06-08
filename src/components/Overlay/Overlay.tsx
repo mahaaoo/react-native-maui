@@ -40,7 +40,10 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
           break;
         }
       }
-      if (addElement) return key;
+      if (addElement) {
+        console.log('this componet didMount');
+        return key;
+      };
     }
 
     let nodeRef;

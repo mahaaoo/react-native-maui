@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import {StyleSheet, Dimensions, View} from 'react-native';
-import Animated, { measure, runOnJS, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const {width, height} = Dimensions.get('window');
 
@@ -19,6 +19,7 @@ export interface TranslateContainerRef {
 const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerProps>((props, ref) => {
   const {from = 'bottom', children, onAppear, onDisappear} = props;
   const translateY = useSharedValue(0);
+  const translateX = useSharedValue(0);
 
   const toHeight = useRef(0);
   const toWidth = useRef(0);
@@ -30,24 +31,90 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
   }) => {
     toHeight.current = h;
     toWidth.current = w;
+    console.log('onLayout', [h,w]);
     mount();
   }, []);
 
   const mount = useCallback(() => {
-    translateY.value = withTiming(-toHeight.current, {duration: 250}, () => {
-      onAppear && runOnJS(onAppear)();
-    });
+    let direction;
+    let dest = 0;
+    switch(true) {
+      case (from === 'bottom'): {
+        direction = true;
+        dest = -toHeight.current;
+        break;
+      }
+      case (from === 'top'): {
+        direction = true;
+        dest = toHeight.current;
+        break;
+      }
+      case (from === 'left'): {
+        direction = false;
+        dest = toWidth.current;
+        break;
+      }
+      case (from === 'right'): {
+        direction = false;
+        dest = -toWidth.current;
+        break;
+      }
+    }
+
+    if (direction) {
+      console.log([dest]);
+      translateY.value = withTiming(dest, {duration: 250}, () => {
+        onAppear && runOnJS(onAppear)();
+      });
+    } else {
+      translateX.value = withTiming(dest, {duration: 250}, () => {
+        onAppear && runOnJS(onAppear)();
+      });
+    }
   }, [onAppear]);
 
   const unMount = useCallback(() => {
-    translateY.value = withTiming(height, {duration: 250}, () => {
-      onDisappear && runOnJS(onDisappear)();
-    });
+    let direction;
+    let dest = 0;
+    switch(true) {
+      case (from === 'bottom'): {
+        direction = true;
+        dest = height;
+        break;
+      }
+      case (from === 'top'): {
+        direction = true;
+        dest = -height;
+        break;
+      }
+      case (from === 'left'): {
+        direction = false;
+        dest = -width;
+        break;
+      }
+      case (from === 'right'): {
+        direction = false;
+        dest = width;
+        break;
+      }
+    }
+
+    if (direction) {
+      translateY.value = withTiming(dest, {duration: 250}, () => {
+        onDisappear && runOnJS(onDisappear)();
+      }); 
+    } else {
+      translateX.value = withTiming(dest, {duration: 250}, () => {
+        onDisappear && runOnJS(onDisappear)();
+      });
+    }
   }, [onDisappear]);
 
   const animationStyle = useAnimatedStyle(() => {
     return {
       transform: [{
+        translateX: translateX.value
+      },{
         translateY: translateY.value
       }]
     }
