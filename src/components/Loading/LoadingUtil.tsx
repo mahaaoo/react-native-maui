@@ -1,13 +1,13 @@
 import {overlayRef} from '../Overlay'
 import Loading from './Loading'
-import {OverlayContainer} from '../Overlay';
+import {OpacityContainer} from '../Overlay';
 
 export const LoadingUtil = {
   style: () => {
     return (
-      <OverlayContainer>
+      <OpacityContainer>
         <Loading />
-      </OverlayContainer>
+      </OpacityContainer>
     )
   },
   show: () => {

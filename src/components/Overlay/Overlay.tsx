@@ -71,7 +71,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     const deleteAnimation = deleteElement?.ref.current?.unMount;
     if (!!deleteAnimation && typeof deleteAnimation === 'function') {
       deleteAnimation(() => {
-        forceUpdate(update => update + 1)
+        forceUpdate(update => update + 1);
       })
     } else {
       forceUpdate(update => update + 1);

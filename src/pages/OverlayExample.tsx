@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import Button from "../components/Button";
-import { useOverlay, OverlayUtil } from '../components/Overlay';
+import { useOverlay, OverlayUtil, TranslateContainer } from '../components/Overlay';
+
+const {width} = Dimensions.get('window');
 
 export default function OverlayExample() {
   const {add, remove, removeAll} = useOverlay();
@@ -28,6 +30,18 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(<Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>)
+        elementIndex.current++;
+      }}>
+        <Text>添加一个子视图-Function</Text>
+      </Button>
+      <Button onPress={() => {
+        OverlayUtil.add(
+          <TranslateContainer>
+            <View style={{ height: 200, width, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+            </View>
+          </TranslateContainer>
+        )
         elementIndex.current++;
       }}>
         <Text>添加一个子视图-Function</Text>

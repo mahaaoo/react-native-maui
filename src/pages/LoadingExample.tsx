@@ -2,11 +2,11 @@ import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Button from "../components/Button";
 import { LoadingUtil, Loading, LoadingTitle } from '../components/Loading';
-import { OverlayContainer, OverlayContainerRef } from '../components/Overlay';
+import { OpacityContainer, OpacityContainerRef } from '../components/Overlay';
 
 export default function LoadingExample() {
 
-  const ref = React.createRef<OverlayContainerRef>();
+  const ref = React.createRef<OpacityContainerRef>();
 
   return (
     <View style={styles.container}>
@@ -16,9 +16,9 @@ export default function LoadingExample() {
       <Button onPress={() => {
         LoadingUtil.style = () => {
           return (
-            <OverlayContainer>
+            <OpacityContainer>
               <Loading />
-            </OverlayContainer>
+            </OpacityContainer>
           )
         }        
         LoadingUtil.show();
@@ -31,9 +31,9 @@ export default function LoadingExample() {
       <Button onPress={() => {
         LoadingUtil.style = () => {
           return (
-            <OverlayContainer ref={ref} dark={false}>
+            <OpacityContainer ref={ref} dark={false}>
               <LoadingTitle />
-            </OverlayContainer>    
+            </OpacityContainer>    
           )
         }
         LoadingUtil.show();
