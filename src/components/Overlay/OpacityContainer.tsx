@@ -1,34 +1,41 @@
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle} from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface OpacityContainerProps {
   containerStyle?: ViewStyle,
   dark?: boolean,
-  children: React.ReactNode
+  children: React.ReactNode,
+  onAppear?: () => void;
+  onDisappear?: () => void;
 }
 
 export interface OpacityContainerRef {
-  mount: (callback?: () => void) => void;
+  mount: () => void;
 }
 
 const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>((props, ref) => {
   const {
     children, 
     containerStyle,
-    dark = true
+    dark = true,
+    onAppear,
+    onDisappear
   } = props;
   const opacity = useSharedValue(0);
 
   useEffect(() => {
     mount();
+    return () => {
+      onDisappear && onDisappear();
+    }
   }, []);
 
-  const mount = useCallback((callback?) => {
+  const mount = useCallback(() => {
     opacity.value = withTiming(dark ? 0.3 : 0, {duration: 250}, () => {
-      callback && callback();
+      onAppear && runOnJS(onAppear)();
     });
-  }, []);
+  }, [onAppear]);
 
   const animationStyle = useAnimatedStyle(() => {
     return {

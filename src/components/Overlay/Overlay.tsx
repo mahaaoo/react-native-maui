@@ -27,22 +27,36 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const elementsIndex = useRef<number>(0);
   const loadingRef = useRef<any>(null);
 
-  const addNodeToOverlay = useCallback((node: React.ReactNode, key?: string) => {
+  // 如果指定一个key之后，无法重复添加
+  // 如果没有指定，则会默认添加一个key，内部计数
+  // TODO: can't solve typeof node
+  const addNodeToOverlay = useCallback((node: any, key?: string) => {
     // 如果添加的内容，已存在则返回
     if (typeof key === 'string') {
-      const alreadyExists = elements.current.some(element => element.key === key);
-      if (alreadyExists) return key;
+      let addElement;
+      for (let index = 0; index < elements.current.length; index++) {
+        if (elements.current[index].key === key) {
+          addElement = elements.current[index];
+          break;
+        }
+      }
+      if (addElement) return key;
     }
+
     let nodeRef;
     if (!!node && !!node.ref) {
       nodeRef = node.ref;
     } else {
       nodeRef = React.createRef();
     }
-
+    const onDisappear = node?.props?.onDisappear;
     elements.current.push({
       element: React.cloneElement(node, {
-        ref: nodeRef
+        ref: nodeRef,
+        onDisappear: () => {
+          forceUpdate(update => update + 1);
+          onDisappear && onDisappear();
+        }
       }),
       key: key || 'overlay' + (elementsIndex.current + 1),
       ref: nodeRef
@@ -70,9 +84,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
 
     const deleteAnimation = deleteElement?.ref.current?.unMount;
     if (!!deleteAnimation && typeof deleteAnimation === 'function') {
-      deleteAnimation(() => {
-        forceUpdate(update => update + 1);
-      })
+      deleteAnimation();
     } else {
       forceUpdate(update => update + 1);
     }

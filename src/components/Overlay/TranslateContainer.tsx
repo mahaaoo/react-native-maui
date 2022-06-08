@@ -1,12 +1,14 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import {StyleSheet, Dimensions, View} from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { measure, runOnJS, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const {width, height} = Dimensions.get('window');
 
 interface TranslateContainerProps {
   children: React.ReactNode,
-  from?: 'bottom' | 'top' | 'left' | 'right';
+  from?: 'bottom' | 'top' | 'left' | 'right',
+  onAppear?: () => void;
+  onDisappear?: () => void;
 };
 
 export interface TranslateContainerRef {
@@ -15,34 +17,33 @@ export interface TranslateContainerRef {
 }
 
 const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerProps>((props, ref) => {
-  const {from = 'bottom', children} = props;
+  const {from = 'bottom', children, onAppear, onDisappear} = props;
   const translateY = useSharedValue(0);
 
-  const toHeight = useSharedValue(0);
-  const toWidth = useSharedValue(0);
+  const toHeight = useRef(0);
+  const toWidth = useRef(0);
 
   const onLayout = useCallback(({
     nativeEvent: {
       layout: { height: h, width: w},
     },
   }) => {
-    toHeight.value = h;
-    toWidth.value = w;
+    toHeight.current = h;
+    toWidth.current = w;
     mount();
   }, []);
 
-  const mount = useCallback((callback?) => {
-    console.log(toHeight.value);
-    translateY.value = withTiming(-toHeight.value, {duration: 250}, () => {
-      callback && callback();
+  const mount = useCallback(() => {
+    translateY.value = withTiming(-toHeight.current, {duration: 250}, () => {
+      onAppear && runOnJS(onAppear)();
     });
-  }, []);
+  }, [onAppear]);
 
-  const unMount = useCallback((callback?) => {
+  const unMount = useCallback(() => {
     translateY.value = withTiming(height, {duration: 250}, () => {
-      callback && callback();
+      onDisappear && runOnJS(onDisappear)();
     });
-  }, []);
+  }, [onDisappear]);
 
   const animationStyle = useAnimatedStyle(() => {
     return {

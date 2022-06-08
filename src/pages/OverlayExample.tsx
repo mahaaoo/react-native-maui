@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import Button from "../components/Button";
-import { useOverlay, OverlayUtil, TranslateContainer } from '../components/Overlay';
+import { useOverlay, OverlayUtil, TranslateContainer, NormalContainer } from '../components/Overlay';
 
 const {width} = Dimensions.get('window');
 
@@ -17,6 +17,23 @@ export default function OverlayExample() {
         elementIndex.current++;
       }}>
         <Text>添加一个子视图</Text>
+      </Button>
+      <Button onPress={() => {
+        const index = add(
+          <NormalContainer
+            onAppear={() => {
+              console.log('子视图已弹出');
+            }}
+            onDisappear={() => {
+              console.log('子视图已消失');
+            }}
+          >
+            <Text style={{ marginTop: 100, fontSize: 24 }}>子视图{elementIndex.current}</Text>
+          </NormalContainer>
+        );
+        elementIndex.current++;
+      }}>
+        <Text>添加一个子视图-NormalContainer</Text>
       </Button>
       <Button onPress={() => {
         remove();
@@ -36,11 +53,19 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer>
+          <TranslateContainer
+            onAppear={() => {
+              console.log('子视图已弹出');
+            }}
+            onDisappear={() => {
+              console.log('子视图已消失');
+            }}
+          >
             <View style={{ height: 200, width, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
-          </TranslateContainer>
+          </TranslateContainer>,
+          'pop-view'
         )
         elementIndex.current++;
       }}>
