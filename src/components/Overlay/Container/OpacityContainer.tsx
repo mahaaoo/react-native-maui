@@ -10,10 +10,11 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 
 
 interface OpacityContainerProps {
   containerStyle?: ViewStyle,
-  dark?: boolean,
+  mask?: boolean,
   children: React.ReactNode,
   onAppear?: () => void;
   onDisappear?: () => void;
+  duration?: number;
 }
 
 export interface OpacityContainerRef {
@@ -24,9 +25,10 @@ const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
   const {
     children, 
     containerStyle,
-    dark = true,
+    mask = true,
     onAppear,
-    onDisappear
+    onDisappear,
+    duration = 250,
   } = props;
   const opacity = useSharedValue(0);
 
@@ -38,14 +40,14 @@ const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
   }, []);
 
   const mount = useCallback(() => {
-    opacity.value = withTiming(dark ? 0.3 : 0, {duration: 250}, () => {
+    opacity.value = withTiming(mask ? 0.3 : 0, {duration}, () => {
       onAppear && runOnJS(onAppear)();
     });
   }, [onAppear]);
 
   const animationStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor: dark ? '#000' : 'transparent',
+      backgroundColor: '#000',
       opacity: opacity.value
     }
   });

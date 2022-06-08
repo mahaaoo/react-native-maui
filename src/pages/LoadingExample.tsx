@@ -31,7 +31,7 @@ export default function LoadingExample() {
       <Button onPress={() => {
         LoadingUtil.style = () => {
           return (
-            <OpacityContainer ref={ref} dark={false}>
+            <OpacityContainer ref={ref} mask={false}>
               <LoadingTitle />
             </OpacityContainer>    
           )
@@ -43,7 +43,7 @@ export default function LoadingExample() {
       <Button onPress={() => {
         LoadingUtil.hide();
       }}>
-        <Text>show loading</Text>
+        <Text>dismiss loading</Text>
       </Button>
     </View>
   );

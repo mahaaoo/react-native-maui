@@ -14,8 +14,10 @@ const {width, height} = Dimensions.get('window');
 interface TranslateContainerProps {
   children: React.ReactNode,
   from?: 'bottom' | 'top' | 'left' | 'right',
+  mask?: boolean
   onAppear?: () => void;
   onDisappear?: () => void;
+  duration?: number;
 };
 
 export interface TranslateContainerRef {
@@ -24,9 +26,10 @@ export interface TranslateContainerRef {
 }
 
 const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerProps>((props, ref) => {
-  const {from = 'bottom', children, onAppear, onDisappear} = props;
+  const {from = 'bottom', children, onAppear, onDisappear, mask = true, duration = 250} = props;
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
+  const opacity = useSharedValue(0);
 
   const toHeight = useRef(0);
   const toWidth = useRef(0);
@@ -68,13 +71,14 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
       }
     }
 
+    opacity.value = withTiming(mask ? 0.3 : 0, {duration})
     if (direction) {
       console.log([dest]);
-      translateY.value = withTiming(dest, {duration: 250}, () => {
+      translateY.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
     } else {
-      translateX.value = withTiming(dest, {duration: 250}, () => {
+      translateX.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
     }
@@ -106,12 +110,14 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
       }
     }
 
+    opacity.value = withTiming(0, {duration});
+
     if (direction) {
-      translateY.value = withTiming(dest, {duration: 250}, () => {
+      translateY.value = withTiming(dest, {duration}, () => {
         onDisappear && runOnJS(onDisappear)();
       }); 
     } else {
-      translateX.value = withTiming(dest, {duration: 250}, () => {
+      translateX.value = withTiming(dest, {duration}, () => {
         onDisappear && runOnJS(onDisappear)();
       });
     }
@@ -126,6 +132,13 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
       }]
     }
   });
+
+  const maskAnimationStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value, 
+      backgroundColor: '#000'
+    }
+  })
 
   const initialPosition = useMemo(() => {
     switch(true) {
@@ -162,19 +175,25 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
   }), []);
 
   return (
-    <Animated.View 
-      style={[styles.overlay, initialPosition, animationStyle]}
-    >
-      <View onLayout={onLayout}>
-        {children}
-      </View>
-    </Animated.View>
+    <View style={styles.mask}>
+      <Animated.View pointerEvents={"none"} style={[styles.mask, maskAnimationStyle]} />
+      <Animated.View 
+        style={[styles.overlay, initialPosition, animationStyle]}
+      >
+        <View onLayout={onLayout}>
+          {children}
+        </View>
+      </Animated.View>
+    </View>
   )
 });
 
 const styles = StyleSheet.create({
   overlay: {
     position: 'absolute',
+  },
+  mask: {
+    ...StyleSheet.absoluteFillObject,
   },
 })
 
