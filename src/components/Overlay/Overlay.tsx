@@ -17,6 +17,7 @@ interface OverlayProps {
 interface ElementType {
   element: React.ReactNode,
   key: string,
+  ref: any;
 }
 
 const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
@@ -32,10 +33,19 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
       const alreadyExists = elements.current.some(element => element.key === key);
       if (alreadyExists) return key;
     }
+    let nodeRef;
+    if (!!node && !!node.ref) {
+      nodeRef = node.ref;
+    } else {
+      nodeRef = React.createRef();
+    }
 
     elements.current.push({
-      element: node,
+      element: React.cloneElement(node, {
+        ref: nodeRef
+      }),
       key: key || 'overlay' + (elementsIndex.current + 1),
+      ref: nodeRef
     });
 
     elementsIndex.current++;
@@ -44,12 +54,28 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   }, [elements]);
 
   const deleteNodeFromOverlay = useCallback((key?: string) => {
+    let deleteElement;
     if (!!key && key?.length > 0) {
-      elements.current = elements.current.filter((item: ElementType) => item.key !== key);
+      for (let index = 0; index < elements.current.length; index++) {
+        if (elements.current[index].key === key) {
+          deleteElement = elements.current[index];
+          elements.current.splice(index, 1);
+          break;
+        }
+      }
     } else {
+      deleteElement = elements.current[elements.current.length - 1];
       elements.current.splice(elements.current.length - 1, 1);
     }
-    forceUpdate(update => update + 1);
+
+    const deleteAnimation = deleteElement?.ref.current?.unMount;
+    if (!!deleteAnimation && typeof deleteAnimation === 'function') {
+      deleteAnimation(() => {
+        forceUpdate(update => update + 1)
+      })
+    } else {
+      forceUpdate(update => update + 1);
+    }
   }, [elements]);
 
   const deleteAllNodeFromOverlay = useCallback(() => {

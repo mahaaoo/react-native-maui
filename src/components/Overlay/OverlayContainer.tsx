@@ -1,13 +1,19 @@
-import React, {useLayoutEffect} from 'react';
+import React, {forwardRef, useCallback, useEffect, useImperativeHandle} from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface OverlayContainerProps {
   containerStyle?: ViewStyle,
-  dark?: boolean
+  dark?: boolean,
+  children: React.ReactNode
 }
 
-const OverlayContainer: React.FC<OverlayContainerProps> = (props) => {
+export interface OverlayContainerRef {
+  mount: (callback?: () => void) => void;
+  unMount?: (callback?: () => void) => void;
+}
+
+const OverlayContainer = forwardRef<OverlayContainerRef, OverlayContainerProps>((props, ref) => {
   const {
     children, 
     containerStyle,
@@ -15,9 +21,21 @@ const OverlayContainer: React.FC<OverlayContainerProps> = (props) => {
   } = props;
   const opacity = useSharedValue(0);
 
-  useLayoutEffect(() => {
-    opacity.value = withTiming(0.3, {duration: 250});
+  useEffect(() => {
+    mount();
   }, []);
+
+  const mount = useCallback((callback?) => {
+    opacity.value = withTiming(0.3, {duration: 250}, () => {
+      callback && callback();
+    });
+  }, []);
+
+  // const unMount = useCallback((callback?) => {
+    // opacity.value = withTiming(0, {duration: 250}, () => {
+    //   callback && callback();
+    // });
+  // }, []);
 
   const animationStyle = useAnimatedStyle(() => {
     return {
@@ -25,6 +43,11 @@ const OverlayContainer: React.FC<OverlayContainerProps> = (props) => {
       opacity: opacity.value
     }
   });
+
+  useImperativeHandle(ref, () => ({
+    mount,
+    // unMount,
+  }), []);
 
   return (
     <View style={styles.overlay}>
@@ -34,7 +57,7 @@ const OverlayContainer: React.FC<OverlayContainerProps> = (props) => {
       <Animated.View pointerEvents={"none"} style={[styles.overlay, animationStyle]} />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   overlay: {

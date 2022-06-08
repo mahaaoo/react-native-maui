@@ -2,15 +2,25 @@ import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Button from "../components/Button";
 import { LoadingUtil, Loading, LoadingTitle } from '../components/Loading';
-import { OverlayContainer } from '../components/Overlay';
+import { OverlayContainer, OverlayContainerRef } from '../components/Overlay';
 
 export default function LoadingExample() {
+
+  const ref = React.createRef<OverlayContainerRef>();
+
   return (
     <View style={styles.container}>
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 50}}>
         <Loading />
       </View>
       <Button onPress={() => {
+        LoadingUtil.style = () => {
+          return (
+            <OverlayContainer>
+              <Loading />
+            </OverlayContainer>
+          )
+        }        
         LoadingUtil.show();
       }}>
         <Text>show loading</Text>
@@ -21,7 +31,7 @@ export default function LoadingExample() {
       <Button onPress={() => {
         LoadingUtil.style = () => {
           return (
-            <OverlayContainer dark={false}>
+            <OverlayContainer ref={ref} dark={false}>
               <LoadingTitle />
             </OverlayContainer>    
           )

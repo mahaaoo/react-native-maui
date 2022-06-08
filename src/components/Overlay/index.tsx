@@ -1,5 +1,5 @@
 import Overlay, {useOverlay} from "./Overlay";
-import OverlayContainer from "./OverlayContainer";
+import OverlayContainer, {OverlayContainerRef} from "./OverlayContainer";
 
 import {overlayRef, OverlayUtil} from "./OverlayUtil";
 
@@ -9,4 +9,5 @@ export {
   useOverlay,
   overlayRef,
   OverlayUtil,
+  OverlayContainerRef
 }

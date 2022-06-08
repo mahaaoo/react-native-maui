@@ -11,7 +11,7 @@ export const LoadingUtil = {
     )
   },
   show: () => {
-    overlayRef.current?.add(LoadingUtil.style(), 'global-loading')
+    overlayRef.current?.add(LoadingUtil.style(), 'global-loading');
   },
   hide: () => overlayRef.current?.remove('global-loading'),
 };
