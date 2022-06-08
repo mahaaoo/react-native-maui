@@ -27,7 +27,6 @@ card2.forEach((_, i) => {
 export default function SwiperExample() {
   const ref = useRef<SwiperRef>(null);
   const [autoplay, setAutoplay] = useState(false);
-  const [horizontal, setHorizontal] = useState(true);
   const [curIndx, setCurrent] = useState<number>(0);
 
   const handeEnd = useCallback(() => {
@@ -52,7 +51,7 @@ export default function SwiperExample() {
         onScollStart={handeStart}
         onScollEnd={handeEnd}
         auto={autoplay}
-        horizontal={horizontal}
+        horizontal={true}
         style={{
           width,
           height: 200,
@@ -71,11 +70,6 @@ export default function SwiperExample() {
           setAutoplay(auto => !auto);
         }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>{`isAuto: ${autoplay}`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          setHorizontal(auto => !auto);
-        }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>{`isHorizontal: ${horizontal}`}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
           ref.current?.next();

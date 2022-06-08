@@ -17,6 +17,7 @@ import SliderSheetExample from './pages/SliderSheetExample';
 import PickerExample from './pages/PickerExample';
 import SkeletonExample from './pages/SkeletonExample';
 import Refresh from './pages/Refresh';
+import LoadingExample from './pages/LoadingExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -34,6 +35,7 @@ export type RootStackParamList = {
   PickerExample: undefined;
   SkeletonExample: undefined;
   Refresh: undefined;
+  LoadingExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -129,6 +131,11 @@ const App: React.FC<{}> = () => {
         name="Refresh"
         component={Refresh}
         options={{ headerTitle: 'Refresh', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="LoadingExample"
+        component={LoadingExample}
+        options={{ headerTitle: 'LoadingExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );

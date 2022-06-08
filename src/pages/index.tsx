@@ -6,8 +6,8 @@ import Button from '../components/Button';
 import Badge from '../components/Badge';
 import SliderSelect from '../components/SliderSelect';
 import Switch from '../components/Switch';
-import Divider from '../components/Divider';
 import Avatar from '../components/Avatar';
+import {Loading} from '../components/Loading';
 
 import useTheme from '../hooks/useTheme';
 import {navigate} from '../navigate';
@@ -164,6 +164,15 @@ export default function ComponentScreen() {
               <Text>Refresh</Text>
             }
             onPress={() => { navigate("Refresh"); }}
+          />
+          <View style={{width: Margin}} />
+          <Card 
+            title={'Loading'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Loading />
+            }
+            onPress={() => { navigate("LoadingExample"); }}
           />
         </View>
       </ScrollView>

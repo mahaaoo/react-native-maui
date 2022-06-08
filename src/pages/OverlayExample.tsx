@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Button from "../components/Button";
-import { useOverlay } from '../components/Overlay';
+import { useOverlay, OverlayUtil } from '../components/Overlay';
 
 export default function OverlayExample() {
-  const {add, remove, removeAll, showLoading, closeLoading} = useOverlay();
+  const {add, remove, removeAll} = useOverlay();
   const elementIndex = React.useRef(0);
 
   return (
@@ -27,14 +27,10 @@ export default function OverlayExample() {
         <Text>删除全部子视图</Text>
       </Button>
       <Button onPress={() => {
-        showLoading();
+        OverlayUtil.add(<Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>)
+        elementIndex.current++;
       }}>
-        <Text>show loading</Text>
-      </Button>
-      <Button onPress={() => {
-        closeLoading();
-      }}>
-        <Text>close loading</Text>
+        <Text>添加一个子视图-Function</Text>
       </Button>
     </View>
   );

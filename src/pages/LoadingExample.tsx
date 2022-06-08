@@ -1,0 +1,46 @@
+import * as React from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import Button from "../components/Button";
+import { LoadingUtil, Loading, LoadingTitle } from '../components/Loading';
+import { OverlayContainer } from '../components/Overlay';
+
+export default function LoadingExample() {
+  return (
+    <View style={styles.container}>
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 50}}>
+        <Loading />
+      </View>
+      <Button onPress={() => {
+        LoadingUtil.show();
+      }}>
+        <Text>show loading</Text>
+      </Button>
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 50}}>
+        <LoadingTitle />
+      </View>
+      <Button onPress={() => {
+        LoadingUtil.style = () => {
+          return (
+            <OverlayContainer dark={false}>
+              <LoadingTitle />
+            </OverlayContainer>    
+          )
+        }
+        LoadingUtil.show();
+      }}>
+        <Text>show loading title</Text>
+      </Button>
+      <Button onPress={() => {
+        LoadingUtil.hide();
+      }}>
+        <Text>show loading</Text>
+      </Button>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

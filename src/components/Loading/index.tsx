@@ -1,12 +1,10 @@
-import React from 'react';
-import {ActivityIndicator, View} from 'react-native';
+import Loading from './Loading';
+import LoadingTitle from './LoadingTitle';
 
-const Loading: React.FC<{}> = () => {
-  return (
-    <View>
-      <ActivityIndicator color={'blue'} animating={true} />
-    </View>
-  );
+import {LoadingUtil} from './LoadingUtil';
+
+export {
+  Loading,
+  LoadingUtil,
+  LoadingTitle
 }
-
-export default Loading;

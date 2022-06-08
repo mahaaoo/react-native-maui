@@ -1,46 +1,37 @@
-import React, {useRef, useEffect, useLayoutEffect, useCallback} from 'react';
-import {View, StyleSheet, Animated, ViewStyle} from 'react-native';
+import React, {useLayoutEffect} from 'react';
+import {View, StyleSheet, ViewStyle} from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface OverlayContainerProps {
-  opacity?: number;
-  containerStyle?: ViewStyle
+  containerStyle?: ViewStyle,
+  dark?: boolean
 }
 
 const OverlayContainer: React.FC<OverlayContainerProps> = (props) => {
   const {
     children, 
-    opacity = 0.3,
     containerStyle,
+    dark = true
   } = props;
-  const opacityRef = useRef(new Animated.Value(0)).current;
+  const opacity = useSharedValue(0);
 
   useLayoutEffect(() => {
-    appear();
+    opacity.value = withTiming(0.3, {duration: 250});
   }, []);
 
-  const appear = useCallback(() => {
-    opacityRef.setValue(0);
-    Animated.timing(opacityRef, {
-      toValue: opacity,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-  }, []);
-
-  const disappear = useCallback(() => {
-    Animated.timing(opacityRef, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-  }, []);
+  const animationStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: dark ? '#000' : 'transparent',
+      opacity: opacity.value
+    }
+  });
 
   return (
     <View style={styles.overlay}>
-      <Animated.View pointerEvents={"none"} style={[styles.overlay, {backgroundColor: '#000', opacity: opacityRef}]} />
       <View style={[styles.container, containerStyle]}>
         {children}
       </View>
+      <Animated.View pointerEvents={"none"} style={[styles.overlay, animationStyle]} />
     </View>
   )
 }
@@ -52,7 +43,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0)'
   },
   container: {
     flex: 1, 
