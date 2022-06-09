@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import SliderSheet, {SliderSheetRef} from '../components/SliderSheet';
+import {SliderSheet, SliderSheetRef} from '../components/SliderSheet';
 
 interface SilderSheetExampleProps {
 };
@@ -36,7 +36,7 @@ const SliderSheetExample: React.FC<SilderSheetExampleProps> = props => {
       </View>
       <SliderSheet 
         maxHeight={500}
-        minHeight={50}
+        minHeight={100}
         position={'bottom'}
       >
         <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
