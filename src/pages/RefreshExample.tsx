@@ -1,54 +1,75 @@
-import React from 'react';
-import {View, ScrollView, Text} from 'react-native';
-import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
+import React, { useEffect, useState } from 'react';
+import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import {RefreshList,RefreshState} from '../components/RefreshList';
+
+const {width} = Dimensions.get('window');
 
 interface RefreshProps {
 };
 
-const data = new Array(100).fill(0);
-for (let index = 0; index < data.length; index++) {
-  data[index] = 1000+index;  
+const mockArray = (): number[] => {
+  const data = new Array(20).fill(0);
+  const randomIndex = Math.floor(Math.random() * 100);
+  for (let index = 0; index < data.length; index++) {
+    data[index] = randomIndex + index;  
+  }
+  return data;
 }
 
-const snapPoints = [0, -50]
-
 const Refresh: React.FC<RefreshProps> = props => {
-  const {} = props;
-  const y = useSharedValue(0);
+  const [data, setData] = useState<number[]>([]);
+  const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      // const dest =
-      y.value = event.contentOffset.y;
-    },
-    onEndDrag: (event) => {
-      y.value = 50;
-    }
-  })
+  useEffect(() => {
+    const list = mockArray();
+    setData(list);
+  }, [])
 
   return (
-    <Animated.ScrollView
-      onScroll={scrollHandler}
-      scrollEventThrottle={16}
-      decelerationRate="fast"
-      bounces={false}
-      style={{
-        transform: [{
-          translateY: 50
-        }]
-      }}
-    >
-      {
-        data.map((item, index) => {
+    <View style={styles.container}>
+      <RefreshList
+        refreshState={status}
+        data={data}
+        onRefresh={() => {
+          setStatus(RefreshState.HeaderRefreshing);
+          setTimeout(() => {
+            const list = mockArray();
+            setData(list);
+            setStatus(RefreshState.Idle);
+          }, 2000);
+        }}
+        onFooterRefresh={() => {
+          setStatus(RefreshState.FooterRefreshing);
+          setTimeout(() => {
+            const list = mockArray();
+            setData(data => data.concat(list));
+            setStatus(RefreshState.Idle);
+          }, 2000);
+        }}
+        renderItem={({item}) => {
           return (
-            <View key={`data${index}`} style={{marginVertical: 10}}>
+            <View style={styles.item}>
               <Text>{item}</Text>
             </View>
           )
-        })
-      }
-    </Animated.ScrollView>
+        }}
+      />
+    </View>
   )
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  item: {
+    width,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'red',
+  }
+})
 
 export default Refresh;
