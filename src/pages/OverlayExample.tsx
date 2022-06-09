@@ -70,8 +70,8 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer pointerEvents="none">
-            <View style={{ height: 200, width, backgroundColor: '#fff' }}>
+          <TranslateContainer gesture={true}>
+            <View style={{ height: 500, width, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
           </TranslateContainer>,

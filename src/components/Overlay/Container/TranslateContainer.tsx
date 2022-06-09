@@ -7,7 +7,9 @@
  */
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import {StyleSheet, Dimensions, View, TouchableWithoutFeedback} from 'react-native';
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { clamp, snapPoint } from 'react-native-redash';
 import {useOverlay} from '../Overlay';
 import { AnimationContainerProps } from './type';
 
@@ -19,6 +21,10 @@ interface TranslateContainerProps extends AnimationContainerProps {
    * only support those four direction
    */
   from?: 'bottom' | 'top' | 'left' | 'right',
+  /**
+   * gesture to close
+   */
+  gesture?: boolean
 };
 
 export interface TranslateContainerRef {
@@ -38,15 +44,19 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     onClickMask,
     pointerEvents='auto',
     innerKey,
-    containerStyle
+    containerStyle,
+    gesture = false,
   } = props;
   const {remove} = useOverlay();
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0);
+  const offset = useSharedValue(0);
 
   const toHeight = useRef(0);
   const toWidth = useRef(0);
+  const snapPoints1 = useSharedValue<number>(0);
+  const snapPoints2 = useSharedValue<number>(0);
 
   const onLayout = useCallback(({
     nativeEvent: {
@@ -55,10 +65,36 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
   }) => {
     toHeight.current = h;
     toWidth.current = w;
+    switch(true) {
+      case (from === 'bottom'): {
+        snapPoints1.value = -h;
+        snapPoints2.value = 0;
+        break;
+      }
+      case (from === 'top'): {
+        snapPoints1.value = 0;
+        snapPoints2.value = h;
+        break;
+      }
+      case (from === 'left'): {
+        snapPoints1.value = 0;
+        snapPoints2.value = w;
+        break;
+      }
+      case (from === 'right'): {
+        snapPoints1.value = -w;
+        snapPoints2.value = 0;
+        break;
+      }
+    }
     console.log('onLayout', [h,w]);
     mount();
   }, []);
 
+  /**
+   * After Component has created by Overlay, this funtion will move the component to destination
+   * Just a animation not created
+   */
   const mount = useCallback(() => {
     let direction;
     let dest = 0;
@@ -87,17 +123,22 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
 
     opacity.value = withTiming(mask ? 0.3 : 0, {duration})
     if (direction) {
-      // console.log([dest]);
+      console.log([dest]);
       translateY.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
     } else {
+      console.log([dest]);
       translateX.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
     }
   }, [onAppear]);
 
+  /**
+   * Before the Component be removed, the function move the component out of the window
+   * Just a animation not remove actually
+   */
   const unMount = useCallback(() => {
     let direction;
     let dest = 0;
@@ -183,13 +224,49 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     }
   }, [from])
 
+  const removeSelf = useCallback(() => {
+    remove(innerKey);
+  }, [remove, innerKey])
+
   const handleClickMask = useCallback(() => {
     if (pointerEvents === 'none') return;
     if (!modal && pointerEvents === 'auto') {
-      remove(innerKey);
+      removeSelf();
     }
     onClickMask && onClickMask();
   }, []);
+
+  const panGesture = Gesture.Pan()
+  .onBegin(() => {
+    if (!gesture) return;
+    if (from === 'bottom' || from === 'top') {
+      offset.value = translateY.value;
+    } else {
+      offset.value = translateX.value;
+    }
+  })
+  .onUpdate(({translationY, translationX}) => {
+    if (!gesture) return;
+    if (from === 'bottom' || from === 'top') {
+      translateY.value = clamp(offset.value + translationY, snapPoints1.value, snapPoints2.value);
+    } else {
+      translateX.value = clamp(offset.value + translationX, snapPoints1.value, snapPoints2.value);
+    }
+  })
+  .onEnd(({velocityY, velocityX}) => {
+    if (!gesture) return;
+    let dest;
+    if (from === 'bottom' || from === 'top') {
+      dest = snapPoint(translateY.value, velocityY, [snapPoints1.value, snapPoints2.value]);
+      translateY.value = withTiming(dest);
+    } else {
+      dest = snapPoint(translateX.value, velocityX, [snapPoints1.value, snapPoints2.value]);
+      translateX.value = withTiming(dest);
+    }
+    if (dest === 0) {
+      runOnJS(removeSelf)();
+    }
+  })
 
   useImperativeHandle(ref, () => ({
     mount,
@@ -201,13 +278,15 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
       <TouchableWithoutFeedback style={styles.overlay} onPress={handleClickMask}>
         <Animated.View pointerEvents={pointerEvents} style={[styles.mask, maskAnimationStyle]} />
       </TouchableWithoutFeedback>
-      <Animated.View 
-        style={[styles.overlay, initialPosition, animationStyle]}
-      >
-        <View style={[styles.container, containerStyle]} onLayout={onLayout}>
-          {children}
-        </View>
-      </Animated.View>
+      <GestureDetector gesture={panGesture}>
+        <Animated.View 
+          style={[styles.overlay, initialPosition, animationStyle]}
+        >
+          <View style={[styles.container, containerStyle]} onLayout={onLayout}>
+            {children}
+          </View>
+        </Animated.View>
+      </GestureDetector>
     </View>
   )
 });

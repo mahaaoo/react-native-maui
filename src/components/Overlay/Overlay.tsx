@@ -81,6 +81,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
       element: React.cloneElement(node, {
         ref: nodeRef,
         onDisappear: () => {
+          console.log(`删除组件${inner_key}`);
           forceUpdate(update => update + 1);
           onDisappear && onDisappear();
         },
