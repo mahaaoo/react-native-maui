@@ -8,8 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --coverage",
-    "lockTest": "jest"
+    "test": "jest",
+    "testc": "jest --coverage"
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.10",
