@@ -6,18 +6,15 @@
  * when it unmount, will play translate animation reversedly
  */
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
-import {StyleSheet, Dimensions, View} from 'react-native';
+import {StyleSheet, Dimensions, View, TouchableWithoutFeedback} from 'react-native';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import {useOverlay} from '../Overlay';
+import { AnimationContainerProps } from './type';
 
 const {width, height} = Dimensions.get('window');
 
-interface TranslateContainerProps {
-  children: React.ReactNode,
+interface TranslateContainerProps extends AnimationContainerProps {
   from?: 'bottom' | 'top' | 'left' | 'right',
-  mask?: boolean
-  onAppear?: () => void;
-  onDisappear?: () => void;
-  duration?: number;
 };
 
 export interface TranslateContainerRef {
@@ -26,7 +23,19 @@ export interface TranslateContainerRef {
 }
 
 const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerProps>((props, ref) => {
-  const {from = 'bottom', children, onAppear, onDisappear, mask = true, duration = 250} = props;
+  const {
+    from = 'bottom', 
+    children, 
+    onAppear, 
+    onDisappear, 
+    mask = true, 
+    duration = 250,
+    modal = false,
+    onClickMask,
+    pointerEvents='auto',
+    innerKey
+  } = props;
+  const {remove} = useOverlay();
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0);
@@ -41,7 +50,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
   }) => {
     toHeight.current = h;
     toWidth.current = w;
-    console.log('onLayout', [h,w]);
+    // console.log('onLayout', [h,w]);
     mount();
   }, []);
 
@@ -73,7 +82,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
 
     opacity.value = withTiming(mask ? 0.3 : 0, {duration})
     if (direction) {
-      console.log([dest]);
+      // console.log([dest]);
       translateY.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
@@ -169,6 +178,14 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     }
   }, [from])
 
+  const handleClickMask = useCallback(() => {
+    if (pointerEvents === 'none') return;
+    if (!modal && pointerEvents === 'auto') {
+      remove(innerKey);
+    }
+    onClickMask && onClickMask();
+  }, []);
+
   useImperativeHandle(ref, () => ({
     mount,
     unMount,
@@ -176,7 +193,9 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
 
   return (
     <View style={styles.mask}>
-      <Animated.View pointerEvents={"none"} style={[styles.mask, maskAnimationStyle]} />
+      <TouchableWithoutFeedback style={styles.overlay} onPress={handleClickMask}>
+        <Animated.View pointerEvents={pointerEvents} style={[styles.mask, maskAnimationStyle]} />
+      </TouchableWithoutFeedback>
       <Animated.View 
         style={[styles.overlay, initialPosition, animationStyle]}
       >

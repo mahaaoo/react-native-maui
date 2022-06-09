@@ -70,7 +70,7 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer>
+          <TranslateContainer pointerEvents="none">
             <View style={{ height: 200, width, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
@@ -79,11 +79,11 @@ export default function OverlayExample() {
         )
         elementIndex.current++;
       }}>
-        <Text>从Bottom弹出</Text>
+        <Text>从Bottom弹出-可透过遮罩点击底层View</Text>
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer from="top">
+          <TranslateContainer from="top" onClickMask={() => {console.log('点击遮罩')}}>
             <View style={{ height: 200, width, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
@@ -96,7 +96,7 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer from='left'>
+          <TranslateContainer from='left' modal={true}>
             <View style={{ width: 200, height, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
@@ -105,11 +105,11 @@ export default function OverlayExample() {
         )
         elementIndex.current++;
       }}>
-        <Text>从Left弹出</Text>
+        <Text>从Left弹出-不可触摸关闭</Text>
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer from='right'>
+          <TranslateContainer from='right' mask={false}>
             <View style={{ width: 200, height, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
@@ -118,7 +118,7 @@ export default function OverlayExample() {
         )
         elementIndex.current++;
       }}>
-        <Text>从Right弹出</Text>
+        <Text>从Right弹出-不需要遮罩</Text>
       </Button>
     </View>
   );

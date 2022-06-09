@@ -37,8 +37,11 @@ export default function LoadingExample() {
           )
         }
         LoadingUtil.show();
+        setTimeout(() => {
+          LoadingUtil.hide();
+        }, 2000);
       }}>
-        <Text>show loading title</Text>
+        <Text>show loading title auto close after 2000ms</Text>
       </Button>
       <Button onPress={() => {
         LoadingUtil.hide();

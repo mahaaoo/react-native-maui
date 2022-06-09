@@ -5,16 +5,12 @@
  * when it mount, will play opacity animation
  */
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle} from 'react';
-import {View, StyleSheet, ViewStyle} from 'react-native';
+import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useOverlay } from '../Overlay';
+import { AnimationContainerProps } from './type';
 
-interface OpacityContainerProps {
-  containerStyle?: ViewStyle,
-  mask?: boolean,
-  children: React.ReactNode,
-  onAppear?: () => void;
-  onDisappear?: () => void;
-  duration?: number;
+interface OpacityContainerProps extends AnimationContainerProps {
 }
 
 export interface OpacityContainerRef {
@@ -24,12 +20,16 @@ export interface OpacityContainerRef {
 const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>((props, ref) => {
   const {
     children, 
-    containerStyle,
-    mask = true,
-    onAppear,
-    onDisappear,
+    onAppear, 
+    onDisappear, 
+    mask = true, 
     duration = 250,
+    modal = false,
+    onClickMask,
+    pointerEvents='auto',
+    innerKey
   } = props;
+  const {remove} = useOverlay();
   const opacity = useSharedValue(0);
 
   useEffect(() => {
@@ -52,16 +52,26 @@ const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     }
   });
 
+  const handleClickMask = useCallback(() => {
+    if (pointerEvents === 'none') return;
+    if (!modal && pointerEvents === 'auto') {
+      remove(innerKey);
+    }
+    onClickMask && onClickMask();
+  }, []);
+
   useImperativeHandle(ref, () => ({
     mount,
   }), []);
 
   return (
     <View style={styles.overlay}>
-      <View style={[styles.container, containerStyle]}>
+      <View style={[styles.container]}>
         {children}
       </View>
-      <Animated.View pointerEvents={"none"} style={[styles.overlay, animationStyle]} />
+      <TouchableWithoutFeedback style={styles.overlay} onPress={handleClickMask}>
+        <Animated.View pointerEvents={pointerEvents} style={[styles.overlay, animationStyle]} />
+      </TouchableWithoutFeedback>
     </View>
   )
 })

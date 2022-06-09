@@ -5,11 +5,9 @@
  */
 import React, {forwardRef, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
+import { BaseContainerProps } from './type';
 
-interface NormalContainerProps {
-  children: React.ReactNode,
-  onAppear?: () => void;
-  onDisappear?: () => void;
+interface NormalContainerProps extends BaseContainerProps {
 }
 
 interface NormalContainerRef {

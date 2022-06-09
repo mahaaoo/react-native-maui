@@ -66,21 +66,23 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
       nodeRef = React.createRef();
     }
     const onDisappear = node?.props?.onDisappear;
+    const inner_key = key || 'overlay' + (elementsIndex.current + 1);
     elements.current.push({
       element: React.cloneElement(node, {
         ref: nodeRef,
         onDisappear: () => {
           forceUpdate(update => update + 1);
           onDisappear && onDisappear();
-        }
+        },
+        innerKey: inner_key,
       }),
-      key: key || 'overlay' + (elementsIndex.current + 1),
+      key: inner_key,
       ref: nodeRef
     });
 
     elementsIndex.current++;
     forceUpdate(update => update + 1);
-    return key || 'overlay' + elementsIndex.current;
+    return inner_key;
   }, [elements]);
 
   const deleteNodeFromOverlay = useCallback((key?: string) => {
@@ -128,14 +130,16 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
         <Animated.View style={{flex: 1}}>
           {children}
         </Animated.View>
+        {elements.current.map((node: any) => {
+          const pointerEvents = node.element.props.pointerEvents || 'auto';
+          
+          return (
+            <View key={node.key} pointerEvents={pointerEvents} style={styles.overlay}>
+              {node.element}
+            </View>
+          )
+        })}
       </OverlayContext.Provider>
-      {elements.current.map((node: ElementType) => {
-        return (
-          <View key={node.key} style={styles.overlay} pointerEvents='none'>
-            {node.element}
-          </View>
-        )
-      })}
     </View>
   )
 })
@@ -143,7 +147,6 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0)'
   },
   loadingContainer: {
     ...StyleSheet.absoluteFillObject,
