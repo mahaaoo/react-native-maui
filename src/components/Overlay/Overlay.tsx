@@ -19,6 +19,10 @@ export interface OverlayRef {
    * remove all components without any animation
    */
   removeAll: () => void,
+  /**
+   * check if the component already exists by key
+   */
+  isExist: (key: string) => boolean,
 }
 
 export const OverlayContext = createContext({} as OverlayRef);
@@ -39,7 +43,6 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const elements = useRef<Array<ElementType>>([]);
   const [update, forceUpdate] = useState(0);
   const elementsIndex = useRef<number>(0);
-  const loadingRef = useRef<any>(null);
 
   // 如果指定一个key之后，无法重复添加
   // 如果没有指定，则会默认添加一个key，内部计数
@@ -111,13 +114,17 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const deleteAllNodeFromOverlay = useCallback(() => {
     elements.current = [];
     forceUpdate(update => update + 1);
-    loadingRef.current = null;
+  }, []);
+
+  const isExist = useCallback((key: string) => {
+    return elements.current.some(element => element.key === key);
   }, []);
 
   useImperativeHandle(ref, () => ({
     add: addNodeToOverlay,
     remove: deleteNodeFromOverlay,
     removeAll: deleteAllNodeFromOverlay,
+    isExist,
   }), []);
 
   return (
@@ -126,6 +133,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
         add: addNodeToOverlay,
         remove: deleteNodeFromOverlay,
         removeAll: deleteAllNodeFromOverlay,
+        isExist,
       }}>
         <Animated.View style={{flex: 1}}>
           {children}

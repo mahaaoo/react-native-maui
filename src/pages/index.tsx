@@ -175,6 +175,25 @@ export default function ComponentScreen() {
             onPress={() => { navigate("LoadingExample"); }}
           />
         </View>
+        <View style={styles.card}>
+          <Card 
+            title={'Toast'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Text>Toast</Text>
+            }
+            onPress={() => { navigate("ToastExample"); }}
+          />
+          {/* <View style={{width: Margin}} />
+          <Card 
+            title={'Loading'}
+            style={{ width: HalfCardWidth }}
+            content={
+              <Loading />
+            }
+            onPress={() => { navigate("LoadingExample"); }}
+          /> */}
+        </View>
       </ScrollView>
     </View>
   );

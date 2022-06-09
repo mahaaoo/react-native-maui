@@ -18,6 +18,7 @@ import PickerExample from './pages/PickerExample';
 import SkeletonExample from './pages/SkeletonExample';
 import Refresh from './pages/Refresh';
 import LoadingExample from './pages/LoadingExample';
+import ToastExample from './pages/ToastExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -36,6 +37,7 @@ export type RootStackParamList = {
   SkeletonExample: undefined;
   Refresh: undefined;
   LoadingExample: undefined;
+  ToastExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -136,6 +138,11 @@ const App: React.FC<{}> = () => {
         name="LoadingExample"
         component={LoadingExample}
         options={{ headerTitle: 'LoadingExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="ToastExample"
+        component={ToastExample}
+        options={{ headerTitle: 'ToastExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );

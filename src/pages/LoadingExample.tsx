@@ -14,9 +14,9 @@ export default function LoadingExample() {
         <Loading />
       </View>
       <Button onPress={() => {
-        LoadingUtil.style = () => {
+        LoadingUtil.template = () => {
           return (
-            <OpacityContainer>
+            <OpacityContainer containerStyle={{ justifyContent: 'center', alignItems: 'center'}}>
               <Loading />
             </OpacityContainer>
           )
@@ -29,9 +29,9 @@ export default function LoadingExample() {
         <LoadingTitle />
       </View>
       <Button onPress={() => {
-        LoadingUtil.style = () => {
+        LoadingUtil.template = () => {
           return (
-            <OpacityContainer ref={ref} mask={false}>
+            <OpacityContainer ref={ref} mask={false} containerStyle={{ justifyContent: 'center', alignItems: 'center'}}>
               <LoadingTitle />
             </OpacityContainer>    
           )

@@ -16,6 +16,7 @@ interface NormalContainerRef {
 const NormalContainer = forwardRef<NormalContainerRef, NormalContainerProps>((props, ref) => {
   const {
     children, 
+    containerStyle,
     onAppear,
     onDisappear
   } = props;
@@ -29,7 +30,7 @@ const NormalContainer = forwardRef<NormalContainerRef, NormalContainerProps>((pr
 
   return (
     <View style={styles.overlay}>
-      <View style={styles.container}>
+      <View style={[styles.container, containerStyle]}>
         {children}
       </View>
     </View>
@@ -42,8 +43,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center'
   }
 })
 

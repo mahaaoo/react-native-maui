@@ -33,7 +33,8 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     modal = false,
     onClickMask,
     pointerEvents='auto',
-    innerKey
+    innerKey,
+    containerStyle
   } = props;
   const {remove} = useOverlay();
   const translateY = useSharedValue(0);
@@ -50,7 +51,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
   }) => {
     toHeight.current = h;
     toWidth.current = w;
-    // console.log('onLayout', [h,w]);
+    console.log('onLayout', [h,w]);
     mount();
   }, []);
 
@@ -199,7 +200,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
       <Animated.View 
         style={[styles.overlay, initialPosition, animationStyle]}
       >
-        <View onLayout={onLayout}>
+        <View style={[styles.container, containerStyle]} onLayout={onLayout}>
           {children}
         </View>
       </Animated.View>
@@ -214,6 +215,9 @@ const styles = StyleSheet.create({
   mask: {
     ...StyleSheet.absoluteFillObject,
   },
+  container: {
+    flex: 1,
+  }
 })
 
 export default TranslateContainer;

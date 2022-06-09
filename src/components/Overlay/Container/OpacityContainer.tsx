@@ -27,7 +27,8 @@ const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
     modal = false,
     onClickMask,
     pointerEvents='auto',
-    innerKey
+    innerKey,
+    containerStyle
   } = props;
   const {remove} = useOverlay();
   const opacity = useSharedValue(0);
@@ -66,7 +67,7 @@ const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
 
   return (
     <View style={styles.overlay}>
-      <View style={[styles.container]}>
+      <View style={[styles.container, containerStyle]}>
         {children}
       </View>
       <TouchableWithoutFeedback style={styles.overlay} onPress={handleClickMask}>
@@ -82,8 +83,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center'
   }
 })
 
