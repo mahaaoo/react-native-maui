@@ -16,7 +16,7 @@ import SwiperExample from './pages/SwiperExample';
 import SliderSheetExample from './pages/SliderSheetExample';
 import PickerExample from './pages/PickerExample';
 import SkeletonExample from './pages/SkeletonExample';
-import Refresh from './pages/Refresh';
+import RefreshExample from './pages/RefreshExample';
 import LoadingExample from './pages/LoadingExample';
 import ToastExample from './pages/ToastExample';
 
@@ -35,7 +35,7 @@ export type RootStackParamList = {
   SliderSheetExample: undefined;
   PickerExample: undefined;
   SkeletonExample: undefined;
-  Refresh: undefined;
+  RefreshExample: undefined;
   LoadingExample: undefined;
   ToastExample: undefined;
 };
@@ -130,9 +130,9 @@ const App: React.FC<{}> = () => {
         options={{ headerTitle: 'SkeletonExample', ...headerOptions }}
       />
       <Stack.Screen
-        name="Refresh"
-        component={Refresh}
-        options={{ headerTitle: 'Refresh', ...headerOptions }}
+        name="RefreshExample"
+        component={RefreshExample}
+        options={{ headerTitle: 'RefreshExample', ...headerOptions }}
       />
       <Stack.Screen
         name="LoadingExample"

@@ -5,7 +5,7 @@ import { RootStackParamList } from './app';
 
 export const navigationRef = createNavigationContainerRef()
 
-export const navigate = (name: keyof RootStackParamList, params?: object | undefined) => {
+export const navigate = (name: string, params?: object | undefined) => {
   console.log('navigate to', name);
   if (navigationRef.isReady()) {
     navigationRef.navigate(name, params);
