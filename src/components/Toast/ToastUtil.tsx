@@ -11,12 +11,6 @@ export interface ToastOptions {
 export const ToastUtil = {
   key: 'global-toast',
   template: (title: string, options?: ToastOptions) => {
-    // return (
-    //   <OpacityContainer mask={false} pointerEvents="none">
-    //     <Toast title={title} style={{ marginBottom: 50 }} />
-    //   </OpacityContainer>
-    // )
-
     return (
       <TranslateContainer mask={false} pointerEvents="none" containerStyle={{ justifyContent: 'center', alignItems: 'center' }}>
         <Toast title={title} style={{ marginBottom: 50 }} />

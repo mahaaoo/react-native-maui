@@ -14,6 +14,10 @@ import { AnimationContainerProps } from './type';
 const {width, height} = Dimensions.get('window');
 
 interface TranslateContainerProps extends AnimationContainerProps {
+  /**
+   * it means the component will appear from
+   * only support those four direction
+   */
   from?: 'bottom' | 'top' | 'left' | 'right',
 };
 
