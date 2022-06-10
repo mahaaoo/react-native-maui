@@ -84,6 +84,9 @@ const exampleList: Example[] = [{
 }, {
   title: 'ListRow',
   content: null,
+}, {
+  title: 'ImageViewer',
+  content: null,
 }];
 
 export default function ComponentScreen() {

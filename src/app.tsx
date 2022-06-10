@@ -20,6 +20,7 @@ import RefreshExample from './pages/RefreshExample';
 import LoadingExample from './pages/LoadingExample';
 import ToastExample from './pages/ToastExample';
 import ListRowExample from './pages/ListRowExample';
+import ImageViewerExample from './pages/ImageViewerExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -40,6 +41,7 @@ export type RootStackParamList = {
   LoadingExample: undefined;
   ToastExample: undefined;
   ListRowExample: undefined;
+  ImageViewerExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -150,6 +152,11 @@ const App: React.FC<{}> = () => {
         name="ListRowExample"
         component={ListRowExample}
         options={{ headerTitle: 'ListRowExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="ImageViewerExample"
+        component={ImageViewerExample}
+        options={{ headerTitle: 'ImageViewer', ...headerOptions }}
       />
     </Stack.Navigator>
   );
