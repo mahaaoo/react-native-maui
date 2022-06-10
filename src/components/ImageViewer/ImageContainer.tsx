@@ -4,7 +4,8 @@ import { useAnimatedRef } from 'react-native-reanimated';
 
 interface ImageContainerProps {
   children: React.ReactNode,
-  onPress: (position: Position) => void;
+  onPress: () => void;
+  onLayout: (position: Position) => void;
 };
 
 export type Position = {
@@ -17,7 +18,7 @@ export type Position = {
 }
 
 const ImageContainer: React.FC<ImageContainerProps> = props => {
-  const {children, onPress} = props;
+  const {children, onPress, onLayout} = props;
   const position = useRef<Position>({} as Position);
   const aref = useAnimatedRef<View>();
 
@@ -32,12 +33,13 @@ const ImageContainer: React.FC<ImageContainerProps> = props => {
           pageX,
           pageY
         }
+        onLayout && onLayout(position.current);
       });
     }
   }, [])
 
   const handlePress = useCallback(() => {
-    onPress && onPress(position.current);
+    onPress && onPress();
   }, [onPress]);
 
   return (
