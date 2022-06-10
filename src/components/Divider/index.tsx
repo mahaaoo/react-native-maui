@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, {Line} from 'react-native-svg';
 
-interface DividerProps {
+export interface DividerProps {
   start: number;
   end: number;
 
