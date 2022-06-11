@@ -44,7 +44,7 @@ const exampleList: Example[] = [{
 }, {
   title: 'ListRow',
   content: (
-    <View style={{ height: 40, width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5, justifyContent: 'space-between' }}>
+    <View style={{ height: 40, width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5, justifyContent: 'space-between', borderRadius: 8 }}>
       <Text>标题</Text>
       <Text>{`>`}</Text>
     </View>
@@ -99,9 +99,9 @@ const exampleList: Example[] = [{
   title: 'Swiper',
   content: (
     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-      <View style={{ backgroundColor: 'white', height: '80%', width: 30}}/>
-      <View style={{ backgroundColor: 'white', height: '80%', width: 60, marginHorizontal: 20 }}/>
-      <View style={{ backgroundColor: 'white', height: '80%', width: 30}}/>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 30, borderTopRightRadius: 8, borderBottomRightRadius: 8 }}/>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 60, marginHorizontal: 20, borderRadius: 8 }}/>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 30, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
     </View>
   ),
 }, {
@@ -132,7 +132,6 @@ const exampleList: Example[] = [{
   title: 'RefreshList',
   content: (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Refresh</Text>
       <View style={{ backgroundColor: 'white', height: '70%', width: 100, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}/>
     </View>
   ),

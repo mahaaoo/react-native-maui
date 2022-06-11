@@ -26,7 +26,7 @@ const Card: React.FC<CardProps> = props => {
         </View>
       </View>
       <TouchableOpacity style={styles.titleContainer} onPress={onPress}>
-        <Text style={{color: theme.clickTextColor}}>查看详情</Text>
+        <Text style={{color: theme.clickTextColor}}>more</Text>
       </TouchableOpacity>
     </View>
   )
