@@ -5,7 +5,7 @@
  * when it mount, will play opacity animation
  */
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle} from 'react';
-import {View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useOverlay } from '../Overlay';
 import { AnimationContainerProps } from './type';
@@ -67,12 +67,12 @@ const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>(
 
   return (
     <View style={styles.overlay}>
-      <View style={[styles.container, containerStyle]}>
+      <TouchableOpacity activeOpacity={1} style={styles.overlay} onPress={handleClickMask}>
+        <Animated.View pointerEvents={pointerEvents} style={[styles.overlay, animationStyle]} />
+      </TouchableOpacity>
+      <View style={[styles.container, containerStyle]} pointerEvents={"box-none"}>
         {children}
       </View>
-      <TouchableWithoutFeedback style={styles.overlay} onPress={handleClickMask}>
-        <Animated.View pointerEvents={pointerEvents} style={[styles.overlay, animationStyle]} />
-      </TouchableWithoutFeedback>
     </View>
   )
 })

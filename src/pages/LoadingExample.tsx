@@ -17,7 +17,7 @@ export default function LoadingExample() {
         LoadingUtil.template = () => {
           return (
             <OpacityContainer containerStyle={{ justifyContent: 'center', alignItems: 'center'}}>
-              <Loading />
+              <Loading color="white" />
             </OpacityContainer>
           )
         }        

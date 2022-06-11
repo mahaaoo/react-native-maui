@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, FlatList } from 'react-native';
 
 import Card from '../components/Card'
 import Button from '../components/Button';
@@ -10,12 +10,7 @@ import {Loading} from '../components/Loading';
 
 import useTheme from '../hooks/useTheme';
 import {navigate} from '../navigate';
-import { FlatList } from 'react-native-gesture-handler';
 import { Toast } from '../components/Toast';
-
-const Margin = 15;
-const HalfCardWidth = (Dimensions.get('window').width - 3 * Margin) / 2;
-const CardWidth = Dimensions.get('window').width - 2 * Margin;
 
 interface Example {
   title: string;
@@ -44,11 +39,17 @@ const exampleList: Example[] = [{
     />
   ),
 }, {
+  title: 'ListRow',
+  content: null,
+}, {
   title: 'Loading',
   content: <Loading />,
 }, {
   title: 'Toast',
   content: <Toast title="提示" />,
+}, {
+  title: 'Pagination',
+  content: null,
 }, {
   title: 'SliderSelect',
   content: null,
@@ -84,7 +85,10 @@ const exampleList: Example[] = [{
   title: 'Skeleton',
   content: null,
 }, {
-  title: 'Refresh',
+  title: 'RefreshList',
+  content: null,
+}, {
+  title: 'ImageViewer',
   content: null,
 }];
 
@@ -105,7 +109,7 @@ export default function ComponentScreen() {
               title={item.title}
               style={{ margin: 10 }}
               content={
-                item.content ? item.content : <Text>{item.title}</Text>
+                item.content ? item.content : <Text style={{color: theme.cardTitleColor}}>{item.title}</Text>
               }
               onPress={() => { navigate(`${item.title}Example`); }}
             />
@@ -122,8 +126,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 30,
   },
-  card: {
-    flexDirection: 'row',
-    marginTop: Margin,
-  }
 });

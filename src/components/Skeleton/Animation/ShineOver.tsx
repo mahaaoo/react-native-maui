@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   shineSlider: {
     height: '100%',
     backgroundColor: 'white',
-    width: 50,
+    width: 20,
     opacity: 0.7,
   }
 })
