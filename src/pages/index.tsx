@@ -87,6 +87,9 @@ const exampleList: Example[] = [{
 }, {
   title: 'ImageViewer',
   content: null,
+}, {
+  title: 'Pagination',
+  content: null,
 }];
 
 export default function ComponentScreen() {

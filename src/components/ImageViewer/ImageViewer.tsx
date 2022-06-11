@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import {View, StyleSheet} from 'react-native';
-import { OpacityContainer, useOverlay } from '../Overlay';
+import { useOverlay } from '../Overlay';
 import ImageContainer, { Position } from './ImageContainer';
 import ImageOverlay from './ImageOverlay';
 

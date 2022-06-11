@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import Pagination from './Pagination';
+import {Pagination, Dot} from '../Pagination';
 import {useRange, useStep, useAutoScroll, useTouching, useProps} from './hook';
 import ItemWrapper from './ItemWrapper';
 import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
@@ -187,7 +187,9 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
               bottom: 0,
               height: 30,
             }}>
-              <Pagination currentIndex={indexAtData} dataNumber={dataSource.length} />
+              <Pagination currentIndex={indexAtData} total={dataSource.length}>
+                <Dot />
+              </Pagination>
             </View>
           </View>
         </Animated.View>

@@ -21,6 +21,7 @@ import LoadingExample from './pages/LoadingExample';
 import ToastExample from './pages/ToastExample';
 import ListRowExample from './pages/ListRowExample';
 import ImageViewerExample from './pages/ImageViewerExample';
+import PaginationExample from './pages/PaginationExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -42,6 +43,7 @@ export type RootStackParamList = {
   ToastExample: undefined;
   ListRowExample: undefined;
   ImageViewerExample: undefined;
+  PaginationExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -157,6 +159,11 @@ const App: React.FC<{}> = () => {
         name="ImageViewerExample"
         component={ImageViewerExample}
         options={{ headerTitle: 'ImageViewer', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="PaginationExample"
+        component={PaginationExample}
+        options={{ headerTitle: 'PaginationExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );
