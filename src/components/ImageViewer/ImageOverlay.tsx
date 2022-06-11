@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
 import { Dimensions, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { Extrapolate, interpolate, runOnJS, useAnimatedReaction, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { interpolate, runOnJS, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import { snapPoint } from 'react-native-redash';
 import { useOverlay } from '../Overlay';
 import { Position } from './ImageContainer';
@@ -16,12 +16,12 @@ interface ImageOverlayProps {
   paddingTop?: number;
   paddingBottom?: number;
   initialIndex: number;
+  currentIndex: Animated.SharedValue<number>;
   data: any[];
   readonly innerKey?: string;
 
   onAppear?: () => void;
   onDisappear?: () => void;
-  onScroll?: (index: number) => void;
 };
 
 interface ImageOverlayRef {
@@ -34,12 +34,12 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
     duration = 300, 
     paddingTop = 100, 
     paddingBottom = 50, 
+    currentIndex,
     innerKey, 
     onAppear, 
     onDisappear,
     data,
     initialIndex,
-    onScroll,
   } = props;
   const {remove} = useOverlay();
 
@@ -51,20 +51,11 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
   const translateX = useSharedValue(-Width * initialIndex);
   const offsetX = useSharedValue(0);
   const opacity = useSharedValue(0);
-  const scrollIndex = useSharedValue(initialIndex);
   const willUnMount = useSharedValue(false);
 
   const paginationIndex = useDerivedValue(() => {
-    return scrollIndex.value + 1;
+    return currentIndex.value + 1;
   })
-
-  const handleOnScroll = useCallback((index: number) => {
-    onScroll && onScroll(index);
-  }, [onScroll])
-
-  useAnimatedReaction(() => scrollIndex.value, (value) => {
-    runOnJS(handleOnScroll)(value);
-  });
 
   useEffect(() => {
     mount();
@@ -104,7 +95,7 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
     // console.log(Math.round(dest));
 
     const destX = snapPoint(translateX.value, velocityX, snapPointsX);
-    scrollIndex.value = Math.abs(destX / Width);
+    currentIndex.value = Math.abs(destX / Width);
     translateX.value = withTiming(destX, {duration});
 })
 
@@ -147,7 +138,6 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
 
   const handleClickMask = useCallback(() => {
     willUnMount.value = true;
-    scrollIndex.value = -1;
     remove(innerKey);
   }, [remove, innerKey]);
   
@@ -178,7 +168,7 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
                         <Display 
                           key={`Content_${index}`}
                           containerTranslateY={translateY}
-                          currentIndex={scrollIndex} 
+                          currentIndex={currentIndex} 
                           {...{position, index, paddingBottom, paddingTop, duration, item, willUnMount }}
                         />
                       )

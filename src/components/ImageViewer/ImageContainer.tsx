@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState,  } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Animated, { useAnimatedRef, useAnimatedStyle } from 'react-native-reanimated';
 
@@ -44,6 +44,7 @@ const ImageContainer: React.FC<ImageContainerProps> = props => {
   const handlePress = useCallback(() => {
     onPress && onPress();
   }, [onPress]);
+
 
   const animationStyle = useAnimatedStyle(() => {
     return {

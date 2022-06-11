@@ -18,9 +18,16 @@ const ImageViewer: React.FC<ImageViewerProps> = props => {
 
   const handlePress = useCallback((index: number) => {
     currentIndex.value = index;
-    add(<ImageOverlay positionList={positionList.current} data={data} initialIndex={index} onScroll={(index: number) => {
-      currentIndex.value = index;
-    }} /> , 'image-viewer');
+    add(<ImageOverlay 
+          positionList={positionList.current} 
+          data={data} 
+          initialIndex={index} 
+          currentIndex={currentIndex}
+          onDisappear={() => {
+            // when disappeared, all image show
+            currentIndex.value = -1;
+          }}
+        /> , 'image-viewer');
   }, [])
 
   return (
