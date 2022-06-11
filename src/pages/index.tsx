@@ -45,7 +45,7 @@ const exampleList: Example[] = [{
   title: 'ListRow',
   content: (
     <View style={{ height: 40, width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5, justifyContent: 'space-between', borderRadius: 8 }}>
-      <Text>标题</Text>
+      <Text>Title</Text>
       <Text>{`>`}</Text>
     </View>
   ),
@@ -145,6 +145,9 @@ const exampleList: Example[] = [{
       <View style={{ width: 30, height: 30, backgroundColor: 'white' }} />
     </View>
   ),
+}, {
+  title: 'ActionSheet',
+  content: null
 }];
 
 export default function ComponentScreen() {
