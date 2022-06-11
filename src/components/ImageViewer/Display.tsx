@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {View, Image, Dimensions} from 'react-native';
-import Animated, { interpolate, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { Extrapolate, interpolate, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Position } from './ImageContainer';
 
 const {width: Width, height: Height} = Dimensions.get('window');
@@ -30,23 +30,27 @@ const Display: React.FC<DisplayProps> = (props) => {
   const translateX = useSharedValue(initialX)
   const translateY = useSharedValue(initialY);
   const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
 
   useAnimatedReaction(() => willUnMount.value, (value) => {
-    if (value && index === currentIndex.value) {
+    if (value && index === currentIndex.value) {      
       width.value = withTiming(initialW, {duration});
       height.value = withTiming(initialH, {duration});
       translateX.value = withTiming(initialX, {duration});
-      translateY.value = withTiming(initialY, {duration});  
+      translateY.value = withTiming(initialY, {duration});
+      opacity.value = withTiming(0, {duration});
     }
   });
 
   useAnimatedReaction(() => containerTranslateY.value, (value) => {
-    const ratio = interpolate(value, [-Height/2, 0, Height / 2], [0.5, 1, 0.5]);
+    const ratio = interpolate(value, [-Height/2, 0, Height / 2], [0.5, 1, 0.5], Extrapolate.CLAMP);
     scale.value = withTiming(ratio, {duration});
+    opacity.value = withTiming(ratio, {duration});
   })
 
   const animationStyle = useAnimatedStyle(() => {
     return {
+      opacity: opacity.value,
       width: width.value,
       height: height.value,
       transform: [{
