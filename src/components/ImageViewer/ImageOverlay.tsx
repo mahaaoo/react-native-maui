@@ -1,11 +1,12 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
 import { Dimensions, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { Extrapolate, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { snapPoint } from 'react-native-redash';
 import { useOverlay } from '../Overlay';
 import { Position } from './ImageContainer';
 import Display from './Display';
+import { Pagination, Percent } from '../Pagination';
 
 const {width: Width, height: Height} = Dimensions.get('window');
 
@@ -48,7 +49,7 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
   const translateX = useSharedValue(-Width * currentIndex);
   const offsetX = useSharedValue(0);
   const opacity = useSharedValue(0);
-  const scrollIndex = useSharedValue(currentIndex);
+  const scrollIndex = useSharedValue(currentIndex + 1);
   const willUnMount = useSharedValue(false);
 
   useEffect(() => {
@@ -83,8 +84,13 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
     translateX.value = translationX + offsetX.value;
   })
   .onEnd(({velocityX}) => {
+    // TODO: ensure every sigle pan only move one screen width
+    // const distance = (translateX.value + 0.2 * velocityX) / Width + scrollIndex.value;
+    // const dest = interpolate(distance, [-0.5, 0, 0.5], [1, 0, -1], Extrapolate.CLAMP);
+    // console.log(Math.round(dest));
+
     const destX = snapPoint(translateX.value, velocityX, snapPointsX);
-    scrollIndex.value = Math.abs(destX / Width);
+    scrollIndex.value = Math.abs(destX / Width) + 1;
     translateX.value = withTiming(destX, {duration});
 })
 
@@ -95,7 +101,6 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
   })
   .onUpdate(({translationY}) => {
     translateY.value = translationY + offsetY.value;   
-     
     opacity.value = withTiming(interpolate(translateY.value, [-0.3*Height, 0, 0.3 * Height], [0.5, 1, 0.5]), {duration});
   })
   .onEnd(({velocityY}) => {
@@ -166,6 +171,16 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
             }
           </Animated.View>
         </GestureDetector>
+      </View>
+      <View style={{
+          position: 'absolute',
+          top: paddingTop - 30,
+          left: 0,
+          right: 0,
+      }}>
+        <Pagination currentIndex={scrollIndex} total={positionList.length}>
+          <Percent />
+        </Pagination>
       </View>
     </View>
   )
