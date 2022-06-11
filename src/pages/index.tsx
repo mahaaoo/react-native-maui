@@ -39,11 +39,17 @@ const exampleList: Example[] = [{
     />
   ),
 }, {
+  title: 'ListRow',
+  content: null,
+}, {
   title: 'Loading',
   content: <Loading />,
 }, {
   title: 'Toast',
   content: <Toast title="提示" />,
+}, {
+  title: 'Pagination',
+  content: null,
 }, {
   title: 'SliderSelect',
   content: null,
@@ -82,13 +88,7 @@ const exampleList: Example[] = [{
   title: 'RefreshList',
   content: null,
 }, {
-  title: 'ListRow',
-  content: null,
-}, {
   title: 'ImageViewer',
-  content: null,
-}, {
-  title: 'Pagination',
   content: null,
 }];
 
