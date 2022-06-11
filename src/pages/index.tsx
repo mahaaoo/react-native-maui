@@ -11,6 +11,9 @@ import {Loading} from '../components/Loading';
 import useTheme from '../hooks/useTheme';
 import {navigate} from '../navigate';
 import { Toast } from '../components/Toast';
+import Divider from '../components/Divider';
+import SliderSelect from '../components/SliderSelect';
+import { Shine, SkeletonContainer, SkeletonRect } from '../components/Skeleton';
 
 interface Example {
   title: string;
@@ -29,7 +32,7 @@ const exampleList: Example[] = [{
   content: <Badge number={2} />,
 }, {
   title: 'Divider',
-  content: null,
+  content: <Divider start={30} end={120} color={'white'} width={2} />,
 }, {
   title: 'Avatar',
   content: (
@@ -40,7 +43,12 @@ const exampleList: Example[] = [{
   ),
 }, {
   title: 'ListRow',
-  content: null,
+  content: (
+    <View style={{ height: 40, width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5, justifyContent: 'space-between' }}>
+      <Text>标题</Text>
+      <Text>{`>`}</Text>
+    </View>
+  ),
 }, {
   title: 'Loading',
   content: <Loading />,
@@ -49,10 +57,16 @@ const exampleList: Example[] = [{
   content: <Toast title="提示" />,
 }, {
   title: 'Pagination',
-  content: null,
+  content: (
+    <View style={{ flexDirection: 'row' }}>
+      <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: 'white' }} />
+      <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#D8D8D8', marginHorizontal: 8 }} />
+      <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#D8D8D8' }} />
+    </View>
+  ),
 }, {
   title: 'SliderSelect',
-  content: null,
+  content: <SliderSelect style={{ width: 100 }} items={['one', 'two']} />,
 }, {
   title: 'Switch',
   content: (
@@ -68,28 +82,70 @@ const exampleList: Example[] = [{
   ),
 }, {
   title: 'Collapse',
-  content: null,
+  content: (
+    <View style={{width: '100%',height: '100%',justifyContent: 'center',alignItems: 'center'}}>
+      <View style={{ height: 50, width: 100, backgroundColor: 'white', transform: [{perspective: 2000},{rotateX: '-60deg'}, {translateY: 25}] }} />
+      <View style={{ height: 50, width: 100, backgroundColor: 'white', transform: [{perspective: 2000},{rotateX: '60deg'},  {translateY: -25}] }} />
+    </View>
+  ),
 }, {
   title: 'Overlay',
-  content: null,
+  content: (
+    <View style={{width: '100%',height: '100%', backgroundColor: 'white', borderRadius: 8}}>
+      <View style={{ margin: 10, flex: 1, borderRadius: 8, backgroundColor: '#000', opacity: 0.2}} />
+    </View>
+  ),
 }, {
   title: 'Swiper',
-  content: null,
+  content: (
+    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 30}}/>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 60, marginHorizontal: 20 }}/>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 30}}/>
+    </View>
+  ),
 }, {
   title: 'SliderSheet',
-  content: null,
+  content: (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ backgroundColor: 'white', height: '70%', width: 100, borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}/>
+    </View>
+  ),
 }, {
   title: 'Picker',
-  content: null,
+  content: (
+    <View style={{ flex: 1, alignItems: 'center' }}>
+      <View style={{ backgroundColor: 'white', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 8 }}>
+        <Text>Option1</Text>
+      </View>
+      <Text style={{ marginTop: 5, color: '#888' }}>Option2</Text>
+    </View>
+  ),
 }, {
   title: 'Skeleton',
-  content: null,
+  content: (
+    <SkeletonContainer childAnimation={Shine}>
+      <SkeletonRect style={{ height: 44, width: 100, borderRadius: 8 }} />
+    </SkeletonContainer>
+  ),
 }, {
   title: 'RefreshList',
-  content: null,
+  content: (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Refresh</Text>
+      <View style={{ backgroundColor: 'white', height: '70%', width: 100, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}/>
+    </View>
+  ),
 }, {
   title: 'ImageViewer',
-  content: null,
+  content: (
+    <View style={{width: '100%',height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ width: 50, height: 50, backgroundColor: '#000', opacity: 0.1 }} />
+      </View>
+      <View style={{ width: 30, height: 30, backgroundColor: 'white' }} />
+    </View>
+  ),
 }];
 
 export default function ComponentScreen() {

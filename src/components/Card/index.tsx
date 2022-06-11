@@ -1,6 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, ViewStyle, Dimensions} from 'react-native';
 import useTheme from '../../hooks/useTheme';
+
+const {width} = Dimensions.get('window');
 
 interface CardProps {
   content: React.ReactNode,
@@ -32,7 +34,7 @@ const Card: React.FC<CardProps> = props => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 150,
+    width: (width - 50) / 2,
     height: 150,
     borderRadius: 8,
   },
@@ -56,6 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    padding: 5,
   }
 });
 
