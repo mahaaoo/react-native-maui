@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef,  } from 'react';
-import {TouchableOpacity, View, Text} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import { useAnimatedRef } from 'react-native-reanimated';
 
 interface ImageContainerProps {

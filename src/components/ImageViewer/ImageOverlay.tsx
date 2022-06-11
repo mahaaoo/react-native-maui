@@ -142,7 +142,7 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
         <Animated.View style={[styles.overlay, maskAnimationStyle]} />
       </TouchableOpacity>
       <View style={[styles.container]} pointerEvents={"box-none"}>
-        <GestureDetector gesture={Gesture.Exclusive(panGestureX, panGestureY, singleTap)}>
+        <GestureDetector gesture={Gesture.Exclusive(Gesture.Race(panGestureX, panGestureY), singleTap)}>
           <Animated.View style={[{
             position: 'absolute',
             top: paddingTop,

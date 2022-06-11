@@ -20,19 +20,23 @@ interface DisplayProps {
 const Display: React.FC<DisplayProps> = (props) => {
   const {position, duration, paddingTop, paddingBottom, item, currentIndex, index, willUnMount, containerTranslateY} = props;
   const { width: w, height: h, pageX: x, pageY: y } = position;
-  
-  const width = useSharedValue(w);
-  const height = useSharedValue(h);
-  const translateX = useSharedValue(x)
-  const translateY = useSharedValue(y - paddingTop);
+  const initialX = x == undefined ? Width / 2 : x;
+  const initialY = (y == undefined ? Height / 2 : y) - paddingTop;
+  const initialW = w == undefined ? 0 : w;
+  const initialH = h == undefined ? 0 : h;
+
+  const width = useSharedValue(initialW);
+  const height = useSharedValue(initialH);
+  const translateX = useSharedValue(initialX)
+  const translateY = useSharedValue(initialY);
   const scale = useSharedValue(1);
 
   useAnimatedReaction(() => willUnMount.value, (value) => {
     if (value && index === currentIndex.value) {
-      width.value = withTiming(w, {duration});
-      height.value = withTiming(h, {duration});
-      translateX.value = withTiming(x, {duration});
-      translateY.value = withTiming(y - paddingTop, {duration});  
+      width.value = withTiming(initialW, {duration});
+      height.value = withTiming(initialH, {duration});
+      translateX.value = withTiming(initialX, {duration});
+      translateY.value = withTiming(initialY, {duration});  
     }
   });
 
