@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import {View, Image, Dimensions} from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import {View, Image, Dimensions, StyleSheet} from 'react-native';
+import Animated, { Extrapolate, interpolate, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import { Position } from './ImageContainer';
 
 import {useInitialPosition} from './hook';
@@ -20,7 +20,7 @@ interface DisplayProps {
 
 const Display: React.FC<DisplayProps> = (props) => {
   const {position, duration, paddingTop, paddingBottom, item, currentIndex, index, willUnMount, containerTranslateY} = props;
-  const {initialX, initialY, initialW, initialH} = useInitialPosition(position, paddingTop)
+  const {initialX, initialY, initialW, initialH, toHeight} = useInitialPosition(position, paddingTop, paddingBottom)
 
   const width = useSharedValue(initialW);
   const height = useSharedValue(initialH);
@@ -50,12 +50,12 @@ const Display: React.FC<DisplayProps> = (props) => {
       opacity: opacity.value,
       width: width.value,
       height: height.value,
-      transform: [{
+      transform: [ {
+        scale: scale.value
+      },{
         translateX: translateX.value
       }, {
         translateY: translateY.value + containerTranslateY.value
-      }, {
-        scale: scale.value
       }]
     }
   })
@@ -63,13 +63,13 @@ const Display: React.FC<DisplayProps> = (props) => {
   useEffect(() => {
     if (currentIndex.value === index) {
       width.value = withTiming(Width, {duration});
-      height.value = withTiming(Height - paddingTop - paddingBottom, {duration});
+      height.value = withTiming(toHeight, {duration});
       translateX.value = withTiming(0, {duration});
       translateY.value = withTiming(0, {duration});
       opacity.value = withTiming(1, {duration});
     } else {
       width.value = Width;
-      height.value = Height - paddingTop - paddingBottom;
+      height.value = toHeight;
       translateX.value = 0;
       translateY.value = 0;  
       opacity.value = 1;

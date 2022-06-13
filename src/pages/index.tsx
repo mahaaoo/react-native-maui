@@ -147,7 +147,15 @@ const exampleList: Example[] = [{
   ),
 }, {
   title: 'ActionSheet',
-  content: null
+  content: (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ height: '50%', width: 80, borderRadius: 8, overflow: 'hidden' }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }} />
+        <View style={{ flex: 1, backgroundColor: 'white', marginTop: StyleSheet.hairlineWidth }} />
+      </View>
+      <View style={{ backgroundColor: 'white', height: '25%', width: 80, borderRadius: 8, marginTop: 5 }}/>
+    </View>
+  )
 }];
 
 export default function ComponentScreen() {
