@@ -12,31 +12,38 @@ interface ImageContainerProps {
 };
 
 export type Position = {
-  height: number,
-  width: number,
-  x: number,
-  y: number,
-  pageX: number
-  pageY: number
+  height: number | undefined,
+  width: number | undefined,
+  x: number | undefined,
+  y: number | undefined,
+  pageX: number | undefined,
+  pageY: number  | undefined,
 }
 
 const ImageContainer: React.FC<ImageContainerProps> = props => {
   const {children, onPress, onLayout, currentIndex, index} = props;
-  const position = useRef<Position>({} as Position);
   const aref = useAnimatedRef<View>();
 
   useEffect(() => {
     if (aref && aref.current) {
       aref.current.measure((x, y, width, height, pageX, pageY) => {
-        position.current = {
+        onLayout && onLayout({
           x,
           y,
           width,
           height,
           pageX,
           pageY
-        }
-        onLayout && onLayout(position.current);
+        });
+      });
+    } else {
+      onLayout && onLayout({
+        height: undefined,
+        width: undefined,
+        x: undefined,
+        y: undefined,
+        pageX: undefined,
+        pageY: undefined,
       });
     }
   }, [])
