@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import Button from "../components/Button";
-import { LoadingUtil, Loading, LoadingTitle } from '../components/Loading';
-import { OpacityContainer, OpacityContainerRef } from '../components/Overlay';
+import { Button, LoadingUtil, Loading, LoadingTitle, OpacityContainer, OpacityContainerRef } from "@maui";
 
 export default function LoadingExample() {
 

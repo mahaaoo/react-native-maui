@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
-import {RefreshList,RefreshState} from '../components/RefreshList';
+import {RefreshList,RefreshState} from '@maui';
 
 const {width} = Dimensions.get('window');
 

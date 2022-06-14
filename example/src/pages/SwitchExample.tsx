@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, View } from 'react-native';
-import {Switch} from '../components/Switch';
+import {Switch} from '@maui';
 
 export default function SwitchExample() {
   const [on, setOn] = useState(true);

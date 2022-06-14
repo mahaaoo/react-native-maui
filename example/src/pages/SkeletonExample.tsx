@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, StyleSheet, Dimensions, TouchableOpacity, ScrollView} from 'react-native';
-import {SkeletonContainer, SkeletonRect, Breath, Shine, Normal, Loading, ShineOver} from '../components/Skeleton';
+import {SkeletonContainer, SkeletonRect, Breath, Shine, Normal, Load, ShineOver} from '@maui';
 
 const {width} = Dimensions.get('window');
 
@@ -46,7 +46,7 @@ const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
         </View>
       </SkeletonContainer>
 
-      <SkeletonContainer childAnimation={Normal} finished={finished} containerAnimation={Loading}>
+      <SkeletonContainer childAnimation={Normal} finished={finished} containerAnimation={Load}>
         <View 
           style={{ width, height: 200, backgroundColor: 'white' }}>
           <SkeletonRect style={{ marginLeft: 15, marginTop: 15, height: 20, width: 150 }}>

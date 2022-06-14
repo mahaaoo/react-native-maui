@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import {Button, ButtonType} from "../components/Button";
+import {Button, ButtonType} from "@maui";
 
 export default function ButtonExample() {
   return (

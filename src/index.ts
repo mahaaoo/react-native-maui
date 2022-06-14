@@ -1,17 +1,18 @@
-export { ActionSheet, ActionSheetUtil } from './components/ActionSheet'
-export { Avatar } from './components/Avatar';
-export { Badge } from './components/Badge';
-export { Button, ButtonType } from './components/Button';
-export { Collapse } from './components/Collapse';
-export { Divider } from './components/Divider';
-export { ImageViewer } from './components/ImageViewer';
-export { ListRow } from './components/ListRow';
-export {
+import { ActionSheet, ActionSheetUtil } from './components/ActionSheet'
+import { Avatar } from './components/Avatar';
+import { Badge } from './components/Badge';
+import { Button, ButtonType } from './components/Button';
+import { Collapse } from './components/Collapse';
+import { Divider } from './components/Divider';
+import { ImageViewer } from './components/ImageViewer';
+import { ListRow } from './components/ListRow';
+import {
   Loading,
   LoadingUtil,
   LoadingTitle
 } from './components/Loading';
-export {
+
+import {
   Overlay,
   useOverlay,
   overlayRef,
@@ -19,25 +20,25 @@ export {
   
   NormalContainer,
   OpacityContainer,
-  OpacityContainerRef,
   TranslateContainer,
-  TranslateContainerRef,
 
+  OpacityContainerRef,
+  TranslateContainerRef,
   BaseContainerProps,
   AnimationContainerProps
 } from './components/Overlay';
 
-export {
+import {
   Pagination,
   Dot,
   Percent
 } from './components/Pagination';
 
-export { Picker } from './components/Picker';
+import { Picker } from './components/Picker';
 
-export { RefreshList, RefreshState } from './components/RefreshList';
+import { RefreshList, RefreshState } from './components/RefreshList';
 
-export {
+import {
   SkeletonContainer,
   SkeletonRect,
   Breath,
@@ -47,27 +48,84 @@ export {
   ShineOver
 } from './components/Skeleton';
 
-export { SliderSelect } from './components/SliderSelect';
+import { SliderSelect } from './components/SliderSelect';
 
-export {
+import {
   SliderSheet,
   SliderSheetRef
 } from './components/SliderSheet';
 
-export {
+import {
   Swiper,
   BaseLayout,
   ScaleLayout
 } from './components/Swiper';
 
-export {
+import { Switch } from './components/Switch';
+
+import {
   Theme,
   useTheme,
   ThemeType
 } from './components/Theme';
 
-export {
+import {
   Toast,
   ToastUtil
 } from './components/Toast';
+
+export {
+  ActionSheet, 
+  ActionSheetUtil,
+  Avatar,
+  Badge,
+  Button, 
+  ButtonType,
+  Collapse,
+  Divider,
+  ImageViewer,
+  ListRow,
+  Loading,
+  LoadingUtil,
+  LoadingTitle,
+  Overlay,
+  useOverlay,
+  overlayRef,
+  OverlayUtil,
+  
+  NormalContainer,
+  OpacityContainer,
+  TranslateContainer,
+
+  OpacityContainerRef,
+  TranslateContainerRef,
+  BaseContainerProps,
+  AnimationContainerProps,
+
+  Pagination,
+  Dot,
+  Percent,
+  Picker,
+  RefreshList,
+  RefreshState,
+  SkeletonContainer,
+  SkeletonRect,
+  Breath,
+  Shine, 
+  Normal,
+  Load,
+  ShineOver,
+  SliderSelect,
+  SliderSheet,
+  SliderSheetRef,
+  Swiper,
+  BaseLayout,
+  ScaleLayout,
+  Switch,
+  Theme,
+  useTheme,
+  ThemeType,
+  Toast,
+  ToastUtil,
+}
 

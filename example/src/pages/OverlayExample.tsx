@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import Button from "../components/Button";
-import { useOverlay, OverlayUtil, TranslateContainer, NormalContainer, OpacityContainer } from '../components/Overlay';
+import { useOverlay, OverlayUtil, TranslateContainer, NormalContainer, OpacityContainer, Button } from '@maui';
 
 const {width, height} = Dimensions.get('window');
 

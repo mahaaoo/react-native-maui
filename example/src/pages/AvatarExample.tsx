@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
-import {Avatar} from '../components/Avatar';
+import {Avatar} from '@maui';
 
 export default function AvatarExample() {
   return (

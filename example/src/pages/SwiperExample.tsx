@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Swiper, SwiperRef, ScaleLayout } from '../components/Swiper';
+import { Swiper, SwiperRef, ScaleLayout } from '@maui';
 
 const {width} = Dimensions.get('window');
 

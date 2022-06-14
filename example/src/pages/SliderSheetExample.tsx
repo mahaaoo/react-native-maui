@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import {SliderSheet, SliderSheetRef} from '../components/SliderSheet';
+import {SliderSheet, SliderSheetRef} from '@maui';
 
 interface SilderSheetExampleProps {
 };
