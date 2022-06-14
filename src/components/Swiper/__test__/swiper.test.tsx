@@ -60,12 +60,10 @@ describe('Testing:Swiper', () => {
   
       const swiper = getByTestId('test-swiper');
       // console.log(swiper);
-      console.log(useRef.current.getCurrentIndex());
 
       // expect(getCurrentIndexMock).toHaveBeenCalled();
 
       useRef.current.previous();
-      console.log(useRef.current.getCurrentIndex());
 
       // expect(onScollStartMock).toHaveBeenCalled();
       // expect(onScollEndMock).toHaveBeenCalled();

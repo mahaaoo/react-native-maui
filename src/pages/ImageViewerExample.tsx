@@ -1,11 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import {View, StyleSheet, Image, TouchableOpacity, Dimensions} from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { OpacityContainer, useOverlay } from '../components/Overlay';
+import React, { useEffect, useRef } from 'react';
+import {View, StyleSheet, Image, Dimensions} from 'react-native';
 import {ImageViewer} from '../components/ImageViewer'
-
-const {width: Width, height: Height} = Dimensions.get('window');
 
 interface ImageViewerExampleProps {
 };

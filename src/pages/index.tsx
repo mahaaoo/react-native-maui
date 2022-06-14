@@ -2,17 +2,17 @@ import React from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
 
 import Card from '../components/Card'
-import Button from '../components/Button';
-import Badge from '../components/Badge';
-import Switch from '../components/Switch';
-import Avatar from '../components/Avatar';
+import {Button} from '../components/Button';
+import {Badge} from '../components/Badge';
+import {Switch} from '../components/Switch';
+import {Avatar} from '../components/Avatar';
 import {Loading} from '../components/Loading';
 
 import useTheme from '../hooks/useTheme';
 import {navigate} from '../navigate';
 import { Toast } from '../components/Toast';
-import Divider from '../components/Divider';
-import SliderSelect from '../components/SliderSelect';
+import {Divider} from '../components/Divider';
+import {SliderSelect} from '../components/SliderSelect';
 import { Shine, SkeletonContainer, SkeletonRect } from '../components/Skeleton';
 
 interface Example {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native';
-import Collapse from '../components/Collapse';
+import {Collapse} from '../components/Collapse';
 
 const {width} = Dimensions.get('window');
 

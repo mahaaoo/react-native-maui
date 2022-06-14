@@ -3,7 +3,7 @@ import {
   withReanimatedTimer
 } from 'react-native-reanimated/src/reanimated2/jestUtils'
 import {Text} from 'react-native';
-import Avatar from '../index';
+import {Avatar} from '../index';
 
 describe('Test:Avatar', () => {
   it('base', () => {

@@ -1,6 +1,6 @@
 import { render, fireEvent } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import Button from '../index';
+import {Button} from '../index';
 
 describe('Test:Button', () => {
   it('base button',  async () => {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import Divider from '../components/Divider';
+import {Divider} from '../components/Divider';
 
 const Width = Dimensions.get('window').width;
 

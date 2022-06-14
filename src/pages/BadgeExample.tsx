@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Badge from "../components/Badge";
+import {Badge} from "../components/Badge";
 
 export default function BadgeExample() {
   return (

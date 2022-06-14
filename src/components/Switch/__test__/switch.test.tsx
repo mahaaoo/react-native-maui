@@ -1,4 +1,4 @@
-import Switch from '../index';
+import {Switch} from '../index';
 import { fireEvent, render } from '@testing-library/react-native';
 import {
   withReanimatedTimer

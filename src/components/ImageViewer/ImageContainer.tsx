@@ -27,10 +27,6 @@ const ImageContainer: React.FC<ImageContainerProps> = props => {
   const handleLayout = useCallback(() => {
     try {
       aref?.current?.measure((x, y, width, height, pageX, pageY) => {
-        console.log({
-          x, y, width, height, pageX, pageY
-        });
-        
         onLayout && onLayout({
           x,
           y,

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react-native';
-import Badge from '../index';
+import {Badge} from '../index';
 
 describe('Test:Avatar', () => {
   it('base', () => {

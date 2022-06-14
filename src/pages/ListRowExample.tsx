@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {ListRow} from '../components/ListRow';
-import Button from '../components/Button';
+import {Button} from '../components/Button';
 
 interface ListRowExampleProps {
 };
