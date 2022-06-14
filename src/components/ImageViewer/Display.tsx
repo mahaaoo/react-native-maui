@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import {View, Image, Dimensions, StyleSheet} from 'react-native';
+import {View, Image, Dimensions} from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import { Position } from './ImageContainer';
 
 import {useInitialPosition} from './hook';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 const {width: Width, height: Height} = Dimensions.get('window');
 
 interface DisplayProps {
@@ -27,7 +28,23 @@ const Display: React.FC<DisplayProps> = (props) => {
   const translateX = useSharedValue(initialX)
   const translateY = useSharedValue(initialY);
   const scale = useSharedValue(1);
+  const savedScale = useSharedValue(1);
+
   const opacity = useSharedValue(0);
+
+  const pinchGesture = Gesture.Pinch()
+  .onUpdate((e) => {
+    scale.value = savedScale.value * e.scale;
+  })
+  .onEnd(() => {
+    if (scale.value < 1) {
+      scale.value = withTiming(1, {duration});
+      savedScale.value = 1;
+    } else {
+      savedScale.value = scale.value;
+    }
+  });
+
 
   useAnimatedReaction(() => willUnMount.value, (value) => {
     if (value && index === currentIndex.value) {      
@@ -78,9 +95,11 @@ const Display: React.FC<DisplayProps> = (props) => {
 
   return (
     <View style={{ flex: 1, width: Width }}>
-      <Animated.View style={[animationStyle]}>
-        <Image source={item.source} style={{ width: '100%', height: '100%' }} resizeMode="contain" />
-      </Animated.View>  
+      <GestureDetector gesture={pinchGesture}>
+        <Animated.View style={[animationStyle]}>
+          <Image source={item.source} style={{ width: '100%', height: '100%' }} resizeMode="contain" />
+        </Animated.View>  
+      </GestureDetector>
     </View>
   )
 }
