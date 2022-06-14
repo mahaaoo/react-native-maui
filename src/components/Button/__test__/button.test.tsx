@@ -3,6 +3,15 @@ import { Text } from 'react-native';
 import {Button} from '../index';
 
 describe('Test:Button', () => {
+  it('render correctly', () => {
+    const tree = render(
+      <Button onPress={() => {}}>
+        <Text>默认样式</Text>
+      </Button>  
+    ).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   it('base button',  async () => {
     const onPressMock = jest.fn();
     const { queryByText: queryByText1  } = render(

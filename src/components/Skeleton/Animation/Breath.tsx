@@ -1,3 +1,6 @@
+/**
+ * Animation effect child component
+ */
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import Animated, { interpolateColor, useAnimatedStyle } from 'react-native-reanimated';

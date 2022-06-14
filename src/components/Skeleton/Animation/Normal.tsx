@@ -1,3 +1,6 @@
+/**
+ * Animation effect child component
+ */
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import { BaseChildAnimationProps } from '../type'

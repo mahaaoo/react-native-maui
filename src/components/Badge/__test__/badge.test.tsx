@@ -2,6 +2,13 @@ import { render } from '@testing-library/react-native';
 import {Badge} from '../index';
 
 describe('Test:Avatar', () => {
+  it('render correctly', () => {
+    const tree = render(
+      <Badge number={10} /> 
+    ).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   it('base', () => {
     const { queryByText: queryByText1  } = render(<Badge number={10} size={20} />);
     const element1 = queryByText1('10');

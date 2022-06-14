@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test:Avatar render correctly 1`] = `
+<View>
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "animatedStyle": Object {
+          "current": Object {},
+        },
+        "initial": Object {
+          "updater": [Function],
+          "value": Object {
+            "opacity": 0,
+          },
+        },
+        "viewDescriptors": Object {
+          "add": [Function],
+          "batchToRemove": Object {},
+          "items": Array [],
+          "rebuildsharableViewDescriptors": [Function],
+          "remove": [Function],
+          "sharableViewDescriptors": Object {
+            "_animation": null,
+            "_id": 3,
+            "_listeners": Array [],
+            "_setter": [Function],
+            "_value": Array [],
+          },
+          "tags": Object {},
+          "waitForInsertSync": false,
+          "waitForRemoveSync": false,
+        },
+        "viewsRef": Object {
+          "add": [Function],
+          "items": Object {},
+          "remove": [Function],
+        },
+      }
+    }
+  >
+    <Image
+      onLoad={[Function]}
+      resizeMode="cover"
+      source={
+        Object {
+          "uri": "https://avatars.githubusercontent.com/u/16695567?s=400&u=fd8d6249fa408e1e606015a06868a99993171938&v=4",
+        }
+      }
+      style={
+        Object {
+          "borderRadius": 30,
+          "height": 60,
+          "width": 60,
+        }
+      }
+    />
+  </View>
+  <View
+    collapsable={false}
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#eee",
+        "borderRadius": 30,
+        "bottom": 0,
+        "height": 60,
+        "justifyContent": "center",
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "width": 60,
+      }
+    }
+  >
+    <Text>
+      加载中
+    </Text>
+  </View>
+</View>
+`;

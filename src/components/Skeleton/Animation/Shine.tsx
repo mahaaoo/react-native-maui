@@ -1,3 +1,6 @@
+/**
+ * Animation effect child component
+ */
 import React from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import Animated, { interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
