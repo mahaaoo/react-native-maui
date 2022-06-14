@@ -25,15 +25,17 @@ const card = [
   },
 ]
 
-type Position = {
-  height: number,
-  width: number,
-  x: number,
-  y: number,
-}
-
 const ImageViewerExample: React.FC<ImageViewerExampleProps> = props => {
   const {} = props;
+  const refs = useRef<View>();
+
+  useEffect(() => {
+    refs.current && refs.current.measure((x, y, width, height, pageX, pageY) => {
+      console.log({
+        x, y, width, height, pageX, pageY
+      });
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -43,6 +45,18 @@ const ImageViewerExample: React.FC<ImageViewerExampleProps> = props => {
           return <Image source={item.source} style={{ width: 150, height: 150, margin: 10 }} resizeMode={"cover"} />
         }}
       />
+      {/* <View 
+        style={{
+          marginTop: 100,
+          marginLeft: 100,
+          backgroundColor: 'red',
+          width: 150,
+          height: 120
+        }} 
+        ref={(ref) => {
+          refs.current = ref;
+        }}
+      /> */}
     </View>
   )
 };

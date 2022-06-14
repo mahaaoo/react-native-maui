@@ -22,11 +22,15 @@ export type Position = {
 
 const ImageContainer: React.FC<ImageContainerProps> = props => {
   const {children, onPress, onLayout, currentIndex, index} = props;
-  const aref = useAnimatedRef<View>();
+  const aref = useRef<View | null>(null);
 
-  useEffect(() => {
-    if (aref && aref.current) {
-      aref.current.measure((x, y, width, height, pageX, pageY) => {
+  const handleLayout = useCallback(() => {
+    try {
+      aref?.current?.measure((x, y, width, height, pageX, pageY) => {
+        console.log({
+          x, y, width, height, pageX, pageY
+        });
+        
         onLayout && onLayout({
           x,
           y,
@@ -35,8 +39,8 @@ const ImageContainer: React.FC<ImageContainerProps> = props => {
           pageX,
           pageY
         });
-      });
-    } else {
+      });  
+    } catch {
       onLayout && onLayout({
         height: undefined,
         width: undefined,
@@ -62,7 +66,7 @@ const ImageContainer: React.FC<ImageContainerProps> = props => {
   return (
     <TouchableOpacity activeOpacity={1} onPress={handlePress}>
       <Animated.View style={animationStyle}>
-        <View ref={aref}>
+        <View ref={(ref) => aref.current = ref} onLayout={handleLayout}>
           {children}
         </View>
       </Animated.View>
