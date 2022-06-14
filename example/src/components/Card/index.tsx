@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, ViewStyle, Dimensions} from 'react-native';
-import {useTheme} from '../../components/Theme';
+import {useTheme} from '@maui';
 
 const {width} = Dimensions.get('window');
 

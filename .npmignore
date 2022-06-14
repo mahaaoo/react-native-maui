@@ -1,0 +1,6 @@
+.DS_Store
+examples/
+shoot/
+package-lock.lock
+.github/
+node_modules/

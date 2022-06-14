@@ -4,8 +4,12 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 
+// import {Overlay, overlayRef} from '../src/components/Overlay';
+// import {Theme} from '../src/components/Theme';
+
+import {Overlay, overlayRef, Theme} from '@maui';
+
 import {navigationRef} from './src/navigate';
-import {Theme, Overlay, overlayRef} from '@maui';
 import Index from './src/app';
 
 export default function App() {
