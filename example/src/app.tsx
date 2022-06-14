@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import useTheme from './hooks/useTheme';
+import {useTheme} from './components/Theme';
 
 import Index from './pages/index';
 import ButtonExample from "./pages/ButtonExample";

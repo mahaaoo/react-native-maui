@@ -6,11 +6,10 @@ import {
 
 import {navigationRef} from './src/navigate';
 import {Overlay, overlayRef} from './src/components/Overlay';
-import Theme from './src/components/Theme';
+import {Theme} from './src/components/Theme';
 import Index from './src/app';
 
 export default function App() {
-  // const ss = useRef();
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Overlay ref={overlayRef}>

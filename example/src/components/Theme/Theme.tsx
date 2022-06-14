@@ -18,6 +18,8 @@ export const ThemeContext = React.createContext({
   changeTheme: (themeName: ThemeType) => {},
 });
 
+export const useTheme = () => React.useContext(ThemeContext);
+
 interface ThemeProps {
 
 }

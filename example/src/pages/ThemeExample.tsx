@@ -1,9 +1,9 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import {ThemeContext, ThemeType} from '../components/Theme';
+import {useTheme, ThemeType} from '../components/Theme';
 
 export default function ThemeExample() {
-  const { theme, changeTheme } = useContext(ThemeContext);
+  const { theme, changeTheme } = useTheme();
   return (
     <View style={styles.container}>
       <View style={{

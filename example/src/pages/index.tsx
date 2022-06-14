@@ -8,7 +8,7 @@ import {Switch} from '../components/Switch';
 import {Avatar} from '../components/Avatar';
 import {Loading} from '../components/Loading';
 
-import useTheme from '../hooks/useTheme';
+import {useTheme} from '../components/Theme';
 import {navigate} from '../navigate';
 import { Toast } from '../components/Toast';
 import {Divider} from '../components/Divider';
