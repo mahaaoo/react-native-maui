@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "React Native components implemented by react-native-reanimated v2 and react-native-gesture-handler v2, Support iOS/Android.",
   "main": "index.js",
-  "directories": {
-    "example": "example"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,14 +11,42 @@
     "ios",
     "android"
   ],
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@testing-library/jest-native": "^4.0.4",
+    "@testing-library/react-hooks": "^8.0.0",
+    "@testing-library/react-native": "^9.1.0",
+    "@types/jest": "^27.5.1",
+    "@types/react": "~17.0.21",
+    "@types/react-native": "~0.66.13",
+    "typescript": "~4.3.5",
+    "jest": "^26.6.3",
+    "jest-expo": "^45.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-native": "0.68.1",
+    "react-native-gesture-handler": "~2.2.0",
+    "react-native-reanimated": "~2.8.0",
+    "react-native-redash": "^16.2.4",
+    "react-native-svg": "12.3.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0",
+    "react-native-gesture-handler": ">= 2.0.0",
+    "react-native-reanimated": ">=2.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maaaahoo/maui.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "mahaaoo <mahao9393@163.com> (https://github.com/mahaaoo)",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/maaaahoo/maui/issues"
   },
-  "homepage": "https://github.com/maaaahoo/maui#readme"
+  "homepage": "https://github.com/maaaahoo/maui#readme",
+  "setupFilesAfterEnv": [
+    "@testing-library/jest-native/extend-expect"
+  ]
 }

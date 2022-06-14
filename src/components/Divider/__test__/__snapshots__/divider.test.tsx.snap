@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test:Divider render correctly 1`] = `
+<RNSVGSvgView
+  bbHeight={1}
+  bbWidth="100%"
+  focusable={false}
+  height={1}
+  style={
+    Array [
+      Object {
+        "backgroundColor": "transparent",
+        "borderWidth": 0,
+      },
+      Object {
+        "flex": 0,
+        "height": 1,
+        "width": "100%",
+      },
+    ]
+  }
+  width="100%"
+>
+  <RNSVGGroup>
+    <RNSVGLine
+      propList={
+        Array [
+          "stroke",
+          "strokeWidth",
+        ]
+      }
+      stroke={4293190884}
+      strokeWidth={1}
+      x1={0}
+      x2={200}
+      y1="0"
+      y2="0"
+    />
+  </RNSVGGroup>
+</RNSVGSvgView>
+`;
