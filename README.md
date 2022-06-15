@@ -14,7 +14,7 @@ Support iOS & Android
 <img src="./shoot/android_1.jpg" width="375" /><img src="./shoot/android_2.jpg" width="375" />
 
 ## expo demo
-[expo home page](https://expo.dev/@mah22/maui?serviceType=classic&distribution=expo-go)
+[expo home page](https://expo.dev/@mah22/react-native-maui-example?serviceType=classic&distribution=expo-go)
 
 Scan the QR code with Expo Go (Android) or the Camera app
 
