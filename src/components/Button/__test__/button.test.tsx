@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import {Button} from '../index';

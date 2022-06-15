@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {Divider} from '../index';
 import { render } from '@testing-library/react-native';
 

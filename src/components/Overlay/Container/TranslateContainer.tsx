@@ -8,8 +8,8 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import {StyleSheet, Dimensions, View, TouchableWithoutFeedback} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import { clamp, snapPoint } from 'react-native-redash';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { clamp, snapPoint } from '../../../utils/redash';
 import {useOverlay} from '../Overlay';
 import { AnimationContainerProps } from './type';
 
