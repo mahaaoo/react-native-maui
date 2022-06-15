@@ -22,14 +22,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          
-      - name: publish example
-        run: cd ./example
-        
+                  
       - name: Install dependencies
         run: npm install
       - run: npm run test
       
+      - name: publish example
+        run: cd ./example
+      - run: npm install
+
       - name: Expo Init
         uses: expo/expo-github-action@7.2.0
         with: 
