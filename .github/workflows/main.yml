@@ -39,5 +39,5 @@ jobs:
           packager: npm
           
       - name: Expo Publish app
-        run: expo publish --non-interactive
+        run: expo publish
  
