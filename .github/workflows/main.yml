@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           
+      - name: publish example
+        run: cd ./example
+        
       - name: Install dependencies
         run: npm install
       - run: npm run test
@@ -35,5 +38,5 @@ jobs:
           packager: npm
           
       - name: Expo Publish app
-        run: cd example && expo publish --non-interactive
+        run: expo publish --non-interactive
  
