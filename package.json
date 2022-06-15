@@ -1,11 +1,11 @@
 {
-  "name": "maui",
+  "name": "react-native-maui",
   "version": "0.0.1",
   "description": "React Native UI Library",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "source": "src/index",
+  "main": "src/index",
   "scripts": {
+    "expo-publish": "cd example && expo publish",
+    "npm-publish": "./script/npm-publish.sh",
     "test": "jest",
     "testc": "jest --coverage"
   },
@@ -44,14 +44,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maaaahoo/maui.git"
+    "url": "git+https://github.com/mahaaoo/react-native-maui.git"
   },
   "author": "mahaaoo <mahao9393@163.com> (https://github.com/mahaaoo)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/maaaahoo/maui/issues"
+    "url": "https://github.com/mahaaoo/react-native-maui/issues"
   },
-  "homepage": "https://github.com/maaaahoo/maui#readme",
+  "homepage": "https://github.com/mahaaoo/react-native-maui#readme",
   "jest": {
     "preset": "jest-expo"
   },

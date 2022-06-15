@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native';
-import {Collapse} from 'maui';
+import {Collapse} from 'react-native-maui';
 
 const {width} = Dimensions.get('window');
 

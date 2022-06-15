@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "maui": ["./src/index"],
+      "react-native-maui": ["./src/index"],
     },
     "allowJs": true,
     "allowSyntheticDefaultImports": true,

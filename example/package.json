@@ -1,5 +1,5 @@
 {
-  "name": "maui-example",
+  "name": "react-native-maui-example",
   "version": "1.0.0",
   "main": "./index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "jest-expo": "^45.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-native": "0.68.1",
+    "react-native": "0.68.2",
     "react-native-gesture-handler": "~2.2.0",
     "react-native-reanimated": "~2.8.0",
     "react-native-redash": "^16.2.4",

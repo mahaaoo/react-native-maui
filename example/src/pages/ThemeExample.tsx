@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import {useTheme, ThemeType} from 'maui';
+import {useTheme, ThemeType} from 'react-native-maui';
 
 export default function ThemeExample() {
   const { theme, changeTheme } = useTheme();

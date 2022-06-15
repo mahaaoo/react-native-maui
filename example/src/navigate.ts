@@ -1,7 +1,6 @@
 
 import { createNavigationContainerRef } from '@react-navigation/native';
 import { StackActions  } from '@react-navigation/native';
-import { RootStackParamList } from './app';
 
 export const navigationRef = createNavigationContainerRef()
 

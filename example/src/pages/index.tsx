@@ -17,7 +17,7 @@ import {
   Shine,
   SkeletonContainer,
   SkeletonRect
-} from 'maui';
+} from 'react-native-maui';
 
 interface Example {
   title: string;

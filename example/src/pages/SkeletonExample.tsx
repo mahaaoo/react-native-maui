@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, StyleSheet, Dimensions, TouchableOpacity, ScrollView} from 'react-native';
-import {SkeletonContainer, SkeletonRect, Breath, Shine, Normal, Load, ShineOver} from 'maui';
+import {SkeletonContainer, SkeletonRect, Breath, Shine, Normal, Load, ShineOver} from 'react-native-maui';
 
 const {width} = Dimensions.get('window');
 

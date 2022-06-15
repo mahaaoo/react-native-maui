@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {Button, ActionSheet, ActionSheetUtil} from 'maui';
+import {Button, ActionSheet, ActionSheetUtil} from 'react-native-maui';
 
 interface ActionSheetExampleProps {
 };

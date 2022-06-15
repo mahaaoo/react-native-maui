@@ -1,4 +1,4 @@
-# maui
+# react-native-maui
 
 React Native components implemented by `react-native-reanimated v2` and `react-native-gesture-handler v2` 
 

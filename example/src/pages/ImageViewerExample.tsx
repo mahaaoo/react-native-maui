@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import {View, StyleSheet, Image} from 'react-native';
-import {ImageViewer} from 'maui'
+import {ImageViewer} from 'react-native-maui'
 
 interface ImageViewerExampleProps {
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {View, Text} from 'react-native';
-import { Picker } from 'maui';
+import { Picker } from 'react-native-maui';
 
 const data: number[] = [];
 for(let i = 0; i<50; i++) {
