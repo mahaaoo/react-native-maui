@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import {Divider} from '@maui';
+import {Divider} from 'maui';
 
 const Width = Dimensions.get('window').width;
 

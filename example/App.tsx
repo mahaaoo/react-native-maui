@@ -7,7 +7,7 @@ import {
 // import {Overlay, overlayRef} from '../src/components/Overlay';
 // import {Theme} from '../src/components/Theme';
 
-import {Overlay, overlayRef, Theme} from '@maui';
+import {Overlay, overlayRef, Theme} from 'maui';
 
 import {navigationRef} from './src/navigate';
 import Index from './src/app';

@@ -1,5 +1,10 @@
-{
+{ 
+  "include": ["./src"],
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "maui": ["./src/index"],
+    },
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

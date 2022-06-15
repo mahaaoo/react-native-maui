@@ -2,7 +2,7 @@ import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from '
 import { Dimensions, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { interpolate, runOnJS, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
-import { snapPoint } from 'react-native-redash';
+import { snapPoint } from '../../utils/redash';
 import { useOverlay } from '../Overlay';
 import { Position } from './ImageContainer';
 import Display from './Display';

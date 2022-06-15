@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useMemo, forwardRef, useCallback } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { clamp, snapPoint } from 'react-native-redash';
+import { clamp, snapPoint } from '../../utils/redash';
 
 interface SliderSheetProps {
   maxHeight: number;

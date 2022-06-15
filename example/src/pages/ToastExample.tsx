@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import { Toast, ToastUtil, TranslateContainer, OpacityContainer, Button } from '@maui';
+import { Toast, ToastUtil, TranslateContainer, OpacityContainer, Button } from 'maui';
 
 interface ToastExampleProps {
 };

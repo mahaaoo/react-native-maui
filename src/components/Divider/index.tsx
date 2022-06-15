@@ -1,5 +1,6 @@
-import Divider from './Divider';
+import Divider, {DividerProps} from './Divider';
 
 export {
-  Divider
+  Divider,
+  DividerProps
 }

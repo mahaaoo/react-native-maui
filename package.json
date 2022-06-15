@@ -2,7 +2,9 @@
   "name": "maui",
   "version": "0.0.1",
   "description": "React Native UI Library",
-  "main": "index.js",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "source": "src/index",
   "scripts": {
     "test": "jest",
     "testc": "jest --coverage"
@@ -28,14 +30,14 @@
     "react-native": "0.68.1",
     "react-native-gesture-handler": "~2.2.0",
     "react-native-reanimated": "~2.8.0",
-    "react-native-redash": "^16.2.4",
     "react-native-svg": "12.3.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-native": ">=0.60.0",
     "react-native-gesture-handler": ">= 2.0.0",
-    "react-native-reanimated": ">=2.0.0"
+    "react-native-reanimated": ">=2.0.0",
+    "react-native-svg": "*"
   },
   "repository": {
     "type": "git",
@@ -47,6 +49,9 @@
     "url": "https://github.com/maaaahoo/maui/issues"
   },
   "homepage": "https://github.com/maaaahoo/maui#readme",
+  "jest": {
+    "preset": "jest-expo"
+  },
   "setupFilesAfterEnv": [
     "@testing-library/jest-native/extend-expect"
   ]

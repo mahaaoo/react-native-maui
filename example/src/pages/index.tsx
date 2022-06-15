@@ -17,7 +17,7 @@ import {
   Shine,
   SkeletonContainer,
   SkeletonRect
-} from '@maui';
+} from 'maui';
 
 interface Example {
   title: string;

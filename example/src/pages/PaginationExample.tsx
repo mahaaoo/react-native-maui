@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions, TouchableOpacity, Text} from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
-import {Pagination, Dot, Percent} from '@maui';
+import {Pagination, Dot, Percent} from 'maui';
 
 const {width, height} = Dimensions.get('window');
 

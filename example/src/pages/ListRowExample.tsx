@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {Button, ListRow} from '@maui';
+import {Button, ListRow} from 'maui';
 
 interface ListRowExampleProps {
 };

@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import Animated, {Extrapolate, interpolate, runOnJS, useAnimatedReaction} from 'react-native-reanimated'
+import {runOnJS, useAnimatedReaction} from 'react-native-reanimated'
 import { usePagination } from './Pagination';
 
 interface PercentProps {

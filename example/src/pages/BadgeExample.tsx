@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import {Badge} from "@maui";
+import {Badge} from "maui";
 
 export default function BadgeExample() {
   return (

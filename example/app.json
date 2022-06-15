@@ -1,7 +1,10 @@
 {
+  "packagerOpts": {
+    "config": "metro.config.js"
+  },
   "expo": {
-    "name": "maui",
-    "slug": "maui",
+    "name": "maui-example",
+    "slug": "maui-example",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

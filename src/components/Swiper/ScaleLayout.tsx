@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { Dimensions } from 'react-native';
 import Animated, { 
   Extrapolate,
   interpolate,

@@ -5,7 +5,7 @@
  * when it mount, will play opacity animation
  */
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle} from 'react';
-import {View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useOverlay } from '../Overlay';
 import { AnimationContainerProps } from './type';

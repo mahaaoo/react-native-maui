@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import {SliderSelect} from '@maui';
+import {SliderSelect} from 'maui';
 
 export default function SliderSelectExample() {
   return (

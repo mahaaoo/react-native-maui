@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useEffect } from 'react';
 import {View, Dimensions, ViewStyle} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useDerivedValue, withTiming } from 'react-native-reanimated';
-import { snapPoint } from 'react-native-redash';
+import { snapPoint } from '../../utils/redash';
 import PickerItem from './PickerItem';
 import { PickerProps } from './type';
 import { useProps, useInitialValue } from './hook';
