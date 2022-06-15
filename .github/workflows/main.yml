@@ -28,8 +28,7 @@ jobs:
       - run: npm run test
       
       - name: publish example
-        run: cd ./example
-      - run: npm install
+        run: cd ./example && npm install
 
       - name: Expo Init
         uses: expo/expo-github-action@7.2.0
@@ -39,5 +38,5 @@ jobs:
           packager: npm
           
       - name: Expo Publish app
-        run: expo publish
+        run: cd ./example && expo publish
  
