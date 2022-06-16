@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, StyleSheet} from 'react-native';
-import { Progress } from 'react-native-maui';
+import { Progress, CircleProgress } from 'react-native-maui';
 
 interface ProgressExampleProps {
 };
@@ -35,6 +35,7 @@ const ProgressExample: React.FC<ProgressExampleProps> = props => {
       <Progress style={{ width: 300, height: 15, borderRadius: 10, marginTop: 20 }} value={38} />
       <Progress style={{ width: 300, height: 15, marginTop: 20 }} value={49} />
       <Progress style={{ width: 300, height: 15, borderRadius: 10, marginTop: 20 }} value={progress} />
+      <CircleProgress />
     </View>
   )
 };

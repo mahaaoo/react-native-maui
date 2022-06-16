@@ -76,4 +76,4 @@ export {
   ToastUtil
 } from './components/Toast';
 
-export { Progress } from './components/Progress';
+export { Progress, CircleProgress } from './components/Progress';
