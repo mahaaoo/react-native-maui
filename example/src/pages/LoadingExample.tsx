@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { Button, LoadingUtil, Loading, LoadingTitle, OpacityContainer, OpacityContainerRef } from "react-native-maui";
+import { Button, LoadingUtil, Loading, LoadingTitle, OpacityContainer, OpacityContainerRef, Spinner } from "react-native-maui";
 
 export default function LoadingExample() {
 
@@ -24,7 +24,7 @@ export default function LoadingExample() {
         <Text>show loading</Text>
       </Button>
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 50}}>
-        <LoadingTitle />
+        <LoadingTitle title="wait" />
       </View>
       <Button onPress={() => {
         LoadingUtil.template = () => {
@@ -41,10 +41,20 @@ export default function LoadingExample() {
       }}>
         <Text>show loading title auto close after 2000ms</Text>
       </Button>
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 50}}>
+        <Spinner />
+      </View>
       <Button onPress={() => {
-        LoadingUtil.hide();
+        LoadingUtil.template = () => {
+          return (
+            <OpacityContainer containerStyle={{ justifyContent: 'center', alignItems: 'center'}}>
+              <Spinner />
+            </OpacityContainer>
+          )
+        }        
+        LoadingUtil.show();
       }}>
-        <Text>dismiss loading</Text>
+        <Text>show spinner</Text>
       </Button>
     </View>
   );

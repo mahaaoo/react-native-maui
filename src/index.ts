@@ -9,7 +9,8 @@ export { ListRow } from './components/ListRow';
 export {
   Loading,
   LoadingUtil,
-  LoadingTitle
+  LoadingTitle,
+  Spinner
 } from './components/Loading';
 
 export {
