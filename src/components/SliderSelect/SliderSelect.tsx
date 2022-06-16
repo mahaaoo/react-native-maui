@@ -1,6 +1,6 @@
-import React, {useState, useRef, useCallback, useMemo} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, ViewStyle, TextStyle} from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 interface SliderSelectProps {
   items: Array<string>;
@@ -32,7 +32,6 @@ const SliderSelect: React.FC<SliderSelectProps> = (props) => {
     inactiveTextColor = '#000'
   } = props;
   const [current, setCurrent] = useState(0);
-  const sliderTranslateX = useRef(new Animated.Value(0)).current;
   const translateX = useSharedValue(0);
 
   const silderSize = useMemo(() => {
@@ -50,12 +49,16 @@ const SliderSelect: React.FC<SliderSelectProps> = (props) => {
     }
   }, [style])
 
+  const handDidChange = useCallback((item: string, index: number) => {
+    didChange && didChange(item, index);
+  }, [didChange])
+
   const handlePress = useCallback((item: string, index: number) => {
     setCurrent(index);
     onChange && onChange(item, index);
     const dest = index * silderSize.width / items.length;
     translateX.value = withSpring(dest, {overshootClamping: true}, () => {
-      didChange && didChange(item, index);
+      runOnJS(handDidChange)(item, index);
     });
   }, [silderSize]);
 

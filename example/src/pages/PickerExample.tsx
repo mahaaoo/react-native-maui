@@ -69,7 +69,6 @@ const PickerExample: React.FC<PickerExampleProps> = props => {
       <View style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
         <Text>{`当前选择日期：${year}年-${month}月`}</Text>
       </View> */}
-      <Text>TODO：该组件在大数据范围下，性能待优化</Text>
     </View>
   )
 };

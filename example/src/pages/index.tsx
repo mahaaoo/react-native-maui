@@ -16,7 +16,8 @@ import {
   SliderSelect,
   Shine,
   SkeletonContainer,
-  SkeletonRect
+  SkeletonRect,
+  Progress
 } from 'react-native-maui';
 
 interface Example {
@@ -28,7 +29,7 @@ const exampleList: Example[] = [{
   title: 'Button',
   content: (
     <Button onPress={() => {}}>
-      <Text>按钮</Text>
+      <Text>Button</Text>
     </Button>  
   ),
 }, {
@@ -53,6 +54,9 @@ const exampleList: Example[] = [{
       <Text>{`>`}</Text>
     </View>
   ),
+}, {
+  title: 'Progress',
+  content: <Progress style={{ width: '60%', height: 15, borderRadius: 10 }} value={70} activeColor="pink" inactiveColor='white' />
 }, {
   title: 'Loading',
   content: <Loading />,
@@ -95,19 +99,21 @@ const exampleList: Example[] = [{
 }, {
   title: 'Overlay',
   content: (
-    <View style={{width: '100%',height: '100%', backgroundColor: 'white', borderRadius: 8}}>
+    <View style={{width: '70%',height: '100%', backgroundColor: 'white', borderRadius: 8}}>
       <View style={{ margin: 10, flex: 1, borderRadius: 8, backgroundColor: '#000', opacity: 0.2}} />
     </View>
   ),
 }, {
-  title: 'Swiper',
+  title: 'ActionSheet',
   content: (
-    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-      <View style={{ backgroundColor: 'white', height: '80%', width: 30, borderTopRightRadius: 8, borderBottomRightRadius: 8 }}/>
-      <View style={{ backgroundColor: 'white', height: '80%', width: 60, marginHorizontal: 20, borderRadius: 8 }}/>
-      <View style={{ backgroundColor: 'white', height: '80%', width: 30, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ height: '50%', width: 80, borderRadius: 8, overflow: 'hidden' }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }} />
+        <View style={{ flex: 1, backgroundColor: 'white', marginTop: StyleSheet.hairlineWidth }} />
+      </View>
+      <View style={{ backgroundColor: 'white', height: '25%', width: 80, borderRadius: 8, marginTop: 5 }}/>
     </View>
-  ),
+  )
 }, {
   title: 'SliderSheet',
   content: (
@@ -140,6 +146,15 @@ const exampleList: Example[] = [{
     </View>
   ),
 }, {
+  title: 'Swiper',
+  content: (
+    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 30, borderTopRightRadius: 8, borderBottomRightRadius: 8 }}/>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 60, marginHorizontal: 20, borderRadius: 8 }}/>
+      <View style={{ backgroundColor: 'white', height: '80%', width: 30, borderTopLeftRadius: 8, borderBottomLeftRadius: 8}}/>
+    </View>
+  ),
+}, {
   title: 'ImageViewer',
   content: (
     <View style={{width: '100%',height: '100%', justifyContent: 'center', alignItems: 'center'}}>
@@ -149,17 +164,6 @@ const exampleList: Example[] = [{
       <View style={{ width: 30, height: 30, backgroundColor: 'white' }} />
     </View>
   ),
-}, {
-  title: 'ActionSheet',
-  content: (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ height: '50%', width: 80, borderRadius: 8, overflow: 'hidden' }}>
-        <View style={{ flex: 1, backgroundColor: 'white' }} />
-        <View style={{ flex: 1, backgroundColor: 'white', marginTop: StyleSheet.hairlineWidth }} />
-      </View>
-      <View style={{ backgroundColor: 'white', height: '25%', width: 80, borderRadius: 8, marginTop: 5 }}/>
-    </View>
-  )
 }];
 
 export default function ComponentScreen() {

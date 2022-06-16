@@ -11,6 +11,7 @@ const Toast: React.FC<ToastProps> = props => {
 
   return (
     <View style={[styles.container, style]}>
+      <View style={styles.mask} />
       <Text style={styles.title}>{title}</Text>
     </View>
   )
@@ -18,8 +19,12 @@ const Toast: React.FC<ToastProps> = props => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#000',
     borderRadius: 5,
+    overflow: 'hidden',
+  },
+  mask: {
+    ...StyleSheet.absoluteFillObject, 
+    backgroundColor: '#000',
     opacity: 0.3,
   },
   title: {

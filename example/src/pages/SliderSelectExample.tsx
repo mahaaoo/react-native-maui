@@ -5,7 +5,7 @@ import {SliderSelect} from 'react-native-maui';
 export default function SliderSelectExample() {
   return (
     <View style={styles.container}>
-      <SliderSelect items={['选项一', '选项二', '选项三', '选项四']} />
+      <SliderSelect items={['option1', 'option2', 'option3', 'option4']} />
       <SliderSelect 
         items={['section1', 'section2', 'section3', 'section4']}
         style={{
@@ -19,9 +19,12 @@ export default function SliderSelectExample() {
         }}
         inactiveTextColor={'grey'}
         activeTextColor={'green'}
+        didChange={(item: string, index: number) => {
+          console.log([item, index]);
+        }}
       />
       <SliderSelect 
-        items={['第一', '第二']}
+        items={['one', 'two']}
         style={{
           marginTop: 20,
           height: 50,

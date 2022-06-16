@@ -23,6 +23,7 @@ import ListRowExample from './pages/ListRowExample';
 import ImageViewerExample from './pages/ImageViewerExample';
 import PaginationExample from './pages/PaginationExample';
 import ActionSheetExample from './pages/ActionSheetExample';
+import ProgressExample from './pages/ProgressExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -46,6 +47,7 @@ export type RootStackParamList = {
   ImageViewerExample: undefined;
   PaginationExample: undefined;
   ActionSheetExample: undefined;
+  ProgressExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -171,6 +173,11 @@ const App: React.FC<{}> = () => {
         name="ActionSheetExample"
         component={ActionSheetExample}
         options={{ headerTitle: 'ActionSheetExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="ProgressExample"
+        component={ProgressExample}
+        options={{ headerTitle: 'ProgressExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );

@@ -12,11 +12,11 @@ const ListRowExample: React.FC<ListRowExampleProps> = props => {
     <View style={styles.container}>
       <ListRow left="ListRow" />
       <ListRow left="Disable" disabled={true} />
-      <ListRow left="ListRow" mid={<Text style={{ marginLeft: 10 }}>测试中间位置</Text>} right=">" />
-      <ListRow left={<Text>测试前端位置</Text>} mid={<Text style={{ marginLeft: 10 }}>测试中间位置</Text>} right=">" />
-      <ListRow left={<Text>测试前端位置</Text>} mid={<Text style={{ marginLeft: 10 }}>测试中间位置</Text>} right={
+      <ListRow left="ListRow" mid={<Text style={{ marginLeft: 10 }}>Test Mid</Text>} right=">" />
+      <ListRow left={<Text>Test Front</Text>} mid={<Text style={{ marginLeft: 10 }}>Test Mid</Text>} right=">" />
+      <ListRow left={<Text>Test Front</Text>} mid={<Text style={{ marginLeft: 10 }}>Test Mid</Text>} right={
         <Button onPress={() => {}}>
-          <Text>默认样式</Text>
+          <Text>Button</Text>
         </Button>      
       } />
       <ListRow left="NoDivider" divider={false}  />

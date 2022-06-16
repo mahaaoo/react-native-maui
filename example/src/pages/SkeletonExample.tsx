@@ -20,7 +20,7 @@ const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
         <View 
           style={{ width, height: 200, backgroundColor: 'white' }}>
           <SkeletonRect style={{ marginLeft: 15, marginTop: 15, height: 20, width: 150 }}>
-            <Text>测试效果</Text>
+            <Text>Test Normal</Text>
           </SkeletonRect>
           <SkeletonRect style={{ marginTop: 15, width: width - 30, height: 30, marginHorizontal: 15 }} />
           <SkeletonRect style={{ marginTop: 15, width: width - 30, height: 30, marginHorizontal: 15 }} />
@@ -36,7 +36,7 @@ const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
             </View>
             <View style={{ flex: 1 }}>
               <SkeletonRect style={{ marginLeft: 15, marginTop: 15, height: 20, width: 150 }}>
-                <Text>测试效果二</Text>
+                <Text>Test Breath</Text>
               </SkeletonRect>
               <SkeletonRect style={{ height: 30, marginHorizontal: 15, marginTop: 15 }} />
             </View>
@@ -50,7 +50,7 @@ const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
         <View 
           style={{ width, height: 200, backgroundColor: 'white' }}>
           <SkeletonRect style={{ marginLeft: 15, marginTop: 15, height: 20, width: 150 }}>
-            <Text>测试效果一</Text>
+            <Text>Test Normal</Text>
           </SkeletonRect>
           <SkeletonRect style={{ marginTop: 15, width: width - 30, height: 30, marginHorizontal: 15 }} />
           <SkeletonRect style={{ marginTop: 15, width: width - 30, height: 30, marginHorizontal: 15 }} />
@@ -66,7 +66,7 @@ const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
             </View>
             <View style={{ flex: 1 }}>
               <SkeletonRect style={{ marginLeft: 15, marginTop: 15, height: 20, width: 150 }}>
-                <Text>测试效果二</Text>
+                <Text>Test Shine</Text>
               </SkeletonRect>
               <SkeletonRect style={{ height: 30, marginHorizontal: 15, marginTop: 15 }} />
             </View>
@@ -80,12 +80,12 @@ const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
         <View style={{ width, height: 200, backgroundColor: 'white', flexDirection: 'row' }}>
           <View>
             <SkeletonRect style={{ height: 50, width: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center' }}>
-              <Text>头像</Text>
+              <Text>Avatar</Text>
             </SkeletonRect>
           </View>
           <View style={{ flex: 1 }}>
             <SkeletonRect style={{ marginLeft: 15, marginTop: 15, height: 20, width: 150 }}>
-              <Text>测试效果二</Text>
+              <Text>Text ShineOver</Text>
             </SkeletonRect>
             <SkeletonRect style={{ flex: 1, height: 30, marginHorizontal: 15, marginTop: 15 }} />
             <SkeletonRect style={{ flex: 1, height: 30, marginHorizontal: 15, marginTop: 15 }} />
@@ -93,15 +93,16 @@ const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
           </View>
         </View>
       </SkeletonContainer>
-
-      <TouchableOpacity 
-        onPress={() => {
-          setFinish(!finished);
-        }}
-        style={{ height: 50, width: 100, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', marginTop: 14 }}
-      >
-        <Text>停止</Text>
-      </TouchableOpacity>
+      <View style={{ marginVertical: 50, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <TouchableOpacity 
+          onPress={() => {
+            setFinish(!finished);
+          }}
+          style={{ height: 50, width: 200, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', marginTop: 14 }}
+        >
+          <Text>stop</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   )
 };
