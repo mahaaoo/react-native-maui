@@ -10,7 +10,8 @@ export {
   Loading,
   LoadingUtil,
   LoadingTitle,
-  Spinner
+  Spinner,
+  CircleLoad,
 } from './components/Loading';
 
 export {

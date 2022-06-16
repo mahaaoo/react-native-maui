@@ -3,10 +3,12 @@ import {View, StyleSheet} from 'react-native';
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 
 interface SpinnerProps {
+  activeColor?: string;
+  inactiveColor?: string;
 };
 
 const Spinner: React.FC<SpinnerProps> = props => {
-  const {} = props;
+  const {activeColor = '#1e90ff', inactiveColor = 'white'} = props;
   const currentIndex = useSharedValue(0);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ const Spinner: React.FC<SpinnerProps> = props => {
         new Array(3).fill(0).map((_, index) => {
           const animationStyle = useAnimatedStyle(() => {
             return {
-              backgroundColor: interpolateColor(currentIndex.value, [index-1, index, index+1], ['white', '#1e90ff', 'white']),
+              backgroundColor: interpolateColor(currentIndex.value, [index-1, index, index+1], [inactiveColor, activeColor, inactiveColor]),
             }
           });
 

@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Button, LoadingUtil, Loading, LoadingTitle, OpacityContainer, OpacityContainerRef, Spinner } from "react-native-maui";
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { Button, LoadingUtil, Loading, LoadingTitle, OpacityContainer, OpacityContainerRef, Spinner, CircleLoad } from "react-native-maui";
 
 export default function LoadingExample() {
 
   const ref = React.createRef<OpacityContainerRef>();
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 50}}>
         <Loading />
       </View>
@@ -56,7 +56,22 @@ export default function LoadingExample() {
       }}>
         <Text>show spinner</Text>
       </Button>
-    </View>
+      <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 50}}>
+        <CircleLoad />
+      </View>
+      <Button onPress={() => {
+        LoadingUtil.template = () => {
+          return (
+            <OpacityContainer containerStyle={{ justifyContent: 'center', alignItems: 'center'}}>
+              <CircleLoad color='white' />
+            </OpacityContainer>
+          )
+        }        
+        LoadingUtil.show();
+      }}>
+        <Text>show circleLoad</Text>
+      </Button>
+    </ScrollView>
   );
 }
 
