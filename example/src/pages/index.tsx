@@ -17,7 +17,8 @@ import {
   Shine,
   SkeletonContainer,
   SkeletonRect,
-  Progress
+  Progress,
+  AnimatedNumber
 } from 'react-native-maui';
 
 interface Example {
@@ -54,6 +55,9 @@ const exampleList: Example[] = [{
       <Text>{`>`}</Text>
     </View>
   ),
+}, {
+  title: 'AnimatedNumber',
+  content: <AnimatedNumber style={{ fontSize: 30, color: 'orange', fontWeight: 'bold' }} value={0} toValue={100} />,
 }, {
   title: 'Progress',
   content: <Progress style={{ width: '60%', height: 15, borderRadius: 10 }} value={70} activeColor="pink" inactiveColor='white' />
