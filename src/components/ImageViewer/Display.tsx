@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {View, Image, Dimensions} from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import { Position } from './ImageContainer';
 
-import {useInitialPosition} from './hook';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 const {width: Width, height: Height} = Dimensions.get('window');
 
@@ -21,7 +20,36 @@ interface DisplayProps {
 
 const Display: React.FC<DisplayProps> = (props) => {
   const {position, duration, paddingTop, paddingBottom, item, currentIndex, index, willUnMount, containerTranslateY} = props;
-  const {initialX, initialY, initialW, initialH, toHeight} = useInitialPosition(position, paddingTop, paddingBottom)
+  const {initialX, initialY, initialW, initialH, toHeight} = useMemo(() => {
+    const toHeight = Height - paddingTop - paddingBottom;
+
+    if (index == currentIndex.value) {
+      const { width: w, height: h, pageX: x, pageY: y } = position;
+
+      const initialX = x == undefined ? Width / 2 : x;
+      const initialY = (y == undefined ? Height / 2 : y);
+      const initialW = w == undefined ? 0 : w;
+      const initialH = h == undefined ? 0 : h;
+  
+      return {
+        initialX,
+        initialY,
+        initialW,
+        initialH,
+        toHeight,
+      }  
+    } else {
+      return {
+        initialX: 0,
+        initialY: 0,
+        initialW: Width,
+        initialH: toHeight,
+        toHeight,
+      }  
+    }
+  }, [position, paddingTop, paddingBottom, index, currentIndex]);
+
+
 
   const width = useSharedValue(initialW);
   const height = useSharedValue(initialH);
@@ -30,7 +58,7 @@ const Display: React.FC<DisplayProps> = (props) => {
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
 
-  const opacity = useSharedValue(0);
+  const opacity = useSharedValue(index == currentIndex.value ? 0 : 1);
 
   const pinchGesture = Gesture.Pinch()
   .onUpdate((e) => {
@@ -78,20 +106,14 @@ const Display: React.FC<DisplayProps> = (props) => {
   })
 
   useEffect(() => {
-    if (currentIndex.value === index) {
+    if (currentIndex.value === index) {      
       width.value = withTiming(Width, {duration});
       height.value = withTiming(toHeight, {duration});
       translateX.value = withTiming(0, {duration});
       translateY.value = withTiming(0, {duration});
       opacity.value = withTiming(1, {duration});
-    } else {
-      width.value = Width;
-      height.value = toHeight;
-      translateX.value = 0;
-      translateY.value = 0;  
-      opacity.value = 1;
     }
-  }, [])
+  }, [currentIndex.value, index, duration, toHeight])
 
   return (
     <View style={{ flex: 1, width: Width }}>

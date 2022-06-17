@@ -61,21 +61,35 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
     mount();
   }, [])
 
+  const handleAppear = useCallback(() => {
+    onAppear && onAppear();
+  }, [onAppear])
+
+  const handleDisappear = useCallback(() => {
+    onDisappear && onDisappear();
+  }, [onDisappear])
+
   const mount = useCallback(() => {
     opacity.value = withTiming(1, {duration}, () => {
-      onAppear && runOnJS(onAppear)();
+      runOnJS(handleAppear)();
     });
-  }, [onAppear]);
+  }, []);
 
   const unMount = useCallback(() => {
     opacity.value = withTiming(0, {duration}, () => {
-      onDisappear && runOnJS(onDisappear)();
+      runOnJS(handleDisappear)();
     });
-  }, [onDisappear])
+  }, [])
 
   const maskAnimationStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: '#000',
+      opacity: opacity.value
+    }
+  });
+
+  const paginationStyle = useAnimatedStyle(() => {
+    return {
       opacity: opacity.value
     }
   });
@@ -177,12 +191,14 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
           </Animated.View>
         </GestureDetector>
       </View>
-      <View style={{
+      <View 
+        style={[{
           position: 'absolute',
           top: paddingTop - 30,
           left: 0,
           right: 0,
-      }}>
+        }, paginationStyle]}
+      >
         <Pagination currentIndex={paginationIndex} total={positionList.length}>
           <Percent />
         </Pagination>
