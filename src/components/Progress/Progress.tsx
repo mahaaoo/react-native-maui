@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {View, ViewStyle} from 'react-native';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 
 interface ProgressProps {
   activeColor?: string;
   inactiveColor?: string;
   value: number;
   style: ViewStyle;
+  toValue?: number;
 };
 
 const Progress: React.FC<ProgressProps> = props => {
@@ -13,24 +15,26 @@ const Progress: React.FC<ProgressProps> = props => {
     activeColor='#1e90ff',
     inactiveColor='#D8D8D8',
     value,
-    style
+    style,
+    toValue,
   } = props;
+
+  const progress = useSharedValue(value);
+
+  useEffect(() => {
+    if (toValue && toValue > value) {
+      progress.value = withDelay(500, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
+    }
+  }, [])
 
   const borderRadius = useMemo(() => {
     return style?.borderRadius || 0;
   }, [style]);
 
-  const progressStyle = useMemo(() => {
-    let percent = value;
-    if (percent <= 0) {
-      percent = 0;
-    } else if (percent >= 100) {
-      percent = 100;
-    }
-
+  const progressStyle = useAnimatedStyle(() => {
     return {
       height: '100%',
-      width: `${percent}%`,
+      width: `${progress.value}%`,
       backgroundColor: activeColor,
       borderRadius
     }
@@ -38,7 +42,7 @@ const Progress: React.FC<ProgressProps> = props => {
   
   return (
     <View style={[style, { backgroundColor: inactiveColor}]}>
-      <View style={[progressStyle]} />
+      <Animated.View style={[progressStyle]} />
     </View>
   )
 };

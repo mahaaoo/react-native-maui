@@ -1,12 +1,13 @@
-import React, { useCallback, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import Animated, { Easing, runOnJS, useAnimatedProps, useAnimatedReaction, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import Svg, {Circle, Path} from 'react-native-svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 interface CircleProgressProps {
   value: number; // percent: 0%-100%
 
+  style?: ViewStyle;
   size?: number;
   toValue?: number;
   width?: number;
@@ -15,14 +16,19 @@ interface CircleProgressProps {
 };
 
 const CircleProgress: React.FC<CircleProgressProps> = props => {
-  const {size = 100, value, toValue, width = 10, activeColor="#1e90ff", inactiveColor='#D8D8D8'} = props;
+  const {size = 100, value, toValue, width = 10, activeColor="#1e90ff", inactiveColor='#D8D8D8', style} = props;
   const progress = useSharedValue(value);
-  
+  const [percent, setPercent] = useState(value);
+
   useEffect(() => {
     if (toValue && toValue > value) {
-      progress.value = withTiming(toValue, {duration: 1000});
+      progress.value = withDelay(500, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
     }
   }, []);
+
+  useAnimatedReaction(() => Math.round(progress.value), (value) => {
+    runOnJS(setPercent)(value);
+  });
 
   const getEndPoint = useCallback((value: number) => {
     'worklet';
@@ -63,24 +69,44 @@ const CircleProgress: React.FC<CircleProgressProps> = props => {
   });
 
   return (
-    <Svg width={size * 2} height={size * 2} style={{ backgroundColor: 'white' }}>
-      <Circle
-        cx={size}
-        cy={size}
-        r={size-width}
-        stroke={inactiveColor}
-        strokeWidth={width}
-      />
-      <AnimatedPath
-        animatedProps={animatedProps}
-        stroke={activeColor}
-        strokeWidth={width}
-        strokeLinecap={"round"}
-        style={{
-          ...StyleSheet.absoluteFillObject
-        }}
-      />
-    </Svg>
+    <View style={style}>
+      <Svg width={size * 2} height={size * 2}>
+        <Circle
+          cx={size}
+          cy={size}
+          r={size-width}
+          stroke={inactiveColor}
+          strokeWidth={width}
+        />
+        <AnimatedPath
+          animatedProps={animatedProps}
+          stroke={activeColor}
+          strokeWidth={width}
+          strokeLinecap={"round"}
+          style={{
+            ...StyleSheet.absoluteFillObject
+          }}
+        />
+      </Svg>
+      <View style={{ 
+        ...StyleSheet.absoluteFillObject, 
+        width: 2 * size - 2 * width,
+        height: 2 * size - 2 * width,
+        borderRadius:  size - width,
+        padding: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        transform: [{
+          translateX: width,
+        }, {
+          translateY: width,
+        }]
+      }}>
+        <Text style={{ fontWeight: "bold", fontSize: size * 0.4 }}>
+          {percent}%
+        </Text>
+      </View>  
+    </View>
   )
 };
 
