@@ -35,7 +35,7 @@ const ProgressExample: React.FC<ProgressExampleProps> = props => {
       <Progress style={{ width: 300, height: 15, borderRadius: 10, marginTop: 20 }} value={38} />
       <Progress style={{ width: 300, height: 15, marginTop: 20 }} value={49} />
       <Progress style={{ width: 300, height: 15, borderRadius: 10, marginTop: 20 }} value={progress} />
-      <CircleProgress />
+      <CircleProgress value={10} toValue={90} />
     </View>
   )
 };
