@@ -11,7 +11,7 @@ interface CircleLoadProps {
 };
 
 const CircleLoad: React.FC<CircleLoadProps> = props => {
-  const {size = 30, circle = 50, color = '#1e90ff'} = props;
+  const {size = 30, circle = 120, color = '#1e90ff'} = props;
   const progress = useSharedValue(0);
 
   const all = size * 2 * Math.PI * 0.8;
