@@ -25,6 +25,7 @@ import PaginationExample from './pages/PaginationExample';
 import ActionSheetExample from './pages/ActionSheetExample';
 import ProgressExample from './pages/ProgressExample';
 import AnimatedNumberExample from './pages/AnimatedNumberExample';
+import ShadowExample from './pages/ShadowExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -50,6 +51,7 @@ export type RootStackParamList = {
   ActionSheetExample: undefined;
   ProgressExample: undefined;
   AnimatedNumberExample: undefined;
+  ShadowExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -185,6 +187,11 @@ const App: React.FC<{}> = () => {
         name="AnimatedNumberExample"
         component={AnimatedNumberExample}
         options={{ headerTitle: 'AnimatedNumberExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="ShadowExample"
+        component={ShadowExample}
+        options={{ headerTitle: 'ShadowExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );

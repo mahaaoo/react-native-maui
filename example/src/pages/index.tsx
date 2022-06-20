@@ -168,6 +168,9 @@ const exampleList: Example[] = [{
       <View style={{ width: 30, height: 30, backgroundColor: 'white' }} />
     </View>
   ),
+}, {
+  title: 'Shadow',
+  content: null
 }];
 
 export default function ComponentScreen() {
