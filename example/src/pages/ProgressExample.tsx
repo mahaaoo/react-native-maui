@@ -9,14 +9,13 @@ const ProgressExample: React.FC<ProgressExampleProps> = props => {
   const {} = props;
   return (
     <View style={styles.container}>
-      <Progress style={{ width: 300, height: 20, borderRadius: 10, marginTop: 20 }} value={10} />
-      <Progress style={{ width: 300, height: 20, borderRadius: 10, marginTop: 20 }} value={74} activeColor="orange" />
-      <Progress style={{ width: 300, height: 20, borderRadius: 10, marginTop: 20 }} value={20} activeColor="pink" inactiveColor='white' />
-      <Progress style={{ width: 300, height: 15, borderRadius: 10, marginTop: 20 }} value={38} />
-      <Progress style={{ width: 300, height: 15, marginTop: 20 }} value={49} />
-      <Progress style={{ width: 300, height: 15, borderRadius: 10, marginTop: 20 }} value={10} toValue={90} />
-      <CircleProgress style={{ marginTop: 20 }} size={60} value={30} activeColor="pink" />
-      <CircleProgress style={{ marginTop: 20 }} value={10} toValue={90} />
+      <Progress style={{ marginTop: 20 }} height={10} width={200} radius value={10} />
+      <Progress style={{ marginTop: 20 }} value={74} activeColor="orange" radius />
+      <Progress style={{ marginTop: 20 }} value={60} activeColor={['pink', 'white']} inactiveColor='white' radius />
+      <Progress style={{ marginTop: 20 }} value={49} />
+      <Progress style={{ marginTop: 20 }} value={10} toValue={90} radius />
+      <CircleProgress style={{ marginTop: 20 }} size={60} value={45} activeColor={['white', 'pink']} />
+      <CircleProgress style={{ marginTop: 20 }} width={15} value={10} toValue={90}  />
     </View>
   )
 };

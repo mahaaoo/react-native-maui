@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Animated, { Easing, runOnJS, useAnimatedProps, useAnimatedReaction, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
-import Svg, {Circle, Path} from 'react-native-svg';
+import Svg, {Circle, Defs, LinearGradient, Path, Stop} from 'react-native-svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 interface CircleProgressProps {
@@ -11,7 +11,7 @@ interface CircleProgressProps {
   size?: number;
   toValue?: number;
   width?: number;
-  activeColor?: string;
+  activeColor?: string | string[];
   inactiveColor?: string;
 };
 
@@ -68,9 +68,20 @@ const CircleProgress: React.FC<CircleProgressProps> = props => {
     }
   });
 
+  
+
   return (
     <View style={style}>
       <Svg width={size * 2} height={size * 2}>
+        <Defs>
+          <LinearGradient id="circle_progress" x1="0" y1="0" x2="1" y2="0">
+          {
+            Array.isArray(activeColor) && activeColor?.map((color, index) => {
+              return <Stop key={`circle_progress_stop${index}`} offset={index/activeColor.length} stopColor={color} stopOpacity="1" />
+            })
+          }
+          </LinearGradient>
+        </Defs>
         <Circle
           cx={size}
           cy={size}
@@ -80,7 +91,7 @@ const CircleProgress: React.FC<CircleProgressProps> = props => {
         />
         <AnimatedPath
           animatedProps={animatedProps}
-          stroke={activeColor}
+          stroke={Array.isArray(activeColor) ? 'url(#circle_progress)' : activeColor}
           strokeWidth={width}
           strokeLinecap={"round"}
           style={{
