@@ -78,3 +78,4 @@ export {
 
 export { Progress, CircleProgress } from './components/Progress';
 export {AnimatedNumber} from './components/AnimatedNumber';
+export {Shadow} from './components/Shadow';
