@@ -1,8 +1,11 @@
 # react-native-maui
 
-React Native components implemented by `react-native-reanimated v2` and `react-native-gesture-handler v2` 
+React Native UI Library
 
-Support iOS & Android
+Component animations are implemented by `react-native-reanimated` and `react-native-gesture-handler`
+
+All files are 100% typescript,and Support iOS & Android
+
 
 ## Preview
 ### iOS
