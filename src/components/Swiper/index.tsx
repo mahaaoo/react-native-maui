@@ -1,10 +1,11 @@
 import Swiper from './Swiper';
-export * from './type';
+import { SwiperRef } from './type';
 import BaseLayout from './BaseLayout';
 import ScaleLayout from './ScaleLayout';
 
 export {
   Swiper,
   BaseLayout,
-  ScaleLayout
+  ScaleLayout,
+  SwiperRef
 };

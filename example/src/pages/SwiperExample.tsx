@@ -19,10 +19,13 @@ const card = [
   },
 ]
 
-const card2 = new Array(100).fill(0);
-card2.forEach((_, i) => {
-  card2[i] = i;
-})
+let card2: any[] = [];
+for(let i = 0; i < 1; i++) {
+  card2 = card2.concat(card);
+}
+
+console.log(card2);
+
 
 export default function SwiperExample() {
   const ref = useRef<SwiperRef>(null);
@@ -44,7 +47,7 @@ export default function SwiperExample() {
       <Swiper
         ref={ref}
         interval={1000}
-        dataSource={card}
+        dataSource={card2}
         renderItem={(item) => {
           return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
         }}

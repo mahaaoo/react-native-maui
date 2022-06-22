@@ -60,7 +60,8 @@ export {
 export {
   Swiper,
   BaseLayout,
-  ScaleLayout
+  ScaleLayout,
+  SwiperRef,
 } from './components/Swiper';
 
 export { Switch } from './components/Switch';
