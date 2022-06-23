@@ -1,71 +1,68 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import Animated, {
-  useAnimatedRef,
-  measure,
   useSharedValue,
   useAnimatedStyle,
   useDerivedValue,
-  withSpring,
   withTiming,
-  runOnUI,
 } from "react-native-reanimated";
 
 interface CollapseProps {
   title: string;
+  toggle?: boolean;
+  onChange?: () => void;
 }
 
 const Collapse: React.FC<CollapseProps> = props => {
-  const {children, title} = props
+  const {children, title, onChange, toggle = false} = props;
 
-  const open = useSharedValue(false);
-  const aref = useAnimatedRef<View>();
+  const open = useSharedValue(toggle);
   const height = useSharedValue(0);
   const transition = useDerivedValue(() => {
-    return open.value === true ? withSpring(1) : withTiming(0);
+    return open.value === true ? withTiming(1) : withTiming(0);
   });
 
-  const style = useAnimatedStyle(() => ({
-    height: 1 + transition.value * height.value,
-    opacity: transition.value === 0 ? 0 : 1,
-  }));
+  const handleLayout = useCallback(({
+    nativeEvent: {
+      layout: { height: h },
+    },
+  }) => {
+    height.value = h;
+  }, []);
+
+  const handleOnPress = useCallback(() => {
+    open.value = !open.value;
+    onChange && onChange();
+  }, [onChange]);
+
+  const style = useAnimatedStyle(() => {
+    return {
+      height: transition.value * height.value + 1,
+      opacity: transition.value === 0 ? 0 : 1,
+    }
+  });
 
   return (
-    <>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          if(height.value === 0) {
-            runOnUI(() => {
-              "worklet";
-              height.value = measure(aref).height;
-            })();
-          }
-          open.value = !open.value;
-        }}
-      >
-        <Animated.View style={styles.container}>
+    <View style={styles.container}>
+      <TouchableWithoutFeedback  onPress={handleOnPress}>
+        <Animated.View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
         </Animated.View>
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.items, style]}>
-        <View 
-          ref={aref}
-          onLayout={({
-            nativeEvent: {
-              layout: { height: h },
-            },
-          }) => height.value = h}
-        >
+        <View onLayout={handleLayout}>
           {children}
         </View>
       </Animated.View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
+  },
+  titleContainer: {
     padding: 16,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,

@@ -14,7 +14,7 @@ const ProgressExample: React.FC<ProgressExampleProps> = props => {
       <Progress style={{ marginTop: 20 }} value={60} activeColor={['pink', 'white']} inactiveColor='white' radius />
       <Progress style={{ marginTop: 20 }} value={49} />
       <Progress style={{ marginTop: 20 }} value={10} toValue={90} radius />
-      <CircleProgress style={{ marginTop: 20 }} size={60} value={45} activeColor={['white', 'pink']} />
+      <CircleProgress style={{ marginTop: 20 }} size={60} value={75} activeColor={['white', 'pink']} />
       <CircleProgress style={{ marginTop: 20 }} width={15} value={10} toValue={90}  />
     </View>
   )

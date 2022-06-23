@@ -8,19 +8,30 @@ export default function ButtonExample() {
 
   return (
     <ScrollView style={styles.container}>
-      <Collapse title={"折叠面板一"}>
+      <Collapse title={"collapse1"}>
         <View style={styles.content}>
-          <Text>内容内容内容内容</Text>
+          <Text>contentcontentcontentcontent</Text>
         </View>
       </Collapse>
-      <Collapse title={"折叠面板二"}>
+      <Collapse title={"collapse2"} toggle={true}>
         <View style={styles.content}>
-          <Text>内容内容内容内容</Text>
+          <Text>contentcontentcontentcontent</Text>
         </View>
       </Collapse>
-      <Collapse title={"折叠面板三"}>
+      <Collapse title={"collapse3"} onChange={() => {
+        console.log('open/close');
+      }}>
         <View style={styles.content}>
-          <Text>内容内容内容内容</Text>
+          <Text>contentcontentcontentcontent</Text>
+        </View>
+        <View style={styles.content}>
+          <Text>contentcontentcontentcontent</Text>
+        </View>
+        <View style={styles.content}>
+          <Text>contentcontentcontentcontent</Text>
+        </View>
+        <View style={styles.content}>
+          <Text>contentcontentcontentcontent</Text>
         </View>
       </Collapse>
     </ScrollView>
