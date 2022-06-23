@@ -1,8 +1,6 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {Shadow} from 'react-native-maui';
-
-const BORDER_RADIUS = 90;
 
 interface ShadowExampleProps {
 };
@@ -10,9 +8,21 @@ interface ShadowExampleProps {
 const ShadowExample: React.FC<ShadowExampleProps> = props => {
   return (
     <View style={styles.container}>
-      <Shadow borderRadius={BORDER_RADIUS} color={"red"} shadowWidth={30}>
+      <Shadow shadowWidth={15}>
         <View style={{ 
-          width: 200, height: 300, backgroundColor: 'pink', borderRadius: BORDER_RADIUS,
+          width: 100, height: 100, backgroundColor: 'white',
+        }}>
+          <Text></Text>
+        </View>
+      </Shadow>
+      <Shadow borderRadius={30} shadowWidth={15}>
+        <View style={{ 
+          width: 100, height: 100, backgroundColor: 'white', borderRadius: 30,
+        }} />
+      </Shadow>
+      <Shadow borderRadius={50} shadowWidth={15}>
+        <View style={{ 
+          width: 100, height: 100, backgroundColor: 'white', borderRadius: 50,
         }} />
       </Shadow>
     </View>

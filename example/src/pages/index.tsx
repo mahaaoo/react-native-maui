@@ -18,7 +18,8 @@ import {
   SkeletonContainer,
   SkeletonRect,
   Progress,
-  AnimatedNumber
+  AnimatedNumber,
+  Shadow
 } from 'react-native-maui';
 
 interface Example {
@@ -61,6 +62,15 @@ const exampleList: Example[] = [{
 }, {
   title: 'Progress',
   content: <Progress height={12} width={120} radius value={10} toValue={80} activeColor="pink" inactiveColor='white' />
+}, {
+  title: 'Shadow',
+  content: (
+    <Shadow borderRadius={15} shadowWidth={15} color="white">
+      <View style={{ 
+        width: 45, height: 45, backgroundColor: '#F8F8F8', borderRadius: 15,
+      }} />
+    </Shadow>
+  )
 }, {
   title: 'Loading',
   content: <Loading />,
@@ -168,9 +178,6 @@ const exampleList: Example[] = [{
       <View style={{ width: 30, height: 30, backgroundColor: 'white' }} />
     </View>
   ),
-}, {
-  title: 'Shadow',
-  content: null
 }];
 
 export default function ComponentScreen() {

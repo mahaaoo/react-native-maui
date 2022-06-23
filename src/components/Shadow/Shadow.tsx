@@ -6,12 +6,11 @@ interface ShadowProps {
   borderRadius?: number;
   color?: string;
   shadowWidth?: number;
+  stopOpacity?: number;
 };
 
-const stopOpacity = 0.45;
-
 const Shadow: React.FC<ShadowProps> = props => {
-  const {borderRadius = 15, children, color = '#F8F8F8', shadowWidth=15} = props;
+  const {borderRadius = 15, children, color = '#F8F8F8', shadowWidth=15, stopOpacity=1} = props;
   const [viewport, setViewport] = useState({
     width: 0,
     height: 0,
@@ -59,16 +58,6 @@ const Shadow: React.FC<ShadowProps> = props => {
 
     const circleR = borderRadius + shadowWidth / 2;
 
-
-    console.log({width, height, circleR, xAxisLength, yAxisLength,});
-    // console.log(shadowWidth/(2 * circleR));
-    
-    // console.log(1 - shadowWidth/(circleR));
-
-    console.log(1 - borderRadius * 2 / viewport.width);
-    console.log(1 - borderRadius * 2 / viewport.height);
-
-
     return {
       x11, y11, x12, y12,
       x21, y21, x22, y22,
@@ -102,28 +91,28 @@ const Shadow: React.FC<ShadowProps> = props => {
           id="top-left" 
           r="100%" cx="100%" cy="100%" fx="100%" fy="100%">
           <Stop offset="0" stopColor={color} stopOpacity="1" />
-          <Stop offset={`${2 * options.circleR / (viewport.height + viewport.width)}`} stopColor={color} stopOpacity="1" />
+          <Stop offset={`${borderRadius / (borderRadius + shadowWidth)}`} stopColor={color} stopOpacity={stopOpacity} />
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
         <RadialGradient 
           id="top-right" 
           r="100%" cx="0" cy="100%" fx="0" fy="100%">
           <Stop offset="0" stopColor={color} stopOpacity="1" />
-          <Stop offset={`${2 * options.circleR / (viewport.height + viewport.width)}`} stopColor={color} stopOpacity="1" />
+          <Stop offset={`${borderRadius / (borderRadius + shadowWidth)}`} stopColor={color} stopOpacity={stopOpacity} />
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
         <RadialGradient 
           id="bottom-right" 
           r="100%" cx="0" cy="0" fx="0" fy="0">
-          <Stop offset="0" stopColor={color} stopOpacity="1" />
-          <Stop offset={`${2 * options.circleR / (viewport.height + viewport.width)}`} stopColor={color} stopOpacity="1" />
+          <Stop offset="0" stopColor={color} stopOpacity={stopOpacity} />
+          <Stop offset={`${borderRadius / (borderRadius + shadowWidth)}`} stopColor={color} stopOpacity={stopOpacity} />
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
         <RadialGradient 
           id="bottom-left" 
           r="100%" cx="100%" cy="0" fx="100%" fy="0">
           <Stop offset="0" stopColor={color} stopOpacity="1" />
-          <Stop offset={`${2 * options.circleR / (viewport.height + viewport.width)}`} stopColor={color} stopOpacity="1" />
+          <Stop offset={`${borderRadius / (borderRadius + shadowWidth)}`} stopColor={color} stopOpacity={stopOpacity} />
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
       </Defs>
