@@ -65,9 +65,9 @@ const exampleList: Example[] = [{
 }, {
   title: 'Shadow',
   content: (
-    <Shadow borderRadius={15} shadowWidth={15} color="white">
+    <Shadow borderRadius={10} shadowWidth={10} color="white">
       <View style={{ 
-        width: 45, height: 45, backgroundColor: '#F8F8F8', borderRadius: 15,
+        width: 45, height: 45, backgroundColor: '#F8F8F8', borderRadius: 10,
       }} />
     </Shadow>
   )
@@ -89,6 +89,13 @@ const exampleList: Example[] = [{
 }, {
   title: 'SliderSelect',
   content: <SliderSelect style={{ width: 100 }} items={['one', 'two']} />,
+}, {
+  title: 'RefreshList',
+  content: (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ backgroundColor: 'white', height: '70%', width: 100, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}/>
+    </View>
+  ),
 }, {
   title: 'Switch',
   content: (
@@ -151,13 +158,6 @@ const exampleList: Example[] = [{
     <SkeletonContainer childAnimation={Shine}>
       <SkeletonRect style={{ height: 44, width: 100, borderRadius: 8 }} />
     </SkeletonContainer>
-  ),
-}, {
-  title: 'RefreshList',
-  content: (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ backgroundColor: 'white', height: '70%', width: 100, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}/>
-    </View>
   ),
 }, {
   title: 'Swiper',

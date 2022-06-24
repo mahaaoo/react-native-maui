@@ -34,6 +34,7 @@ export default function ButtonExample() {
           <Text>contentcontentcontentcontent</Text>
         </View>
       </Collapse>
+      <Text>contentcontentcontentcontent</Text>
     </ScrollView>
   );
 }
