@@ -10,19 +10,19 @@ const ShadowExample: React.FC<ShadowExampleProps> = props => {
     <View style={styles.container}>
       <Shadow shadowWidth={15}>
         <View style={{ 
-          width: 100, height: 100, backgroundColor: 'white',
+          width: 100, height: 100, backgroundColor: '#D8D8D8',
         }}>
           <Text></Text>
         </View>
       </Shadow>
-      <Shadow borderRadius={30} shadowWidth={15}>
+      <Shadow borderRadius={30} shadowWidth={15} color="#FFFFFF">
         <View style={{ 
-          width: 100, height: 100, backgroundColor: 'white', borderRadius: 30,
+          width: 100, height: 100, backgroundColor: '#D8D8D8', borderRadius: 30,
         }} />
       </Shadow>
       <Shadow borderRadius={50} shadowWidth={15}>
         <View style={{ 
-          width: 100, height: 100, backgroundColor: 'white', borderRadius: 50,
+          width: 100, height: 100, backgroundColor: '#D8D8D8', borderRadius: 50,
         }} />
       </Shadow>
     </View>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: '#D8D8D8'
   }
 })
 

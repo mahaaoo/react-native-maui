@@ -21,6 +21,7 @@ import {
   AnimatedNumber,
   Shadow
 } from 'react-native-maui';
+import WaterMark from '../components/WaterMark';
 
 interface Example {
   title: string;
@@ -185,6 +186,7 @@ export default function ComponentScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+      <WaterMark />
       <FlatList
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
