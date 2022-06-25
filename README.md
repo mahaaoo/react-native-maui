@@ -6,19 +6,68 @@ Component animations are implemented by `react-native-reanimated` and `react-nat
 
 All files are 100% typescript,and Support iOS & Android
 
-
 ## Preview
-### iOS
 
-<img src="./shoot/ios_1.jpeg" width="375" /><img src="./shoot/ios_2.jpeg" width="375" />
+| Button  | Badge  |  Divider  |
+| ------------- | ------------- | ------------- | 
+| ![Button](./screenshoot/Button.png)  | ![Badge](./screenshoot/Badge.png)  |  ![Divider](./screenshoot/Divider.png) |
 
-### Android
+| Avatar  | ListRow  |  AnimatedNumber  |
+| ------------- | ------------- | ------------- | 
+| ![Avatar](./screenshoot/Avatar.png)  | ![ListRow](./screenshoot/ListRow.png)  |  <img src="./screenshoot/AnimatedNumber.gif" width="290" /> |
 
-<img src="./shoot/android_1.jpg" width="375" /><img src="./shoot/android_2.jpg" width="375" />
+| Progress  | Shadow  |  Loading  |
+| ------------- | ------------- | ------------- | 
+| <img src="./screenshoot/Progress.gif" width="290" />  | ![Shadow](./screenshoot/Shadow.png)  |  <img src="./screenshoot/Loading.gif" width="290" /> |
 
-## expo demo
-[expo home page](https://expo.dev/@mah22/react-native-maui-example?serviceType=classic&distribution=expo-go)
+| Toast  | Pagination  |  SliderSelect  |
+| ------------- | ------------- | ------------- | 
+| ![Toast](./screenshoot/Toast.png)  | ![Pagination](./screenshoot/Pagination.png)  |  ![SliderSelect](./screenshoot/SilderSelect.png) |
+
+| Theme  | Collapse  |  Overlay  |
+| ------------- | ------------- | ------------- | 
+| ![Theme](./screenshoot/Theme.png)  | ![Collapse](./screenshoot/Collapse.png)  |  ![Overlay](./screenshoot/Overlay.png) |
+
+| ActionSheet  | SliderSheet  |  Picker  |
+| ------------- | ------------- | ------------- | 
+| ![ActionSheet](./screenshoot/ActionSheet.png)  | ![SliderSheet](./screenshoot/SliderSheet.png)  |  ![Picker](./screenshoot/Picker.png) |
+
+| Skeleton  | Swiper  |  ImageViewer  |
+| ------------- | ------------- | ------------- | 
+| <img src="./screenshoot/Skeleton.gif" width="290" />  | ![Swiper](./screenshoot/Swiper.png)  |  ![ImageViewer](./screenshoot/ImageViewer.png) |
+
+## Installation
+
+Before Installation, Make sure have installed `react-native-reanimated`、`react-native-gesture-handler` and `react-native-svg`:
+
+```
+npm install react-native-reanimated react-native-gesture-handler react-native-svg
+npx pod-install
+```
+
+For more information, please check 
+- [react-native-reanimated](https://github.com/software-mansion/react-native-reanimated)
+- [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler)
+- [react-native-svg](https://github.com/react-native-svg/react-native-svg)
+
+Install the `react-native-maui` with:
+```
+npm install react-native-maui
+```
+
+Then use by:
+```
+import { Button } from 'react-native-maui'
+```
+
+## Expo Demo
+[Expo HomePage](https://expo.dev/@mah22/react-native-maui-example?serviceType=classic&distribution=expo-go)
 
 Scan the QR code with Expo Go (Android) or the Camera app
 
-<img src="./shoot/qrcode.png" width="200" />
+<img src="./screenshoot/qrcode.png" width="200" />
+
+## License
+
+Under The MIT License.
+
