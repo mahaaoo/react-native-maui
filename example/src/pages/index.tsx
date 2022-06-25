@@ -59,7 +59,7 @@ const exampleList: Example[] = [{
   ),
 }, {
   title: 'AnimatedNumber',
-  content: <AnimatedNumber style={{ fontSize: 30, color: 'orange', fontWeight: 'bold' }} value={0} toValue={100} />,
+  content: <AnimatedNumber style={{ fontSize: 30, color: 'orange', fontWeight: 'bold' }} delay={5000} value={0} toValue={100} />,
 }, {
   title: 'Progress',
   content: <Progress height={12} width={120} radius value={10} toValue={80} activeColor="pink" inactiveColor='white' />

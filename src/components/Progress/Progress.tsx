@@ -33,7 +33,7 @@ const Progress: React.FC<ProgressProps> = props => {
 
   useEffect(() => {
     if (toValue && toValue > value) {
-      progress.value = withDelay(500, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
+      progress.value = withDelay(5000, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
     }
   }, [])
   
