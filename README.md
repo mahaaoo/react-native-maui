@@ -36,6 +36,11 @@ All files are 100% typescript,and Support iOS & Android
 | ------------- | ------------- | ------------- | 
 | <img src="./screenshoot/Skeleton.gif" width="290" />  | ![Swiper](./screenshoot/Swiper.png)  |  ![ImageViewer](./screenshoot/ImageViewer.png) |
 
+| RefreshList  | Switch  |
+| ------------- | ------------- |
+| <img src="./screenshoot/RefreshList.png" width="290" />  | <img src="./screenshoot/Switch.png" width="290" />  |
+
+
 ## Installation
 
 Before Installation, Make sure have installed `react-native-reanimated`、`react-native-gesture-handler` and `react-native-svg`:
