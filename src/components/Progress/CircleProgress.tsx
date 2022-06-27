@@ -13,16 +13,18 @@ interface CircleProgressProps {
   width?: number;
   activeColor?: string | string[];
   inactiveColor?: string;
+  delay?: number;
+  renderCenter?: (progress: number) => React.ReactNode;
 };
 
 const CircleProgress: React.FC<CircleProgressProps> = props => {
-  const {size = 100, value, toValue, width = 10, activeColor="#1e90ff", inactiveColor='#D8D8D8', style} = props;
+  const {size = 100, value, toValue, width = 10, activeColor="#1e90ff", inactiveColor='#D8D8D8', style, renderCenter, delay=1000} = props;
   const progress = useSharedValue(value);
   const [percent, setPercent] = useState(value);
 
   useEffect(() => {
     if (toValue && toValue > value) {
-      progress.value = withDelay(500, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
+      progress.value = withDelay(delay, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
     }
   }, []);
 
@@ -113,9 +115,7 @@ const CircleProgress: React.FC<CircleProgressProps> = props => {
           translateY: width,
         }]
       }}>
-        <Text style={{ fontWeight: "bold", fontSize: size * 0.4 }}>
-          {percent}%
-        </Text>
+        {renderCenter && renderCenter(percent)}
       </View>  
     </View>
   )

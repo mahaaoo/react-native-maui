@@ -40,7 +40,7 @@ const exampleList: Example[] = [{
   content: <Badge number={2} />,
 }, {
   title: 'Divider',
-  content: <Divider start={30} end={120} color={'white'} width={2} />,
+  content: <Divider start={30} end={140} color={'white'} width={2} />,
 }, {
   title: 'Avatar',
   content: (

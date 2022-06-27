@@ -14,7 +14,8 @@ interface ProgressProps {
   radius?: boolean;
   width?: number;
   height?: number;
-  style?: ViewStyle
+  style?: ViewStyle;
+  delay?: number;
 };
 
 const Progress: React.FC<ProgressProps> = props => {
@@ -27,13 +28,14 @@ const Progress: React.FC<ProgressProps> = props => {
     height = 15,
     style,
     radius = false,
+    delay = 1000,
   } = props;
 
   const progress = useSharedValue(value);
 
   useEffect(() => {
     if (toValue && toValue > value) {
-      progress.value = withDelay(5000, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
+      progress.value = withDelay(delay, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
     }
   }, [])
   
