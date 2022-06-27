@@ -21,7 +21,7 @@ export default function ButtonExample() {
           style={{ marginHorizontal: 10 }} 
           onPress={() => {}} 
           type={ButtonType.Link}
-          textStyle={{ color: 'orange' }}
+          textStyle={{ color: '#fcb70a' }}
         >
           Link
         </Button> 
@@ -32,8 +32,8 @@ export default function ButtonExample() {
           style={{
             borderRadius: 15,
             borderWidth: 2,
-            borderColor: '#cf4813',
-            backgroundColor: '#d9a40e',
+            borderColor: '#80766e',
+            backgroundColor: '#93b5cf',
             marginHorizontal: 10
           }}
           withoutFeedback
@@ -71,7 +71,7 @@ export default function ButtonExample() {
           <Plus />
         </Button>
       </Section>
-      <Section title="自定义样式">
+      <Section title="等待视图">
         <Button 
           onPress={() => {}} 
           type={ButtonType.None}
