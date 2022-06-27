@@ -15,6 +15,7 @@ const CircleLoad: React.FC<CircleLoadProps> = props => {
   const progress = useSharedValue(0);
 
   const all = size * 2 * Math.PI * 0.8;
+  const dashPath = (Math.PI * 2 / 360) * circle * size * 0.8;
 
   useEffect(() => {
     progress.value = withRepeat(
@@ -44,7 +45,7 @@ const CircleLoad: React.FC<CircleLoadProps> = props => {
         r={size * 0.8}
         stroke={color}
         strokeWidth={5}
-        strokeDasharray={`${circle} ${all}`}
+        strokeDasharray={`${dashPath} ${all}`}
       />
     </AnimationSvg>
   )
