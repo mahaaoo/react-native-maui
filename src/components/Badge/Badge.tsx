@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, ViewStyle} from 'react-native';
 
 interface BadgeProps {
   number: number;
@@ -7,6 +7,7 @@ interface BadgeProps {
   size?: number;
   fontSize?: number;
   color?: string;
+  style?: ViewStyle;
 }
 
 const Badge: React.FC<BadgeProps> = props => {
@@ -15,6 +16,7 @@ const Badge: React.FC<BadgeProps> = props => {
     size = 15, 
     fontSize = 0.8 * size,
     color = '#fc4840',
+    style
   } = props;
 
   const content = useMemo(() => {
@@ -51,7 +53,8 @@ const Badge: React.FC<BadgeProps> = props => {
       style={[
         styles.container,
         {height: content.height, borderRadius: content.borderRadius, width: content.width},
-        {backgroundColor: color}
+        {backgroundColor: color},
+        style
       ]}>
       <Text style={{fontSize: fontSize, color: '#fff'}}>
         {content.title}

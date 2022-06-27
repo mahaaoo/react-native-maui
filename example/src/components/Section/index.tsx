@@ -12,7 +12,7 @@ const Section: React.FC<SectionProps> = props => {
   return (
     <View style={styles.container}>
       <Text style={{ padding: 15, fontSize: 16 }}>{title}</Text>
-      <View style={[{ padding: 15, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'flex-start' }, style]}>
+      <View style={[{ padding: 15, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}, style]}>
         {children}
       </View>
     </View>
