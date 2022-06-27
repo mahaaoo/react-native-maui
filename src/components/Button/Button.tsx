@@ -11,11 +11,11 @@ interface ButtonProps extends BaseButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
-  const { onPress, style, children, type = ButtonType.Default, disabled, textStyle } = props;
+  const { onPress, style, children, type = ButtonType.Default, disabled, textStyle, ...options } = props;
   const typeStyle = useType(type);
 
   return (
-    <BaseButton style={[typeStyle, style]} {...{disabled, onPress }}>
+    <BaseButton style={[typeStyle, style]} {...{disabled, onPress, ...options }}>
       {
         typeof children === 'string' ? <Text style={textStyle}>{children}</Text> : children
       }

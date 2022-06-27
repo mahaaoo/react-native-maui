@@ -16,10 +16,15 @@ export default function ButtonExample() {
       </Button>
       <Button onPress={() => {}} type={ButtonType.Link}>
         Link
-      </Button>
+      </Button> 
       <GradientButton
-        colors={['pink', 'orange', 'pink']}
-      />
+        colors={['orange', 'red']} 
+        width={150} 
+        height={50}
+        onPress={() => {}}
+      >
+        <Text style={{ color: 'white' }}>GradientButton</Text>
+      </GradientButton>
     </View>
   );
 }
@@ -27,7 +32,5 @@ export default function ButtonExample() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

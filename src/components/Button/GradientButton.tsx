@@ -1,9 +1,9 @@
-import React, { useCallback, useRef } from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, View, ViewStyle} from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import BaseButton from './BaseButton';
+import BaseButton, { BaseButtonProps } from './BaseButton';
 
-interface GradientButtonProps {
+interface GradientButtonProps extends BaseButtonProps{
   colors: string[];
   width: number;
   height: number;
@@ -13,18 +13,22 @@ interface GradientButtonProps {
   borderColor?: string;
   start?: { x: number, y: number },
   end?: { x: number, y: number },
+  style?: ViewStyle;
 };
 
-const Gradient: React.FC<GradientButtonProps> = props => {
+const GradientButton: React.FC<GradientButtonProps> = props => {
   const {
+    children,
     colors, 
     start = {x: 0, y: 0}, 
     end={x:1, y:0}, 
     width = 100, 
     height = 50, 
-    borderWidth = 2, 
+    borderWidth = 0, 
     borderColor = '#FFF',
-    borderRadius = 10,
+    borderRadius = 0,
+    style,
+    ...options
   } = props;
   return (
     <View>
@@ -50,8 +54,8 @@ const Gradient: React.FC<GradientButtonProps> = props => {
             strokeWidth={borderWidth}
           />
       </Svg>
-      <BaseButton onPress={() => {}} style={[styles.container]}>
-        <Text>按钮</Text>
+      <BaseButton style={[styles.container, {width, height}, style]} {...{...options}}>
+        {children}
       </BaseButton>
     </View>
   )
@@ -60,10 +64,9 @@ const Gradient: React.FC<GradientButtonProps> = props => {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   }
 })
 
-export default Gradient;
+export default GradientButton;
