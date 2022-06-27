@@ -7,7 +7,8 @@
     "expo-publish": "cd example && expo publish",
     "npm-publish": "./script/npm-publish.sh",
     "test": "jest",
-    "testc": "jest --coverage"
+    "testc": "jest --coverage",
+    "testu": "jest --updateSnapshot"
   },
   "keywords": [
     "react-native",

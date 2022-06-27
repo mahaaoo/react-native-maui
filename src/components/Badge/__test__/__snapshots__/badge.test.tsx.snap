@@ -16,6 +16,7 @@ exports[`Test:Avatar render correctly 1`] = `
       Object {
         "backgroundColor": "#fc4840",
       },
+      undefined,
     ]
   }
 >
