@@ -3,40 +3,17 @@
 exports[`Test:Avatar render correctly 1`] = `
 <View>
   <View
+    animatedStyle={
+      Object {
+        "value": Object {
+          "opacity": 0,
+        },
+      }
+    }
     collapsable={false}
     style={
       Object {
-        "animatedStyle": Object {
-          "current": Object {},
-        },
-        "initial": Object {
-          "updater": [Function],
-          "value": Object {
-            "opacity": 0,
-          },
-        },
-        "viewDescriptors": Object {
-          "add": [Function],
-          "batchToRemove": Object {},
-          "items": Array [],
-          "rebuildsharableViewDescriptors": [Function],
-          "remove": [Function],
-          "sharableViewDescriptors": Object {
-            "_animation": null,
-            "_id": 3,
-            "_listeners": Array [],
-            "_setter": [Function],
-            "_value": Array [],
-          },
-          "tags": Object {},
-          "waitForInsertSync": false,
-          "waitForRemoveSync": false,
-        },
-        "viewsRef": Object {
-          "add": [Function],
-          "items": Object {},
-          "remove": [Function],
-        },
+        "opacity": 0,
       }
     }
   >
@@ -58,6 +35,13 @@ exports[`Test:Avatar render correctly 1`] = `
     />
   </View>
   <View
+    animatedStyle={
+      Object {
+        "value": Object {
+          "opacity": 1,
+        },
+      }
+    }
     collapsable={false}
     style={
       Object {
@@ -68,6 +52,7 @@ exports[`Test:Avatar render correctly 1`] = `
         "height": 60,
         "justifyContent": "center",
         "left": 0,
+        "opacity": 1,
         "position": "absolute",
         "right": 0,
         "top": 0,
