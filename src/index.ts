@@ -11,7 +11,8 @@ export {
   LoadingUtil,
   LoadingTitle,
   Spinner,
-  CircleLoad,
+  CircleLoading,
+  GrowLoading,
 } from './components/Loading';
 
 export {

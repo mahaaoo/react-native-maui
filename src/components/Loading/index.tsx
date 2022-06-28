@@ -1,7 +1,8 @@
 import Loading from './Loading';
 import LoadingTitle from './LoadingTitle';
 import Spinner from './Spinner';
-import CircleLoad from './CircleLoad';
+import CircleLoading from './CircleLoading';
+import GrowLoading from './GrowLoading';
 
 import {LoadingUtil} from './LoadingUtil';
 
@@ -10,5 +11,6 @@ export {
   LoadingUtil,
   LoadingTitle,
   Spinner,
-  CircleLoad
+  CircleLoading,
+  GrowLoading,
 }

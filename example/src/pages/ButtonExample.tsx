@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import {Button, ButtonType, GradientButton, Loading, CircleLoad} from "react-native-maui";
+import {Button, ButtonType, GradientButton, Loading, CircleLoading} from "react-native-maui";
 import Section from '../components/Section';
 import Plus from '../components/Icon/plus'
 
@@ -100,7 +100,7 @@ export default function ButtonExample() {
             marginHorizontal: 10
           }}
         >
-          <CircleLoad color="white" size={20} />
+          <CircleLoading color="white" size={20} />
         </Button>
       </Section>
       <Section title="渐变">

@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
 const AnimationSvg = Animated.createAnimatedComponent(Svg);
 
-interface CircleLoadProps {
+interface CircleLoadingProps {
   size?: number;
   circle?: number;
   color?: string;
 };
 
-const CircleLoad: React.FC<CircleLoadProps> = props => {
+const CircleLoading: React.FC<CircleLoadingProps> = props => {
   const {size = 30, circle = 120, color = '#1e90ff'} = props;
   const progress = useSharedValue(0);
 
@@ -21,7 +21,6 @@ const CircleLoad: React.FC<CircleLoadProps> = props => {
     progress.value = withRepeat(
       withTiming(1, {
         duration: 800,
-        easing: Easing.bezier(0.65, 0, 0.35, 1)
       }),
       -1,
       false,
@@ -44,11 +43,11 @@ const CircleLoad: React.FC<CircleLoadProps> = props => {
         cy={size}
         r={size * 0.8}
         stroke={color}
-        strokeWidth={5}
+        strokeWidth={6}
         strokeDasharray={`${dashPath} ${all}`}
       />
     </AnimationSvg>
   )
 };
 
-export default CircleLoad;
+export default CircleLoading;

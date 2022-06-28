@@ -15,6 +15,15 @@ export default function SwitchExample() {
       </Section>
       <Section title="自定义样式">
         <Switch activeBackgroundColor={'cyan'} inactiveBackgroundColor={'pink'} />
+        <Switch 
+          style={{
+            width: 80,
+            height: 50,
+            marginHorizontal: 20,
+          }}
+          activeBackgroundColor={'cyan'} 
+          inactiveBackgroundColor={'pink'}
+        />
       </Section>
       <Section title="默认属性及回调">
         <Switch value={on} onChange={(value) => {
