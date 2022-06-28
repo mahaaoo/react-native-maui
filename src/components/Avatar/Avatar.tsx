@@ -1,25 +1,36 @@
 import React, {useCallback, useState} from 'react';
-import {View, StyleSheet, Animated, Image, ImageStyle, ImageResizeMode} from 'react-native';
-import { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import {View, StyleSheet, Image, ImageStyle, ImageResizeMode} from 'react-native';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface AvatarProps {
   url: string;
   style: ImageStyle;
+
+  delay?: number;
   placeholder?: React.ReactNode;
-  resizeMode?: ImageResizeMode
+  resizeMode?: ImageResizeMode;
 }
 
 const Avatar: React.FC<AvatarProps> = props => {
-  const {style, placeholder, url, resizeMode='cover'} = props;
-  const [finished, setFinished] = useState(false);
+  const {style, placeholder, url, resizeMode='cover', delay=500} = props;
+  const [remove, setRemove] = useState(false);
+  const finished = useSharedValue(false);
 
   const loadFinish = useCallback(() => {
-    setFinished(true);
+    finished.value = true
   }, []);
 
   const animationStyle = useAnimatedStyle(() => {
     return {
-      opacity: finished ? withTiming(1, {duration: 500}) : 0
+      opacity: finished.value ? withTiming(1, {duration: delay}) : 0
+    }
+  })
+
+  const placeholderStyle = useAnimatedStyle(() => {
+    return {
+      opacity: finished.value ? withTiming(0, {duration: delay}, () => {
+        runOnJS(setRemove)(true)
+      }) : 1
     }
   })
 
@@ -34,10 +45,10 @@ const Avatar: React.FC<AvatarProps> = props => {
         />  
       </Animated.View>
       {
-        !finished && (
-          <Animated.View style={[styles.placeholder, style]}>
+        !remove && (
+          <Animated.View style={[styles.placeholder, style, placeholderStyle]}>
             {placeholder}
-          </Animated.View>
+          </Animated.View>  
         )
       }
     </View>
