@@ -12,13 +12,13 @@ import Index from './src/app';
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Overlay ref={overlayRef}>
-        <Theme>
+      <Theme>
+        <Overlay ref={overlayRef}>
           <NavigationContainer ref={navigationRef}>
             <Index />
           </NavigationContainer>
-        </Theme>
-      </Overlay>
+        </Overlay>
+      </Theme>
     </GestureHandlerRootView>
   );
 }

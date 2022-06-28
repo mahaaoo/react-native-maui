@@ -1,5 +1,6 @@
 import React, {useState, createContext, useCallback, useContext, useRef, useImperativeHandle, forwardRef} from 'react';
-import {Animated, View, StyleSheet} from 'react-native';
+import {Animated, View, StyleSheet, StatusBar, StatusBarStyle} from 'react-native';
+import { useTheme } from '../Theme';
 
 export interface OverlayRef {
   /**
@@ -43,6 +44,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const elements = useRef<Array<ElementType>>([]);
   const [update, forceUpdate] = useState(0);
   const elementsIndex = useRef<number>(0);
+  const {theme} = useTheme();
 
   /**
    * When call this function with key, the component will be unique
@@ -152,6 +154,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
 
   return (
     <View style={{flex: 1}}>
+      <StatusBar barStyle={theme.statusBarColor as StatusBarStyle} animated={true} />
       <OverlayContext.Provider value={{
         add: addNodeToOverlay,
         remove: deleteNodeFromOverlay,

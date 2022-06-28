@@ -23,9 +23,9 @@ const ItemWrapper: React.FC<ItemWrapperProps> = props => {
   }
 
   return (
-    <View>
+    <>
       {children}
-    </View>
+    </>
   );
 };
 

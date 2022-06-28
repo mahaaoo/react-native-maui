@@ -110,7 +110,7 @@ export default function SwiperExample() {
           layout: ScaleLayout,
           options: {
             mainAxisSize: width - 60,
-            margin: 10,
+            margin: -50,
           }
         }}
         auto={false}

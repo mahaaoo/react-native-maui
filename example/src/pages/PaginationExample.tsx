@@ -1,10 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions, TouchableOpacity, Text} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import {Pagination, Dot, Percent} from 'react-native-maui';
-
-const {width, height} = Dimensions.get('window');
-
+import Section from '../components/Section';
 interface PaginationExampleProps {
 };
 
@@ -15,27 +13,38 @@ const PaginationExample: React.FC<PaginationExampleProps> = props => {
 
   return (
     <View style={styles.container}>
-      <View style={{ width, height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
-        <Pagination currentIndex={currentIndex} total={5}>
-          <Dot />
-        </Pagination>
-      </View>
-      <View style={{ width, height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
-        <Pagination currentIndex={currentIndex} total={5} position='left'>
-          <Dot activeColor='red' inActiveColor='cyan' />
-        </Pagination>
-      </View>
-      <View style={{ width, height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
-        <Pagination currentIndex={currentIndex} total={5} position='right'>
-          <Dot shape='cube' />
-        </Pagination>
-      </View>
-      <View style={{ width, height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
-        <Pagination currentIndex={currentIndex} total={5}>
-          <Percent />
-        </Pagination>
-      </View>
-      <View style={{ width, height: 50, flexDirection: 'row'}}>
+      <Section title="基本用法" style={{ flexDirection: 'column' }}>
+        <View style={{ width: '100%', height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
+          <Pagination currentIndex={currentIndex} total={5}>
+            <Dot />
+          </Pagination>
+        </View>
+        <View style={{ width: '100%', height: 100, backgroundColor: '#000' }}>
+          <Pagination position="left" currentIndex={currentIndex} total={5}>
+            <Dot direction="column" />
+          </Pagination>
+        </View>
+      </Section>
+      <Section title="自定义样式" style={{ flexDirection: 'column' }}>
+        <View style={{ width: '100%', height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
+          <Pagination currentIndex={currentIndex} total={5} position='left'>
+            <Dot activeColor='red' inActiveColor='cyan' />
+          </Pagination>
+        </View>
+        <View style={{ width: '100%', height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
+          <Pagination currentIndex={currentIndex} total={5} position='right'>
+            <Dot shape='cube' />
+          </Pagination>
+        </View>
+      </Section>
+      <Section title="数字类型" style={{ flexDirection: 'column' }}>
+        <View style={{ width: '100%', height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
+          <Pagination currentIndex={currentIndex} total={5}>
+            <Percent />
+          </Pagination>
+        </View>
+      </Section>
+      <View style={{ width: '100%', height: 50, flexDirection: 'row'}}>
         <TouchableOpacity onPress={() => {
           if (currentIndex.value === 0) {
             currentIndex.value = 4

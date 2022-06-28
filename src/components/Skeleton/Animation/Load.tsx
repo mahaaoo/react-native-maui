@@ -9,7 +9,7 @@ const Load: React.FC<LoadProps> = props => {
 
   return (
     <View style={styles.mask}>
-      <ActivityIndicator />
+      <ActivityIndicator color="#1e90ff" />
     </View>
   )
 };
