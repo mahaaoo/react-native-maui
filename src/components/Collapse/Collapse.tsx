@@ -5,8 +5,11 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   withTiming,
+  interpolate,
+  Extrapolate,
 } from "react-native-reanimated";
 import {useCollapse} from './type';
+import {Icon} from '../Icon';
 
 interface CollapseProps {
   title: string;
@@ -55,11 +58,23 @@ const Collapse: React.FC<CollapseProps> = props => {
     }
   });
 
+  const arrowStyle = useAnimatedStyle(() => {
+    const degress = interpolate(transition.value, [0, 1], [0, 90], Extrapolate.CLAMP);
+    return {
+      transform: [{
+        rotateZ: `${degress}deg`
+      }]
+    }
+  })
+
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback  onPress={handleOnPress}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
+          <Animated.View style={arrowStyle}>
+            <Icon name="arrow-right" />
+          </Animated.View>
         </View>
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.items, style]}>
