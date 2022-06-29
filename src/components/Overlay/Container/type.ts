@@ -25,6 +25,11 @@ export interface BaseContainerProps {
    * will be called after the overlay unmount
    */
   onDisappear?: () => void;
+  /**
+   * 'none': overlay can't response event, can click view under overlay
+   * 'auto': overlay response evet
+   */
+  pointerEvents?: 'none' | 'auto';
 }
 
 /**
@@ -45,11 +50,6 @@ export interface AnimationContainerProps extends BaseContainerProps {
    * If modal equal false, the overlay can be close by click mask
    */
   modal?: boolean;
-  /**
-   * 'none': overlay can't response event, can click view under overlay
-   * 'auto': overlay response evet
-   */
-  pointerEvents?: 'none' | 'auto';
   /**
    * will be called after click mask
    */

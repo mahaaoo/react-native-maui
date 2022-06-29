@@ -11,15 +11,9 @@ export default function OverlayExample() {
   return (
     <View style={styles.container}>
       <Button onPress={() => {
-        const index = add(<Text style={{ marginTop: 100, fontSize: 24 }}>子视图{elementIndex.current}</Text>);
-        console.log('当前添加的元素', index);
-        elementIndex.current++;
-      }}>
-        <Text>添加一个子视图</Text>
-      </Button>
-      <Button onPress={() => {
         const index = add(
           <NormalContainer
+            pointerEvents='none'
             onAppear={() => {
               console.log('子视图已弹出');
             }}
@@ -62,7 +56,14 @@ export default function OverlayExample() {
         <Text>删除全部子视图</Text>
       </Button>
       <Button onPress={() => {
-        OverlayUtil.add(<Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>)
+        OverlayUtil.add(
+          <NormalContainer>
+            <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+            <Text onPress={() => {
+              remove();
+            }} style={{ marginTop: 20, fontSize: 24 }}>关闭</Text>
+          </NormalContainer>
+        )
         elementIndex.current++;
       }}>
         <Text>添加一个子视图-Function</Text>
