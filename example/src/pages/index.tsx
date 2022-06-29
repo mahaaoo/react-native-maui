@@ -19,7 +19,8 @@ import {
   SkeletonRect,
   Progress,
   AnimatedNumber,
-  Shadow
+  Shadow,
+  Icon
 } from 'react-native-maui';
 import WaterMark from '../components/WaterMark';
 import Arrow from '../components/Icon/arrow';
@@ -30,6 +31,9 @@ interface Example {
 }
 
 const exampleList: Example[] = [{
+  title: 'Icon',
+  content: <Icon name="code" size={50} color='#1491a8' />,
+},{
   title: 'Button',
   content: (
     <Button onPress={() => {}}>

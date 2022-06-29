@@ -14,6 +14,7 @@ export {
   CircleLoading,
   GrowLoading,
 } from './components/Loading';
+export { Icon } from './components/Icon';
 
 export {
   Overlay,

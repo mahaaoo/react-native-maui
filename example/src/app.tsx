@@ -26,6 +26,7 @@ import ActionSheetExample from './pages/ActionSheetExample';
 import ProgressExample from './pages/ProgressExample';
 import AnimatedNumberExample from './pages/AnimatedNumberExample';
 import ShadowExample from './pages/ShadowExample';
+import IconExample from './pages/IconExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -52,6 +53,7 @@ export type RootStackParamList = {
   ProgressExample: undefined;
   AnimatedNumberExample: undefined;
   ShadowExample: undefined;
+  IconExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -77,6 +79,11 @@ const App: React.FC<{}> = () => {
         name="ComponentScreen"
         component={Index}
         options={{ headerTitle: 'Component List', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="IconExample"
+        component={IconExample}
+        options={{ headerTitle: 'Icon', ...headerOptions }}
       />
       <Stack.Screen
         name="ButtonExample"
