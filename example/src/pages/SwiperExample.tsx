@@ -113,7 +113,7 @@ export default function SwiperExample() {
             margin: -50,
           }
         }}
-        auto={false}
+        auto={true}
         horizontal={true}
         style={{
           width,

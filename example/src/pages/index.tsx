@@ -22,6 +22,7 @@ import {
   Shadow
 } from 'react-native-maui';
 import WaterMark from '../components/WaterMark';
+import Arrow from '../components/Icon/arrow';
 
 interface Example {
   title: string;
@@ -54,12 +55,12 @@ const exampleList: Example[] = [{
   content: (
     <View style={{ height: 40, width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5, justifyContent: 'space-between', borderRadius: 8 }}>
       <Text>Title</Text>
-      <Text>{`>`}</Text>
+      <Arrow />
     </View>
   ),
 }, {
   title: 'AnimatedNumber',
-  content: <AnimatedNumber style={{ fontSize: 30, color: 'orange', fontWeight: 'bold' }} delay={5000} value={0} toValue={100} />,
+  content: <AnimatedNumber style={{ fontSize: 30, color: 'orange', fontWeight: 'bold' }} delay={2000} value={0} toValue={100} />,
 }, {
   title: 'Progress',
   content: <Progress height={12} width={120} radius value={10} toValue={80} activeColor="pink" inactiveColor='white' />

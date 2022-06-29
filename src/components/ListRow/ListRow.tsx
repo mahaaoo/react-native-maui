@@ -49,7 +49,7 @@ const ListRow: React.FC<ListRowProps> = props => {
 
 const styles = StyleSheet.create({
   listRow: {
-    width,
+    width: '100%',
     backgroundColor: 'white',
     flexDirection: 'row',
     paddingHorizontal: 15,
