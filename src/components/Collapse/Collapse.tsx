@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import Animated, {
   useSharedValue,
@@ -6,21 +6,31 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
+import {useCollapse} from './type';
 
 interface CollapseProps {
   title: string;
-  toggle?: boolean;
+  tag: string;
+  
+  active?: boolean;
   onChange?: () => void;
 }
 
 const Collapse: React.FC<CollapseProps> = props => {
-  const {children, title, onChange, toggle = false} = props;
+  const {children, title, onChange, active = false, tag} = props;
+  const {accordion, currentActive, handleOnChange} = useCollapse();
 
-  const open = useSharedValue(toggle);
+  const open = useSharedValue(accordion ? currentActive == tag : active);
   const height = useSharedValue(0);
   const transition = useDerivedValue(() => {
     return open.value === true ? withTiming(1) : withTiming(0);
   });
+
+  useEffect(() => {
+    if (currentActive !== tag) {
+      open.value = false;
+    }
+  }, [currentActive])
 
   const handleLayout = useCallback(({
     nativeEvent: {
@@ -32,8 +42,11 @@ const Collapse: React.FC<CollapseProps> = props => {
 
   const handleOnPress = useCallback(() => {
     open.value = !open.value;
-    onChange && onChange();
-  }, [onChange]);
+    onChange && onChange();  
+    if (accordion) {
+      handleOnChange && handleOnChange(tag);
+    }
+  }, [onChange, accordion, tag, handleOnChange]);
 
   const style = useAnimatedStyle(() => {
     return {
@@ -45,9 +58,9 @@ const Collapse: React.FC<CollapseProps> = props => {
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback  onPress={handleOnPress}>
-        <Animated.View style={styles.titleContainer}>
+        <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
-        </Animated.View>
+        </View>
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.items, style]}>
         <View onLayout={handleLayout}>
@@ -64,8 +77,6 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     padding: 16,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

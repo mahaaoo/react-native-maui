@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native';
-import {Collapse} from 'react-native-maui';
+import {Collapse, CollapseGroup} from 'react-native-maui';
+import Section from '../components/Section';
 
 const {width} = Dimensions.get('window');
 
@@ -8,33 +9,37 @@ export default function ButtonExample() {
 
   return (
     <ScrollView style={styles.container}>
-      <Collapse title={"collapse1"}>
-        <View style={styles.content}>
-          <Text>contentcontentcontentcontent</Text>
-        </View>
-      </Collapse>
-      <Collapse title={"collapse2"} toggle={true}>
-        <View style={styles.content}>
-          <Text>contentcontentcontentcontent</Text>
-        </View>
-      </Collapse>
-      <Collapse title={"collapse3"} onChange={() => {
-        console.log('open/close');
-      }}>
-        <View style={styles.content}>
-          <Text>contentcontentcontentcontent</Text>
-        </View>
-        <View style={styles.content}>
-          <Text>contentcontentcontentcontent</Text>
-        </View>
-        <View style={styles.content}>
-          <Text>contentcontentcontentcontent</Text>
-        </View>
-        <View style={styles.content}>
-          <Text>contentcontentcontentcontent</Text>
-        </View>
-      </Collapse>
-      <Text>contentcontentcontentcontent</Text>
+      <Section title="基本使用" style={{ backgroundColor: '#F8F8F8', flexDirection: 'column' }}>
+        <Collapse title={"collapse1"} tag="1">
+          <View style={styles.content}>
+            <Text>contentcontentcontentcontent</Text>
+          </View>
+        </Collapse>
+        <Collapse title={"collapse2"} tag="2">
+          <View style={styles.content}>
+            <Text>contentcontentcontentcontent</Text>
+          </View>
+        </Collapse>
+      </Section>
+      <Section title="手风琴" style={{ backgroundColor: '#F8F8F8' }}>
+        <CollapseGroup accordion={true} defaultActive={"2"}>
+          <Collapse title={"collapse1"} tag="1">
+            <View style={styles.content}>
+              <Text>contentcontentcontentcontent</Text>
+            </View>
+          </Collapse>
+          <Collapse title={"collapse2"} tag="2">
+            <View style={styles.content}>
+              <Text>contentcontentcontentcontent</Text>
+            </View>
+          </Collapse>
+          <Collapse title={"collapse3"} tag="cc1123">
+            <View style={styles.content}>
+              <Text>contentcontentcontentcontent</Text>
+            </View>
+          </Collapse>
+        </CollapseGroup>
+      </Section>
     </ScrollView>
   );
 }
@@ -44,7 +49,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    width,
+    width: width - 30,
     height: 100,
     backgroundColor: 'white'
   }

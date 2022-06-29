@@ -2,7 +2,7 @@ export { ActionSheet, ActionSheetUtil } from './components/ActionSheet'
 export { Avatar } from './components/Avatar';
 export { Badge } from './components/Badge';
 export { Button, ButtonType, GradientButton } from './components/Button';
-export { Collapse } from './components/Collapse';
+export { Collapse, CollapseGroup } from './components/Collapse';
 export { Divider, DividerProps } from './components/Divider';
 export { ImageViewer } from './components/ImageViewer';
 export { ListRow } from './components/ListRow';
