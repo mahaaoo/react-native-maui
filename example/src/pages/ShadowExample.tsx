@@ -1,7 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {Shadow} from 'react-native-maui';
 import Section from '../components/Section';
+
+const {width} = Dimensions.get('window');
+
+const SIZE = (width - 120) / 3;
 
 interface ShadowExampleProps {
 };
@@ -12,19 +16,19 @@ const ShadowExample: React.FC<ShadowExampleProps> = props => {
       <Section title="基础用法">
         <Shadow shadowWidth={15}>
           <View style={{ 
-            width: 100, height: 100, backgroundColor: 'white',
+            width: SIZE, height: SIZE, backgroundColor: 'white',
           }}>
             <Text></Text>
           </View>
         </Shadow>
         <Shadow borderRadius={30} shadowWidth={15}>
           <View style={{ 
-            width: 100, height: 100, backgroundColor: 'white', borderRadius: 30,
+            width: SIZE, height: SIZE, backgroundColor: 'white', borderRadius: 30,
           }} />
         </Shadow>
         <Shadow borderRadius={50} shadowWidth={15}>
           <View style={{ 
-            width: 100, height: 100, backgroundColor: 'white', borderRadius: 50,
+            width: SIZE, height: SIZE, backgroundColor: 'white', borderRadius: 50,
           }} />
         </Shadow>
       </Section>

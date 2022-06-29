@@ -11,17 +11,16 @@ const AnimatedNumberExample: React.FC<AnimatedNumberExampleProps> = props => {
 
   return (
     <View style={styles.container}>
-      <Section title="基础用法">
+      <Section title="基础用法" style={{ paddingVertical: 30 }}>
         <AnimatedNumber style={{ fontSize: 40, fontWeight: 'bold', marginHorizontal: 10 }} value={10} toValue={113} />
         <AnimatedNumber 
-          easing={'ease'} 
           style={{ fontSize: 40, color: 'orange', fontWeight: 'bold', marginHorizontal: 10 }} 
           toFixed={2} 
           value={0.11} 
           toValue={1.23}
         />
       </Section>
-      <Section title="自定义属性">
+      <Section title="自定义属性" style={{ paddingVertical: 30 }}>
         <AnimatedNumber 
           easing={'ease'} 
           style={{ fontSize: 40, fontWeight: 'bold', marginHorizontal: 10, color: '#f1441d' }} 
