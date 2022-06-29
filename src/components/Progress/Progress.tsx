@@ -1,21 +1,27 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {View, ViewStyle} from 'react-native';
-import Animated, { Easing, useAnimatedProps, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, runOnJS, useAnimatedProps, useAnimatedReaction, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 interface ProgressProps {
-  activeColor?: string | string[];
-  inactiveColor?: string;
   value: number;
+  width: number;
+  height: number;
+
   toValue?: number;
 
+  activeColor?: string | string[];
+  inactiveColor?: string;
+
   radius?: boolean;
-  width?: number;
-  height?: number;
   style?: ViewStyle;
+
   delay?: number;
+  duration?: number;
+
+  onChangeValue?: (value: number) => void;
 };
 
 const Progress: React.FC<ProgressProps> = props => {
@@ -24,21 +30,33 @@ const Progress: React.FC<ProgressProps> = props => {
     inactiveColor='#D8D8D8',
     value,
     toValue,
-    width = 300,
-    height = 15,
+    width,
+    height,
     style,
     radius = false,
     delay = 1000,
+    duration = 1000,
+    onChangeValue,
   } = props;
 
   const progress = useSharedValue(value);
 
   useEffect(() => {
     if (toValue && toValue > value) {
-      progress.value = withDelay(delay, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
+      progress.value = withDelay(delay, withTiming(toValue, {duration: duration, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
     }
   }, [])
   
+  const handleChangeValue = useCallback((currentValue: number) => {
+    if (currentValue > value) {
+      onChangeValue && onChangeValue(currentValue);
+    }
+  }, [onChangeValue]) 
+
+  useAnimatedReaction(() => Math.round(progress.value), (value) => {
+    runOnJS(handleChangeValue)(value);
+  });
+
   const animatedProps = useAnimatedProps(() => {
     const totalWidth = width || 0;
     const x = totalWidth / 100 * progress.value;

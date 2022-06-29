@@ -1,35 +1,47 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import Animated, { Easing, runOnJS, useAnimatedProps, useAnimatedReaction, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import Svg, {Circle, Defs, LinearGradient, Path, Stop} from 'react-native-svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 interface CircleProgressProps {
   value: number; // percent: 0%-100%
+  toValue?: number;
+
+  activeColor?: string | string[];
+  inactiveColor?: string;
 
   style?: ViewStyle;
   size?: number;
-  toValue?: number;
   width?: number;
-  activeColor?: string | string[];
-  inactiveColor?: string;
-  delay?: number;
   renderCenter?: (progress: number) => React.ReactNode;
+
+  delay?: number;
+  duration?: number;
+
+  onChangeValue?: (value: number) => void;
 };
 
 const CircleProgress: React.FC<CircleProgressProps> = props => {
-  const {size = 100, value, toValue, width = 10, activeColor="#1e90ff", inactiveColor='#D8D8D8', style, renderCenter, delay=1000} = props;
+  const {size = 100, value, toValue, width = 10, activeColor="#1e90ff", inactiveColor='#D8D8D8', style, renderCenter, delay=1000, duration=1000, onChangeValue} = props;
   const progress = useSharedValue(value);
   const [percent, setPercent] = useState(value);
 
   useEffect(() => {
     if (toValue && toValue > value) {
-      progress.value = withDelay(delay, withTiming(toValue, {duration: 1000, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
+      progress.value = withDelay(delay, withTiming(toValue, {duration: duration, easing: Easing.bezier(0.33, 1, 0.68, 1)}));
     }
   }, []);
 
+  const handleChangeValue = useCallback((currentValue: number) => {
+    if (currentValue > value) {
+      onChangeValue && onChangeValue(currentValue);
+    }
+}, [onChangeValue]) 
+
   useAnimatedReaction(() => Math.round(progress.value), (value) => {
     runOnJS(setPercent)(value);
+    runOnJS(handleChangeValue)(value);
   });
 
   const getEndPoint = useCallback((value: number) => {
@@ -69,8 +81,6 @@ const CircleProgress: React.FC<CircleProgressProps> = props => {
       d: `M ${startPoint.x} ${startPoint.y} A ${R} ${R} 0 ${theta > Math.PI ? '1' : '0'} 1 ${endPoint.x} ${endPoint.y} ${progress.value == 100 ? 'Z' : ''}`,
     }
   });
-
-  
 
   return (
     <View style={style}>
