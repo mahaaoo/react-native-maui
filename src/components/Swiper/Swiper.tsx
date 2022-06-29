@@ -31,11 +31,10 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     layoutOption,
   } = useProps(props);
 
+  const offset = useSharedValue(0);
   const translate = useSharedValue(0);
   const currentIndex = useSharedValue(0);
   const touching = useSharedValue<boolean>(false);
-  const offset = useSharedValue(0);
-  const scrolling = useSharedValue(0);
   
   const container = useMemo(() => {
     if (style) {
@@ -51,10 +50,6 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   }, []);
 
   const stepDistance = useMemo<number>(() => {
-    currentIndex.value = 0;
-    translate.value = 0;
-    offset.value = 0;
-
     if (layoutOption?.layout === ScaleLayout) {
       return layoutOption?.options.mainAxisSize + 2 * layoutOption?.options.margin;
     } else {
@@ -63,7 +58,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
       }
       return container.height;  
     }
-  }, [horizontal, container, layoutOption])
+  }, []);
 
   const indexAtData = useDerivedValue(() => {
     let group = currentIndex.value % dataSource.length;
@@ -71,45 +66,37 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
       group = Math.abs(group);
     } else if (group > 0) {
       group = dataSource.length - group;
-    }    
+    }
     return group;
   });
 
   const range = useRange(currentIndex);
 
   const handleScollStart = useCallback(() => {
-    setTimeout(() => {
-      if (scrolling.value <= 0) {
-        onScollStart && onScollStart();
-      }
-    }, 100)
+    onScollStart && onScollStart();
   }, []);
 
   const handleScollEnd = useCallback(() => {
-    // 100ms后再次检查滚动状态
-    setTimeout(() => {
-      if (scrolling.value <= 0) {
-        onScollEnd && onScollEnd();
-      }
-    }, 100)
+    onScollEnd && onScollEnd(indexAtData.value);
   }, []);
 
   const scrollTo = useCallback((step, callback: () => void) => {
     'worklet';
     currentIndex.value = step;
-    if(scrolling.value <= 0) {
-      runOnJS(handleScollStart)();
-    }
-    scrolling.value = scrolling.value + 1;
     translate.value = withSpring((step) * stepDistance, {overshootClamping: true}, () => {
-      scrolling.value = scrolling.value - 1;
-      if(scrolling.value <= 0) {
-        runOnJS(callback)();
-      }
+      // when goback to the first item, reset
+      'worklet'
+      if (indexAtData.value === 0) {
+        offset.value = 0;
+        translate.value = 0;
+        currentIndex.value = 0;
+      }  
+      runOnJS(callback)();
     });
   }, [stepDistance]);
 
   const previous = useCallback((callback?: SwiperCallBack) => {
+    handleScollStart();
     scrollTo(currentIndex.value + 1, () => {
       handleScollEnd();
       callback && callback(indexAtData.value);
@@ -117,6 +104,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   }, [scrollTo]);
 
   const next = useCallback((callback?: SwiperCallBack) => {
+    handleScollStart();
     scrollTo(currentIndex.value - 1, () => {
       handleScollEnd();
       callback && callback(indexAtData.value);
@@ -127,25 +115,26 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   useTouching(start, stop, touching);
 
   const panGesture = Gesture.Pan()
-    .onBegin(() => {
-      touching.value = true;
-      offset.value = translate.value;
-    })
-    .onUpdate(({translationX, translationY}) => {
-      if (horizontal) {
-        translate.value = translationX + offset.value;
-      } else {
-        translate.value = translationY + offset.value;
-      }
-    })
-    .onEnd(({velocityX, velocityY}) => {
-      const velocity = horizontal ? velocityX : velocityY;
-      const distance = (translate.value + 0.2 * velocity) / stepDistance;
-      const step = useStep(distance, range);
-      touching.value = false;
-      
-      scrollTo(step, handleScollEnd);
-    })
+  .onBegin(() => {
+    runOnJS(handleScollStart)();
+    touching.value = true;
+    offset.value = translate.value;
+  })
+  .onUpdate(({translationX, translationY}) => {
+    if (horizontal) {
+      translate.value = translationX + offset.value;
+    } else {
+      translate.value = translationY + offset.value;
+    }
+  })
+  .onEnd(({velocityX, velocityY}) => {
+    const velocity = horizontal ? velocityX : velocityY;
+    const distance = (translate.value + 0.2 * velocity) / stepDistance;
+    const step = useStep(distance, range);
+    touching.value = false;
+    
+    scrollTo(step, handleScollEnd);
+  });
 
   useImperativeHandle(ref, () => ({
     previous,

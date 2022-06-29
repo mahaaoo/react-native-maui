@@ -24,22 +24,18 @@ for(let i = 0; i < 1; i++) {
   card2 = card2.concat(card);
 }
 
-console.log(card2);
-
-
 export default function SwiperExample() {
   const ref = useRef<SwiperRef>(null);
   const [autoplay, setAutoplay] = useState(false);
   const [curIndx, setCurrent] = useState<number>(0);
 
-  const handeEnd = useCallback(() => {
-    const nowIndex = ref.current?.getCurrentIndex();
-    // setCurrent(nowIndex);
-    // console.log(index);
-    // setCurrent(nowIndex);
+  const handeEnd = useCallback((index) => {
+    // console.log('onScollEnd, currentIndex', index);
+    // setCurrent(index);
   }, []);
 
   const handeStart = useCallback(() => {
+    // console.log('onScollStart');
   }, []);
 
   return (
@@ -93,7 +89,7 @@ export default function SwiperExample() {
             margin: 10,
           }
         }}
-        auto={false}
+        auto={true}
         horizontal={false}
         style={{
           width,

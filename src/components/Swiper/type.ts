@@ -21,7 +21,7 @@ export interface SwiperProps {
   dataSource: Array<any>;
   renderItem: (item: any) => React.ReactNode;
   onScollStart?: () => void;
-  onScollEnd?: () => void;
+  onScollEnd?: (index: number) => void;
   auto?: boolean;
   interval?: number;
   options?: SwiperOptions;
@@ -39,7 +39,7 @@ export interface SwiperDefaultProps {
   dataSource: Array<any>;
   renderItem: (item: any) => React.ReactNode;
   onScollStart?: () => void;
-  onScollEnd?: () => void;
+  onScollEnd?: (index: number) => void;
   auto?: boolean;
   interval?: number;
   horizontal?: boolean;
