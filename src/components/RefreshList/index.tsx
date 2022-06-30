@@ -1,6 +1,7 @@
-import RefreshList, {RefreshState} from "./RefreshList";
+import RefreshList, {RefreshState, RefreshListProps} from "./RefreshList";
 
 export {
   RefreshList,
-  RefreshState
+  RefreshState,
+  RefreshListProps
 }

@@ -46,7 +46,7 @@ const Refresh: React.FC<RefreshProps> = props => {
             setStatus(RefreshState.Idle);
           }, 2000);
         }}
-        renderItem={({item}) => {
+        renderItem={({item, index}) => {
           return (
             <View style={styles.item}>
               <Text>{item}</Text>

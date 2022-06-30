@@ -185,7 +185,7 @@ const exampleList: Example[] = [{
     </View>
   ),
 }, {
-  title: 'WaterFlowList',
+  title: 'WaterFallList',
   content: (null),
 }];
 

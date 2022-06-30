@@ -9,7 +9,7 @@ export enum RefreshState {
   Failure = 4 << 5,
 }
 
-interface RefreshListProps extends FlatListProps<any> {
+export interface RefreshListProps extends FlatListProps<any> {
   data: Array<any>,
 
   refreshState: RefreshState,
