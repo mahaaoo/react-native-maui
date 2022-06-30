@@ -184,6 +184,9 @@ const exampleList: Example[] = [{
       <View style={{ width: 30, height: 30, backgroundColor: 'white' }} />
     </View>
   ),
+}, {
+  title: 'WaterFlowList',
+  content: (null),
 }];
 
 export default function ComponentScreen() {
@@ -206,7 +209,9 @@ export default function ComponentScreen() {
               content={
                 item.content ? item.content : <Text style={{color: theme.cardTitleColor}}>{item.title}</Text>
               }
-              onPress={() => { navigate(`${item.title}Example`); }}
+              onPress={() => { 
+                navigate(`${item.title}Example`);
+               }}
             />
           )
         }}

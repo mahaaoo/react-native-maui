@@ -27,6 +27,7 @@ import ProgressExample from './pages/ProgressExample';
 import AnimatedNumberExample from './pages/AnimatedNumberExample';
 import ShadowExample from './pages/ShadowExample';
 import IconExample from './pages/IconExample';
+import WaterFlowListExample from './pages/WaterFlowListExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -54,6 +55,7 @@ export type RootStackParamList = {
   AnimatedNumberExample: undefined;
   ShadowExample: undefined;
   IconExample: undefined;
+  WaterFlowListExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -199,6 +201,11 @@ const App: React.FC<{}> = () => {
         name="ShadowExample"
         component={ShadowExample}
         options={{ headerTitle: 'ShadowExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="WaterFlowListExample"
+        component={WaterFlowListExample}
+        options={{ headerTitle: 'WaterFlowListExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );
