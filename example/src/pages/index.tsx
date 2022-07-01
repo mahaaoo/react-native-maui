@@ -79,6 +79,9 @@ const exampleList: Example[] = [{
     </Shadow>
   )
 }, {
+  title: 'AsyncImage',
+  content: <AsyncImage url={'https://picsum.photos/50/50/?random'} style={{ width: 50, height: 50 }} />,
+}, {
   title: 'Loading',
   content: <Loading />,
 }, {
@@ -195,9 +198,6 @@ const exampleList: Example[] = [{
       <View style={{ backgroundColor: 'white', height: '70%', width: '20%', marginTop: 15, marginHorizontal: 1 }}/>
     </View>
   ),
-}, {
-  title: 'AsyncImage',
-  content: <AsyncImage url={'https://picsum.photos/50/50/?random'} style={{ width: 50, height: 50 }} />,
 }];
 
 export default function ComponentScreen() {
