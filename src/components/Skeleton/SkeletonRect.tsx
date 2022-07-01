@@ -5,16 +5,17 @@ import {BaseChildAnimationProps, useSkeletonStyle} from './type';
 import {Normal} from './Animation';
 
 interface SkeletonRectProps {
-  style?: ViewStyle
+  style?: ViewStyle,
+  delay?: number
 };
 
 const SkeletonRect: React.FC<SkeletonRectProps> = props => {
-  const {children, style} = props;
+  const {children, style, delay=1000} = props;
   const {finished, childAnimation} = useSkeletonStyle();
 
   const fadeStyle = useAnimatedStyle(() => {
     return {
-      opacity: finished ? withTiming(1, {duration: 500}) : 0
+      opacity: finished ? withTiming(1, {duration: delay}) : 0
     }
   })
 

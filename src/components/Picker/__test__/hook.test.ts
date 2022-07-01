@@ -3,7 +3,7 @@ import { Easing } from 'react-native-reanimated';
 import {
   useProps,
   useInitialValue,
-} from '../hook';
+} from '../utils';
 
 describe('Test:Picker->hook/useProps', () => {
   it('dataSource empty', () => {

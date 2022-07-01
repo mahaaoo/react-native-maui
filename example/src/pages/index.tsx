@@ -20,7 +20,8 @@ import {
   Progress,
   AnimatedNumber,
   Shadow,
-  Icon
+  Icon,
+  AsyncImage
 } from 'react-native-maui';
 import WaterMark from '../components/WaterMark';
 import Arrow from '../components/Icon/arrow';
@@ -186,7 +187,17 @@ const exampleList: Example[] = [{
   ),
 }, {
   title: 'WaterFallList',
-  content: (null),
+  content: (
+    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}>
+      <View style={{ backgroundColor: 'white', height: '70%', width: '20%' }}/>
+      <View style={{ backgroundColor: 'white', height: '70%', width: '20%', marginTop: 15, marginHorizontal: 1 }}/>
+      <View style={{ backgroundColor: 'white', height: '70%', width: '20%' }}/>
+      <View style={{ backgroundColor: 'white', height: '70%', width: '20%', marginTop: 15, marginHorizontal: 1 }}/>
+    </View>
+  ),
+}, {
+  title: 'AsyncImage',
+  content: <AsyncImage url={'https://picsum.photos/50/50/?random'} style={{ width: 50, height: 50 }} />,
 }];
 
 export default function ComponentScreen() {

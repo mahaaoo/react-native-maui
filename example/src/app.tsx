@@ -28,6 +28,7 @@ import AnimatedNumberExample from './pages/AnimatedNumberExample';
 import ShadowExample from './pages/ShadowExample';
 import IconExample from './pages/IconExample';
 import WaterFallListExample from './pages/WaterfallListExample';
+import AsyncImageExample from './pages/AsyncImageExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -56,6 +57,7 @@ export type RootStackParamList = {
   ShadowExample: undefined;
   IconExample: undefined;
   WaterFallListExample: undefined;
+  AsyncImageExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -206,6 +208,11 @@ const App: React.FC<{}> = () => {
         name="WaterFallListExample"
         component={WaterFallListExample}
         options={{ headerTitle: 'WaterFallListExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="AsyncImageExample"
+        component={AsyncImageExample}
+        options={{ headerTitle: 'AsyncImageExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );

@@ -22,12 +22,12 @@ const SkeletonContainer: React.FC<SkeletonContainerProps> = props => {
       animationProgress,
       childAnimation
     }}>
-      <View>
+      <>
         {children}
         {
           !finished && <Animation />
         }
-      </View>
+      </>
     </SkeletonContext.Provider>
   )
 };

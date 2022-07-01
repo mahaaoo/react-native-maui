@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {Dimensions, Image, Text} from 'react-native';
-import { RefreshState, WaterfallList } from 'react-native-maui';
+import {Dimensions, Text} from 'react-native';
+import { RefreshState, WaterfallList, AsyncImage } from 'react-native-maui';
 
 const {width} = Dimensions.get('window');
 
@@ -76,7 +76,11 @@ const WaterFallListExample: React.FC<WaterFallListExampleProps> = props => {
       }}
       renderItem={({item, index}) => (
         <>
-          <Image source={{ uri: item.url }} style={{ width: '100%', height: item.height }} resizeMode="cover" />
+          <AsyncImage
+            url={item.url}
+            style={{ width: '100%', height: item.height }} 
+            resizeMode="cover"
+          />
           <Text style={{ fontSize: 30 }}>index:{item.id}</Text>
           <Text style={{ fontSize: 30 }}>id:{item.text}</Text>
         </>
