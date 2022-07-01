@@ -41,7 +41,6 @@ const WaterFallListExample: React.FC<WaterFallListExampleProps> = props => {
 
   const getMoreData = useCallback(() => {
     const data: any = [];
-    console.log('发起请求');
     
     for(let i = 0; i<10; i++) {  
       const height = Math.round(Math.random() * (500 - 100) + 100);
@@ -69,9 +68,10 @@ const WaterFallListExample: React.FC<WaterFallListExampleProps> = props => {
         }, 2000);
       }}
       onFooterRefresh={() => {
+        console.log('onFooterRefresh');
         setStatus(RefreshState.FooterRefreshing);
         setTimeout(() => {
-          // getMoreData();
+          getMoreData();
         }, 2000);
       }}
       renderItem={({item, index}) => (

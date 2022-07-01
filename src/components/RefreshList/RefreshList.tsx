@@ -132,11 +132,11 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
     <FlatList
       ref={ref}
       data={data}
-      onEndReached={endReached}
       onRefresh={headerRefresh}
       refreshing={refreshState === RefreshState.HeaderRefreshing}
       ListFooterComponent={renderFooter}
-      onEndReachedThreshold={0.1}
+      onEndReachedThreshold={0.3}
+      onEndReached={endReached}
       keyExtractor={(item, index) => index.toString()}
       {...options}
     />
