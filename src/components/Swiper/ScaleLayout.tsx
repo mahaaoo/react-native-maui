@@ -5,7 +5,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import {useItemOffset} from './hook';
+import {useItemOffset} from './utils';
 import { ScaleLayoutProps } from './type';
 
 const ScaleLayout: React.FC<ScaleLayoutProps> = props => {

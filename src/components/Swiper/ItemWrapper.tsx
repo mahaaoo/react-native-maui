@@ -4,7 +4,7 @@ import {
   runOnJS, 
   useAnimatedReaction, 
 } from 'react-native-reanimated';
-import {useJudgeRange} from './hook';
+import {useJudgeRange} from './utils';
 import { ItemWrapperProps } from './type';
 
 const ItemWrapper: React.FC<ItemWrapperProps> = props => {

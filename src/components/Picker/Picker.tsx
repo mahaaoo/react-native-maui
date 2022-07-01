@@ -5,7 +5,7 @@ import Animated, { runOnJS, useDerivedValue, withTiming } from 'react-native-rea
 import { snapPoint } from '../../utils/redash';
 import PickerItem from './PickerItem';
 import { PickerProps } from './type';
-import { useProps, useInitialValue } from './hook';
+import { useProps, useInitialValue } from './utils';
 
 const {width} = Dimensions.get('window');
 

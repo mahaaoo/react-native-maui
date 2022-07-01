@@ -10,7 +10,7 @@ import {
   useAutoScroll,
   useIndexAtData,
   useTouching
-} from '../hook';
+} from '../utils';
 
 describe('Test:Swiper->hook/useJudgeRange', () => {
   it('dataSource is empty', () => {

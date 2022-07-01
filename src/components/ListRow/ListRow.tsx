@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import {View, Dimensions, StyleSheet, ViewStyle, TouchableOpacity} from 'react-native';
 import {DividerProps, Divider} from '../Divider';
-import {useProps} from './hook';
+import {useProps} from './utils';
 
 const {width} = Dimensions.get('window');
 

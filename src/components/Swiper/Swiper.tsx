@@ -8,7 +8,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import {Pagination, Dot} from '../Pagination';
-import {useRange, useStep, useAutoScroll, useTouching, useProps} from './hook';
+import {useRange, useStep, useAutoScroll, useTouching, useProps} from './utils';
 import ItemWrapper from './ItemWrapper';
 import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
 

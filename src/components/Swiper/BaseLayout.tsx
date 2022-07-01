@@ -3,7 +3,7 @@ import { Dimensions } from 'react-native';
 import Animated, { 
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import {useItemOffset} from './hook';
+import {useItemOffset} from './utils';
 import { BaseLayoutProps } from './type';
 
 const {width} = Dimensions.get('window');

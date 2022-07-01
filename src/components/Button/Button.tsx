@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleProp, ViewStyle, Text, TextStyle } from "react-native";
 import BaseButton, { BaseButtonProps } from "./BaseButton";
-import {useType} from './hook';
+import {useType} from './utils';
 import {ButtonType} from './type';
 
 interface ButtonProps extends BaseButtonProps {  
