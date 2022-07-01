@@ -52,7 +52,7 @@ export {
   ShineOver
 } from './components/Skeleton';
 
-export { SliderSelect } from './components/SliderSelect';
+export { Segmented } from './components/Segmented';
 
 export {
   SliderSheet,

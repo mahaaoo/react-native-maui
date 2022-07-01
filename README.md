@@ -20,7 +20,7 @@ All files are 100% typescript,and Support iOS & Android
 | ------------- | ------------- | ------------- | 
 | <img src="./screenshoot/Progress.gif" width="250" />  | <img src="./screenshoot/Shadow.png" width="250" />  |  <img src="./screenshoot/Loading.gif" width="250" /> |
 
-| Toast  | Pagination  |  SliderSelect  |
+| Toast  | Pagination  |  Segmented  |
 | ------------- | ------------- | ------------- | 
 | <img src="./screenshoot/Toast.png" width="250" />  | <img src="./screenshoot/Pagination.png" width="250" />  |  <img src="./screenshoot/SilderSelect.png" width="250" /> |
 

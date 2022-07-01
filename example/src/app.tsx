@@ -5,7 +5,7 @@ import {useTheme} from 'react-native-maui';
 import Index from './pages/index';
 import ButtonExample from "./pages/ButtonExample";
 import BadgeExample from './pages/BadgeExample';
-import SliderSelectExample from './pages/SliderSelectExample';
+import SegmentedExample from './pages/SegmentedExample';
 import SwitchExample from './pages/SwitchExample';
 import ThemeExample from './pages/ThemeExample';
 import DividerExample from './pages/DividerExample';
@@ -34,7 +34,7 @@ export type RootStackParamList = {
   ComponentScreen: undefined;
   ButtonExample: undefined;
   BadgeExample: undefined;
-  SliderSelectExample: undefined;
+  SegmentedExample: undefined;
   SwitchExample: undefined;
   ThemeExample: undefined;
   DividerExample: undefined;
@@ -100,9 +100,9 @@ const App: React.FC<{}> = () => {
         options={{ headerTitle: 'Badge', ...headerOptions }}
       />
       <Stack.Screen
-        name="SliderSelectExample"
-        component={SliderSelectExample}
-        options={{ headerTitle: 'SliderSelect', ...headerOptions }}
+        name="SegmentedExample"
+        component={SegmentedExample}
+        options={{ headerTitle: 'Segmented', ...headerOptions }}
       />
       <Stack.Screen
         name="SwitchExample"

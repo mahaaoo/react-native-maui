@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import {SliderSelect} from 'react-native-maui';
+import {Segmented} from 'react-native-maui';
 import Section from '../components/Section';
 
-export default function SliderSelectExample() {
+export default function SegmentedExample() {
   return (
     <View style={styles.container}>
       <Section title={"基础用法"}>
-        <SliderSelect items={['option1', 'option2', 'option3', 'option4']} />
+        <Segmented items={['option1', 'option2', 'option3', 'option4']} />
       </Section>
       <Section title={"自定义样式"} style={{ flexDirection: 'column', alignItems: 'flex-start'}}>
-        <SliderSelect 
+        <Segmented 
           items={['section1', 'section2', 'section3', 'section4']}
           style={{
             marginVertical: 10,
@@ -27,7 +27,7 @@ export default function SliderSelectExample() {
             console.log([item, index]);
           }}
         />
-        <SliderSelect 
+        <Segmented 
           items={['one', 'two']}
           style={{
             marginVertical: 10,

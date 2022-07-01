@@ -2,7 +2,7 @@ import React, {useState, useCallback, useMemo} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, ViewStyle, TextStyle} from 'react-native';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
-interface SliderSelectProps {
+interface SegmentedProps {
   items: Array<string>;
   style?: ViewStyle;
   itemStyle?: TextStyle;
@@ -19,7 +19,7 @@ interface SliderSelectProps {
 const SLIDER_DEFAULT_WIDTH = 300;
 const SLIDER_DEFAULT_HEIGHT = 30;
 
-const SliderSelect: React.FC<SliderSelectProps> = (props) => {
+const Segmented: React.FC<SegmentedProps> = (props) => {
   const {
     items, 
     style, 
@@ -82,7 +82,7 @@ const SliderSelect: React.FC<SliderSelectProps> = (props) => {
       </Animated.View>
       {items.map((item, index) => {
         return (
-          <TouchableOpacity key={`sliderselect_${index}`} activeOpacity={1} style={styles.item} onPress={() => handlePress(item, index)}>
+          <TouchableOpacity key={`Segmented_${index}`} activeOpacity={1} style={styles.item} onPress={() => handlePress(item, index)}>
             <Text style={[itemStyle, { color: current === index ? activeTextColor : inactiveTextColor }]}>{item}</Text>
           </TouchableOpacity>
         )
@@ -109,4 +109,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default SliderSelect;
+export default Segmented;

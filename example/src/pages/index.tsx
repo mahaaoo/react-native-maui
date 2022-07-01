@@ -13,7 +13,7 @@ import {
   useTheme,
   Toast,
   Divider,
-  SliderSelect,
+  Segmented,
   Shine,
   SkeletonContainer,
   SkeletonRect,
@@ -94,8 +94,8 @@ const exampleList: Example[] = [{
     </View>
   ),
 }, {
-  title: 'SliderSelect',
-  content: <SliderSelect style={{ width: 100 }} items={['one', 'two']} />,
+  title: 'Segmented',
+  content: <Segmented style={{ width: 100 }} items={['one', 'two']} />,
 }, {
   title: 'RefreshList',
   content: (
