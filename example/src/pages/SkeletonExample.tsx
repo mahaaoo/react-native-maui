@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, StyleSheet, Dimensions, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import {SkeletonContainer, SkeletonRect, Breath, Shine, Normal, Load, ShineOver} from 'react-native-maui';
 import Section from '../components/Section';
-
-const {width} = Dimensions.get('window');
 
 interface SkeletonExampleProps {
 };
 
 const Content = (
-  <View style={{width, height: 200, backgroundColor: 'white',}}>
+  <View style={{width: '100%', height: 200 }}>
     <View style={{ flexDirection: 'row' }}>
       <View>
         <SkeletonRect style={{ height: 50, width: 50, borderRadius: 25 }} />

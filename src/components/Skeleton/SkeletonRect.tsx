@@ -22,8 +22,8 @@ const SkeletonRect: React.FC<SkeletonRectProps> = props => {
   const Animation: React.FC<BaseChildAnimationProps> = childAnimation || Normal;
 
   return (
-    <View style={style}>
-      <Animated.View style={fadeStyle}>
+    <View>
+      <Animated.View style={[style, fadeStyle]}>
         {children}
       </Animated.View>
       {
