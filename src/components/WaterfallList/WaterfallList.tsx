@@ -11,10 +11,11 @@ export enum WaterfallListStatus {
 
 interface WaterfallListProps extends RefreshListProps {
   numColumns: number;
+  imageSize?: (item: any) => (Promise<{ width: number; height: number }> | { width: number; height: number });
 };
 
 const WaterfallList: React.FC<WaterfallListProps> = props => {
-  const {data, renderItem, numColumns, refreshState = RefreshState.Idle, onFooterRefresh, ...others} = props;  
+  const {data, renderItem, numColumns, refreshState = RefreshState.Idle, onFooterRefresh, imageSize, ...others} = props;  
   const dataQueue = useRef<any[]>([]);
   const [dataSource, setDataSource] = useState<Array<any>[]>(new Array(numColumns).fill(0).map(_ => new Array()));
   const heightList = useRef(new Array(numColumns).fill(0));
@@ -23,7 +24,6 @@ const WaterfallList: React.FC<WaterfallListProps> = props => {
   useEffect(() => {    
     if (data.length > 0 && dataQueue.current.length === 0) {
       const total = getArrayTotalLength(dataSource);
-      console.log('渲染', [total, data.length]);
       if (data.length > total) {
         // 这次要渲染的数据变多，即加载
         dataQueue.current = data.slice(total);
@@ -50,30 +50,23 @@ const WaterfallList: React.FC<WaterfallListProps> = props => {
     }
   }, [dataSource])
 
-  const pushItemToDatabase = () => {
+  const pushItemToDatabase = async () => {
     if (dataQueue.current.length <= 0) {
       waterfallStatus.current = WaterfallListStatus.Idle;
       return;
     };
-    const next = dataQueue.current.shift();
+    let next = dataQueue.current.shift();
     const minIndex = getMinHeight(heightList.current);
-    
+    if (!!imageSize && typeof imageSize === 'function') {
+      const getImageSize = await imageSize(next);
+      next['_imageSize'] = getImageSize;
+    }
+
     const temp = [...dataSource];
     temp[minIndex].push(next);
     
     setDataSource(temp);
   }
-
-  // why this function must add dependencies?
-  // const handleLayout = useCallback(({
-  //   nativeEvent: {
-  //     layout: { height: h },
-  //   },
-  // }) => {
-  //   const index = useMinHeight(heightList.current);
-  //   heightList.current[index] = heightList.current[index] + h;
-  //   pushItemToDatabase();
-  // }, [dataSource]);
 
   const handleLayout = (e: LayoutChangeEvent) => {
     const height = e.nativeEvent.layout.height;
@@ -90,20 +83,20 @@ const WaterfallList: React.FC<WaterfallListProps> = props => {
   return (
     <RefreshList
       refreshState={refreshState}
-      listKey={"ccc112"}
+      listKey={"waterfall_container"}
       data={dataSource}
       numColumns={numColumns}
       removeClippedSubviews={true}
-      keyExtractor={(item, index) => `_key${index.toString()}`}      
+      keyExtractor={(_, index) => `waterfall_key${index.toString()}`}      
       renderItem={({ item, index: group }) => {        
         return (
           <FlatList
-            listKey={`${group}_cccc123`}
+            listKey={`waterfall_${group}_list`}
             removeClippedSubviews={true}
             scrollEnabled={false}
             data={item}
             style={{flex: 1}}
-            keyExtractor={(item, index) => `item_key${index.toString()}`}      
+            keyExtractor={(_, index) => `waterfall_${group}_item_key${index.toString()}`}      
             renderItem={({ item, index, ...props }) => {
               return (
                 <View onLayout={handleLayout}>

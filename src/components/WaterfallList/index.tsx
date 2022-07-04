@@ -1,5 +1,7 @@
 import WaterfallList from './WaterfallList';
+import { getImageSize } from './utils';
 
 export {
-  WaterfallList
+  WaterfallList,
+  getImageSize
 }
