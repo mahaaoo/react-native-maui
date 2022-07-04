@@ -5,7 +5,7 @@ import {Normal} from './Animation';
 import {SkeletonContext, SkeletonContainerProps} from './type';
 
 const SkeletonContainer: React.FC<SkeletonContainerProps> = props => {
-  const {children, finished = false, reverse = true, childAnimation = Normal, containerAnimation} = props;
+  const {children, finished = false, reverse = true, childAnimation = Normal, containerAnimation, color = '#D8D8D8'} = props;
   const initialValue = 0;
   const toValue = 1;
   const animationProgress = useSharedValue(initialValue);
@@ -20,7 +20,8 @@ const SkeletonContainer: React.FC<SkeletonContainerProps> = props => {
     <SkeletonContext.Provider value={{
       finished,
       animationProgress,
-      childAnimation
+      childAnimation,
+      color
     }}>
       <>
         {children}

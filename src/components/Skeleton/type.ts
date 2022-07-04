@@ -24,7 +24,8 @@ export interface SkeletonContextProps {
   /**
    * type of childAnimation
    */
-  childAnimation: ContainerAnimationType
+  childAnimation: ContainerAnimationType,
+  color?: string;
 }
 
 export interface SkeletonContainerProps {
@@ -32,6 +33,7 @@ export interface SkeletonContainerProps {
   containerAnimation?: ContainerAnimationType;
   finished?: boolean;
   reverse?: boolean;
+  color?: string;
 };
 
 export interface BaseChildAnimationProps {

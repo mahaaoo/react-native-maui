@@ -3,23 +3,23 @@
  */
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import { BaseChildAnimationProps } from '../type'
+import { BaseChildAnimationProps, useSkeletonStyle } from '../type'
 
 interface NormalProps extends BaseChildAnimationProps{
 };
 
 const Normal: React.FC<NormalProps> = props => {
   const {style} = props;
+  const {color} = useSkeletonStyle();
 
   return (
-    <View style={[style, styles.mask]} />
+    <View style={[style, styles.mask, { backgroundColor: color }]} />
   )
 };
 
 const styles = StyleSheet.create({
   mask: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#D8D8D8',
   },
 })
 

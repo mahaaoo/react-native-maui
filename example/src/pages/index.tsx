@@ -80,7 +80,7 @@ const exampleList: Example[] = [{
   )
 }, {
   title: 'AsyncImage',
-  content: <AsyncImage url={'https://picsum.photos/50/50/?random'} style={{ width: 50, height: 50 }} />,
+  content: <AsyncImage url={'https://picsum.photos/100/50/?random'} style={{ width: 100, height: 50 }} />,
 }, {
   title: 'Loading',
   content: <Loading />,

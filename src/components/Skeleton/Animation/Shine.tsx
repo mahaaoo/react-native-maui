@@ -13,7 +13,7 @@ interface ShineProps extends BaseChildAnimationProps {
 
 const Shine: React.FC<ShineProps> = props => {
   const {style} = props;
-  const {animationProgress} = useSkeletonStyle();
+  const {animationProgress, color} = useSkeletonStyle();
   const width = useSharedValue(Wwidth);
 
   const animationStyle = useAnimatedStyle(() => {
@@ -26,7 +26,7 @@ const Shine: React.FC<ShineProps> = props => {
 
   return (
     <View 
-      style={[style, styles.mask]}
+      style={[style, styles.mask, {backgroundColor: color}]}
       onLayout={({
         nativeEvent: {
           layout: { width: w },
@@ -41,7 +41,6 @@ const Shine: React.FC<ShineProps> = props => {
 const styles = StyleSheet.create({
   mask: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#D8D8D8',
     flex: 1,
     overflow: 'hidden',
   },
