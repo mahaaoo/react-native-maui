@@ -7,13 +7,13 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import {Pagination, Dot} from '../Pagination';
 import {useRange, useStep, useAutoScroll, useTouching, useProps} from './utils';
 import ItemWrapper from './ItemWrapper';
 import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
 
 import BaseLayout from './BaseLayout';
 import ScaleLayout from './ScaleLayout';
+import SwiperPagination from './SwiperPagination';
 
 const {width} = Dimensions.get('window');
 
@@ -169,17 +169,15 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
             flexDirection: horizontal ? 'row' : 'column',
           }]}>
             {dataSource.map(renderSwiperItem)}
-            <View style={{
+          </View>
+          <View style={{
               position: 'absolute',
               left: 0,
               right: 0,
               bottom: 0,
               height: 30,
             }}>
-              <Pagination currentIndex={indexAtData} total={dataSource.length}>
-                <Dot />
-              </Pagination>
-            </View>
+            <SwiperPagination currentIndex={indexAtData} total={dataSource.length} />
           </View>
         </Animated.View>
       </GestureDetector>

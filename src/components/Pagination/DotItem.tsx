@@ -18,13 +18,13 @@ const DotItem: React.FC<DotItemProps> = (props) => {
 
   const animationStyle = useAnimatedStyle(() => {
     const inputRange = [index - 1, index, index + 1];
-    const opacity = interpolate(currentIndex.value, inputRange, [0.5, 1, 0.5], Extrapolate.CLAMP);
-    const scale = interpolate(currentIndex.value, inputRange, [1, 1.25, 1], Extrapolate.CLAMP);
+    const opacity = interpolate(currentIndex, inputRange, [0.5, 1, 0.5], Extrapolate.CLAMP);
+    const scale = interpolate(currentIndex, inputRange, [1, 1.25, 1], Extrapolate.CLAMP);
   
     return {
       opacity,
       transform: [{scale}],
-      backgroundColor: currentIndex.value === index ? activeColor : inActiveColor, 
+      backgroundColor: currentIndex === index ? activeColor : inActiveColor, 
     }
   })
 

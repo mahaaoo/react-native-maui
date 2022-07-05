@@ -10,15 +10,10 @@ interface PercentProps {
 const Percent: React.FC<PercentProps> = (props) => {
   const {color = 'white'} = props;
   const {currentIndex, total} = usePagination();
-  const [index, setIndex] = useState(currentIndex.value);
-
-  useAnimatedReaction(() => currentIndex.value, (value) => {
-    runOnJS(setIndex)(value)
-  });
 
   return (
     <View style={styles.container}>
-      <Text style={{ color }}>{index}</Text>
+      <Text style={{ color }}>{currentIndex}</Text>
       <Text style={{ color }}>/</Text>
       <Text style={{ color }}>{total}</Text>
     </View>

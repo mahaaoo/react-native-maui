@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import Animated from 'react-native-reanimated';
 
 interface PaginationRef {
-  currentIndex: Animated.SharedValue<number>;
+  currentIndex: number;
   total: number;
 }
 
@@ -11,7 +11,7 @@ export const PaginationContext = createContext({} as PaginationRef);
 export const usePagination = () => useContext(PaginationContext);
 
 interface PaginationProps {
-  currentIndex: Animated.SharedValue<number>;
+  currentIndex: number;
   total: number;
   position?: 'left' | 'center' | 'right';
 };

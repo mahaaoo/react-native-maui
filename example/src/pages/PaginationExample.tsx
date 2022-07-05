@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
 import {Pagination, Dot, Percent} from 'react-native-maui';
 import Section from '../components/Section';
 interface PaginationExampleProps {
@@ -8,8 +7,7 @@ interface PaginationExampleProps {
 
 const PaginationExample: React.FC<PaginationExampleProps> = props => {
   const {} = props;
-
-  const currentIndex = useSharedValue(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
     <View style={styles.container}>
@@ -46,20 +44,24 @@ const PaginationExample: React.FC<PaginationExampleProps> = props => {
       </Section>
       <View style={{ width: '100%', height: 50, flexDirection: 'row'}}>
         <TouchableOpacity onPress={() => {
-          if (currentIndex.value === 0) {
-            currentIndex.value = 4
+          let newIndex = currentIndex;
+          if (currentIndex === 0) {
+            newIndex = 4
           } else {
-            currentIndex.value = currentIndex.value - 1;
+            newIndex = newIndex - 1;
           }
+          setCurrentIndex(newIndex);
         }} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text>Pre</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
-          if (currentIndex.value === 4) {
-            currentIndex.value = 0
+          let newIndex = currentIndex;
+          if (currentIndex === 4) {
+            newIndex = 0
           } else {
-            currentIndex.value = currentIndex.value + 1;
-          }          
+            newIndex = newIndex + 1;
+          }
+          setCurrentIndex(newIndex);
         }}style={{ flex: 1, justifyContent: 'center', alignItems: 'center'  }}>
           <Text>Next</Text>
         </TouchableOpacity>

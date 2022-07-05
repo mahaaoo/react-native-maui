@@ -10,7 +10,7 @@ interface ShadowProps {
 };
 
 const Shadow: React.FC<ShadowProps> = props => {
-  const {borderRadius = 15, children, color = '#F8F8F8', shadowWidth=15, stopOpacity=1} = props;
+  const {borderRadius = 0, children, color = '#F8F8F8', shadowWidth=15, stopOpacity=1} = props;
   const [viewport, setViewport] = useState({
     width: 0,
     height: 0,
