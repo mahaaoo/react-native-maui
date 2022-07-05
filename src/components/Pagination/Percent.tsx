@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import {runOnJS, useAnimatedReaction} from 'react-native-reanimated'
+import React from 'react';
+import { View, StyleSheet, Text, TextStyle } from 'react-native';
 import { usePagination } from './Pagination';
 
 interface PercentProps {
-  color?: string;
+  style?: TextStyle;
 }
 
 const Percent: React.FC<PercentProps> = (props) => {
-  const {color = 'white'} = props;
+  const {style} = props;
   const {currentIndex, total} = usePagination();
 
   return (
     <View style={styles.container}>
-      <Text style={{ color }}>{currentIndex}</Text>
-      <Text style={{ color }}>/</Text>
-      <Text style={{ color }}>{total}</Text>
+      <Text style={style}>{currentIndex}</Text>
+      <Text style={style}>/</Text>
+      <Text style={style}>{total}</Text>
     </View>
   )
 }

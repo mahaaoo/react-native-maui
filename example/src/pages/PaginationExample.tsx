@@ -17,16 +17,16 @@ const PaginationExample: React.FC<PaginationExampleProps> = props => {
             <Dot />
           </Pagination>
         </View>
-        <View style={{ width: '100%', height: 100, backgroundColor: '#000' }}>
-          <Pagination position="left" currentIndex={currentIndex} total={5}>
-            <Dot direction="column" />
-          </Pagination>
-        </View>
       </Section>
       <Section title="自定义样式" style={{ flexDirection: 'column' }}>
         <View style={{ width: '100%', height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
           <Pagination currentIndex={currentIndex} total={5} position='left'>
             <Dot activeColor='red' inActiveColor='cyan' />
+          </Pagination>
+        </View>
+        <View style={{ width: '100%', height: 100, backgroundColor: '#000' }}>
+          <Pagination position="right" currentIndex={currentIndex} total={5}>
+            <Dot direction="column" />
           </Pagination>
         </View>
         <View style={{ width: '100%', height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
@@ -38,7 +38,7 @@ const PaginationExample: React.FC<PaginationExampleProps> = props => {
       <Section title="数字类型" style={{ flexDirection: 'column' }}>
         <View style={{ width: '100%', height: 50, backgroundColor: '#000', justifyContent: 'center' }}>
           <Pagination currentIndex={currentIndex} total={5}>
-            <Percent />
+            <Percent style={{ color: 'white', fontSize: 18 }} />
           </Pagination>
         </View>
       </Section>
