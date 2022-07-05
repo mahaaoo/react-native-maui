@@ -13,7 +13,7 @@ const PickerItem: React.FC<PickerItemProps> = props => {
   }, [offWindow]);
 
   const outOffWindow = useDerivedValue(() => {
-    return Math.abs(index - paningIndex.value) > Math.round(2 * options.maxRender);
+    return Math.abs(index - paningIndex.value) > Math.ceil(1.5 * options.maxRender);
   })
 
   const style = useAnimatedStyle(() => {
