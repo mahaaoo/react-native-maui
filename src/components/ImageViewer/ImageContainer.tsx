@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {TouchableOpacity, View} from 'react-native';
-import Animated, { useAnimatedRef, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 interface ImageContainerProps {
   children: React.ReactNode,

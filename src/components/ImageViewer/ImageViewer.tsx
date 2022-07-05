@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import {View, StyleSheet} from 'react-native';
-import { useSharedValue, withDelay } from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
 import { useOverlay } from '../Overlay';
 import ImageContainer, { Position } from './ImageContainer';
 import ImageOverlay from './ImageOverlay';
@@ -18,7 +18,8 @@ const ImageViewer: React.FC<ImageViewerProps> = props => {
 
   const handlePress = useCallback((index: number) => {
     currentIndex.value = index;
-    add(<ImageOverlay 
+    add(
+        <ImageOverlay 
           positionList={positionList.current} 
           data={data} 
           initialIndex={index} 
@@ -27,7 +28,9 @@ const ImageViewer: React.FC<ImageViewerProps> = props => {
             // when disappeared, all image show
             currentIndex.value = -1;
           }}
-        /> , 'global-image-viewer');
+        />, 
+      'global-image-viewer'
+    );
   }, [])
 
   return (

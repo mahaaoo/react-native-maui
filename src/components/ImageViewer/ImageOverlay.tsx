@@ -200,7 +200,7 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>((props, ref)
         }, paginationStyle]}
       >
         <Pagination currentIndex={paginationIndex} total={positionList.length}>
-          <Percent />
+          <Percent style={{ color: 'white' }} />
         </Pagination>
       </View>
     </View>

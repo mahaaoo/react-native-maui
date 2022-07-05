@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import {View, Image, Dimensions} from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import Animated, { Extrapolate, interpolate, useAnimatedReaction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Position } from './ImageContainer';
 
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';

@@ -13,7 +13,7 @@ import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
 
 import BaseLayout from './BaseLayout';
 import ScaleLayout from './ScaleLayout';
-import SwiperPagination from './SwiperPagination';
+import { Dot, Pagination } from '../Pagination';
 
 const {width} = Dimensions.get('window');
 
@@ -177,7 +177,9 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
               bottom: 0,
               height: 30,
             }}>
-            <SwiperPagination currentIndex={indexAtData} total={dataSource.length} />
+            <Pagination currentIndex={indexAtData} total={dataSource.length}>
+              <Dot />
+            </Pagination>
           </View>
         </Animated.View>
       </GestureDetector>
