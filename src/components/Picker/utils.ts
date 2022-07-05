@@ -36,8 +36,6 @@ const useInitialValue = (options: PickDefaultOptions, dataSource: any[]) => {
   const offset = useSharedValue(0);
   const currentIndex = useSharedValue(0);
 
-  const snapPoints = dataSource.map((_, index) => -index * options.itemHeight + defaultY);  
-
   const timingOptions = {
     duration: 1000,
     easing: Easing.bezier(0.22, 1, 0.36, 1),  
@@ -47,7 +45,6 @@ const useInitialValue = (options: PickDefaultOptions, dataSource: any[]) => {
     translateY,
     offset,
     currentIndex,
-    snapPoints,
     timingOptions,
   }
 }

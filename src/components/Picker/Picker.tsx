@@ -1,13 +1,10 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
-import {View, Dimensions, ViewStyle} from 'react-native';
+import {View, ViewStyle} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useDerivedValue, withTiming } from 'react-native-reanimated';
-import { snapPoint } from '../../utils/redash';
 import PickerItem from './PickerItem';
 import { PickerProps } from './type';
 import { useProps, useInitialValue } from './utils';
-
-const {width} = Dimensions.get('window');
 
 const Picker: React.FC<PickerProps> = props => {
   const {dataSource, style, renderItem, onChange, options} = useProps(props);
@@ -15,7 +12,6 @@ const Picker: React.FC<PickerProps> = props => {
     translateY,
     offset,
     currentIndex,
-    snapPoints,
     timingOptions,
   } = useInitialValue(options, dataSource);
 
@@ -40,7 +36,15 @@ const Picker: React.FC<PickerProps> = props => {
     translateY.value = offset.value + translationY;
   })
   .onEnd(({velocityY}) => {
-    const dest = snapPoint(translateY.value, velocityY, snapPoints);
+    const distance = (translateY.value + 0.2 * velocityY) / options.itemHeight;
+    let step = Math.round(distance);    
+
+    if (-step + options.maxRender >= dataSource.length) {
+      step = options.maxRender - dataSource.length + 1;
+    } else if (step >= options.maxRender) {
+      step = options.maxRender;
+    }
+    const dest = step * options.itemHeight;
     currentIndex.value = options.maxRender - dest / options.itemHeight;
 
     translateY.value = withTiming(dest, timingOptions, () => {
@@ -48,10 +52,8 @@ const Picker: React.FC<PickerProps> = props => {
     });
   });
 
-
   const mustStyle: ViewStyle = useMemo(() => {
     return {
-      width,
       overflow: 'hidden',
       height: options.itemHeight * (options.maxRender * 2 + 1)
     }
@@ -76,7 +78,7 @@ const Picker: React.FC<PickerProps> = props => {
           top: options.maxRender * options.itemHeight,
           left: 0,
           right: 0,
-          width,
+          width: '100%',
           height: options.itemHeight,
           borderWidth: 1,
           borderColor: 'red',

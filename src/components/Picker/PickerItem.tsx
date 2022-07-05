@@ -1,11 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Animated, { interpolate, runOnJS, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated';
 import {PickerItemProps} from './type';
 
 const PickerItem: React.FC<PickerItemProps> = props => {
   const {index, translateY, children, options, paningIndex} = props;
   const [offWindow, setOffWindow] = useState(false);
-  const componentRef = useRef(children);
 
   const changeState = useCallback((mount: boolean) => {
     if (mount != offWindow) {
@@ -14,26 +13,13 @@ const PickerItem: React.FC<PickerItemProps> = props => {
   }, [offWindow]);
 
   const outOffWindow = useDerivedValue(() => {
-    return Math.abs(index - paningIndex.value) > Math.round(1.5 * options.maxRender);
+    return Math.abs(index - paningIndex.value) > Math.round(2 * options.maxRender);
   })
 
   const style = useAnimatedStyle(() => {
     if (outOffWindow.value) {
-      // const upOrDown = index < paningIndex.value - options.maxRender - 1;
-      // const rotateX = upOrDown ? 50 : -50;
-
       runOnJS(changeState)(false);
-
-      return {
-        // opacity: 0.2,
-        // transform: [
-        //   {translateY: translateY.value},
-        //   {perspective: 1500},
-        //   {rotateX: `${rotateX}deg`},
-        //   {scaleX: 0.9},
-        //   {scaleY: 0.9}
-        // ]  
-      }
+      return {}
     }
 
     runOnJS(changeState)(true);
@@ -64,7 +50,7 @@ const PickerItem: React.FC<PickerItemProps> = props => {
       alignItems: 'center',
       }, style]}
     >
-      {offWindow ? componentRef.current : null}
+      {offWindow ? children : null}
     </Animated.View>
   )
 }
