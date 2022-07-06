@@ -13,11 +13,7 @@ interface GrowLoadingProps {
 const GrowLoading: React.FC<GrowLoadingProps> = props => {
   const {size = 30, color = '#1e90ff'} = props;
   const progress = useSharedValue(0);
-
-  const all = size * 2 * Math.PI * 0.8;
-
-  console.log(all);
-  
+  const all = size * 2 * Math.PI * 0.8;  
 
   useEffect(() => {
     progress.value = withRepeat(

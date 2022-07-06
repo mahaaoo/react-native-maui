@@ -1,4 +1,4 @@
-export { ActionSheet, ActionSheetUtil } from './components/ActionSheet'
+export { ActionSheet, ActionSheetUtil, ActionSheetFull } from './components/ActionSheet'
 export { Avatar } from './components/Avatar';
 export { Badge } from './components/Badge';
 export { Button, ButtonType, GradientButton } from './components/Button';

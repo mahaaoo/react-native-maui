@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {Button, ActionSheet, ActionSheetUtil} from 'react-native-maui';
+import {Button, ActionSheet, ActionSheetUtil, ActionSheetFull} from 'react-native-maui';
 
 interface ActionSheetExampleProps {
 };
@@ -24,7 +24,22 @@ const ActionSheetExample: React.FC<ActionSheetExampleProps> = props => {
           />  
         )
       }}>
-        <Text>默认样式</Text>
+        <Text>样式1</Text>
+      </Button>
+      <Button onPress={() => {
+        ActionSheetUtil.show(
+          <ActionSheetFull 
+            options={options} 
+            onSelect={(item, index) => {
+              console.log('选择了:', item);
+            }}
+            onDisappear={() => {
+              console.log('关闭');
+            }}
+          />  
+        )
+      }}>
+        <Text>样式2</Text>
       </Button>
     </View>
   )

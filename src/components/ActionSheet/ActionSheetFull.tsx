@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity,ViewStyle, StyleSheet} from 'react-native';
 import { ActionSheetUtil } from './ActionSheetUtil';
 
-export interface ActionSheetProps {
+export interface ActionSheetFullProps {
   options: string[];
   optionStyle?: ViewStyle;
   closeStyle?: ViewStyle;
@@ -11,12 +11,12 @@ export interface ActionSheetProps {
   onDisappear?: () => void;
 };
 
-const ActionSheet: React.FC<ActionSheetProps> = props => {
+const ActionSheetFull: React.FC<ActionSheetFullProps> = props => {
   const {options, optionStyle, closeStyle, onSelect } = props;
 
   return (
-    <View style={{ marginBottom: 50 }}>
-      <View style={{ borderRadius: 8, marginHorizontal: 15, overflow: 'hidden'}}>
+    <>
+      <View style={{overflow: 'hidden'}}>
         {options.map((item, index) => {
           return (
             <TouchableOpacity 
@@ -32,15 +32,14 @@ const ActionSheet: React.FC<ActionSheetProps> = props => {
           )
         })}
       </View>
-      <View style={{ borderRadius: 8, marginHorizontal: 15, marginTop: 10, overflow: 'hidden' }}>
+      <View style={{ overflow: 'hidden' }}>
         <TouchableOpacity
           onPress={ActionSheetUtil.hide}
-          style={styles.itemContainer}
-        >
+          style={styles.cancelContainer}>
           <Text style={[styles.close, closeStyle]}>{`close`}</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </>
   )
 };
 
@@ -60,6 +59,14 @@ const styles = StyleSheet.create({
     paddingVertical: 15, 
     marginTop: StyleSheet.hairlineWidth
   },
+  cancelContainer: {
+    justifyContent: 'center', 
+    backgroundColor: '#F8F8F8', 
+    alignItems: 'center', 
+    paddingTop: 15, 
+    paddingBottom: 50,
+    marginTop: StyleSheet.hairlineWidth, 
+  }
 });
 
-export default ActionSheet;
+export default ActionSheetFull;
