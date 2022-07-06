@@ -12,4 +12,5 @@ export const OverlayUtil = {
   add: (children: React.ReactNode, key?: string) => overlayRef.current?.add(children, key),
   remove: () => overlayRef.current?.remove(),
   removeAll: () => overlayRef.current?.removeAll(),
+  isExist: (key: string) => overlayRef.current?.isExist(key),
 };

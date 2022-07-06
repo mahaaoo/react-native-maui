@@ -1,3 +1,13 @@
+/**
+ * Overlay can display Component like Modal from 'react-native'
+ * the Component will be push to Array, render at outermost layer
+ * there are two way can use Overlay:
+ * in component, can use useOverlay() hook
+ * in function, can use OverlayUtil
+ * 
+ * Overlay offer WrapperComponent, some of them contains animation, like DrawerContainer、TranslateContainer
+ * Overlay also accepts customize component, if offer unMount function, it will be invoked before remove
+ */
 import React, {useState, createContext, useCallback, useContext, useRef, useImperativeHandle, forwardRef} from 'react';
 import {View, StyleSheet, StatusBar, StatusBarStyle} from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
@@ -47,7 +57,7 @@ interface ElementType {
 
 const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const {children} = props;
-  const elements = useRef<Array<ElementType>>([]);
+  const elements = useRef<Array<ElementType>>([]); // all componets saved here
   const [update, forceUpdate] = useState(0);
   const elementsIndex = useRef<number>(0);
   const {theme} = useTheme();
@@ -155,6 +165,11 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     return elements.current.some(element => element.key === key);
   }, []);
 
+  /**
+   * Animation for MainView, support Scale,translateX
+   * anywhere can use uselayout() to control the Animation
+   * if set new value, animation will react
+   */
   const mainViewStyle = useAnimatedStyle(() => {
     return {
       transform: [{
@@ -189,6 +204,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
         {elements.current.map((node: any) => {
           const pointerEvents = node.element.props.pointerEvents || 'auto';
           let extraStyle = {};
+          // DrawerContainer's View will below the MainView
           if (node.element.type.displayName === 'DrawerContainer') {
             extraStyle = { zIndex: -10 }
           }

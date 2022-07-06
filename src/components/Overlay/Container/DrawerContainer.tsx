@@ -1,6 +1,11 @@
+/**
+ * Component below MainView
+ * when it mount, change MainView's translateX
+ * only support horizontal direction
+ */
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import { StyleSheet, View} from 'react-native';
-import Animated, { runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { runOnJS, withTiming } from 'react-native-reanimated';
 import { useOverlay } from '../Overlay';
 import { BaseContainerProps } from './type';
 
@@ -22,7 +27,7 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps> ((p
 
   const onLayout = useCallback(({
     nativeEvent: {
-      layout: { height: h, width: w},
+      layout: {width: w},
     },
   }) => {
     toWidth.current = w;

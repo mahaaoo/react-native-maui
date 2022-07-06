@@ -38,6 +38,9 @@ interface TranslateContainerProps extends AnimationContainerProps {
 
 export interface TranslateContainerRef {
   mount: (callback?: () => void) => void;
+  /**
+   * will be invoked before be removed
+   */
   unMount: (callback?: () => void) => void;
 }
 
@@ -71,6 +74,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
   const snapPoints1 = useSharedValue<number>(0);
   const snapPoints2 = useSharedValue<number>(0);
 
+  // panGesture can't get useRef value, those just copy toHeight and toWidth
   const appearHeight = useSharedValue(0);
   const appearWidth = useSharedValue(0);
 
@@ -103,7 +107,6 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
         break;
       }
     }
-    console.log('onLayout', [h,w]);
     mount();
   }, []);
 
@@ -146,7 +149,6 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
       underScale.value = withTiming(UNDERSCORE, {duration});
     }
     if (direction) {
-      console.log([dest]);
       translateY.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
@@ -225,6 +227,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     }
   })
 
+  // initial position outof window, this is animation origin point
   const initialPosition = useMemo(() => {
     switch(true) {
       case (from === 'bottom'):
@@ -254,6 +257,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     }
   }, [from])
 
+  // invoke useOverlay remove by key
   const removeSelf = useCallback(() => {
     remove(innerKey);
   }, [remove, innerKey])
