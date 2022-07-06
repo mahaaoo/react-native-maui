@@ -12,6 +12,19 @@ export default function OverlayExample() {
     <View style={styles.container}>
       <Button onPress={() => {
         const index = add(
+          <View style={{ marginTop: 100 }}>
+            <Text style={{ marginTop: 100, fontSize: 24 }}>子视图{elementIndex.current}</Text>
+            <Text onPress={() => {
+              remove(index);
+            }} style={{ marginTop: 20, fontSize: 24 }}>关闭</Text>
+          </View>
+        );
+        elementIndex.current++;
+      }}>
+        <Text>添加一个自定义子视图</Text>
+      </Button>
+      <Button onPress={() => {
+        const index = add(
           <NormalContainer
             pointerEvents='none'
             onAppear={() => {

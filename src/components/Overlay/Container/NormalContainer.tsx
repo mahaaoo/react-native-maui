@@ -46,4 +46,6 @@ const styles = StyleSheet.create({
   }
 })
 
+NormalContainer.displayName = "NormalContainer";
+
 export default NormalContainer;

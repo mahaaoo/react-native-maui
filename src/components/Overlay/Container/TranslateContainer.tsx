@@ -375,4 +375,6 @@ const styles = StyleSheet.create({
   }
 })
 
+TranslateContainer.displayName = "TranslateContainer";
+
 export default TranslateContainer;

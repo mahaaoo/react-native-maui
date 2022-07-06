@@ -17,7 +17,7 @@ export interface OpacityContainerRef {
   mount: () => void;
 }
 
-const OverlayContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>((props, ref) => {
+const OpacityContainer = forwardRef<OpacityContainerRef, OpacityContainerProps>((props, ref) => {
   const {
     children, 
     onAppear, 
@@ -86,4 +86,6 @@ const styles = StyleSheet.create({
   }
 })
 
-export default OverlayContainer;
+OpacityContainer.displayName = "OpacityContainer";
+
+export default OpacityContainer;

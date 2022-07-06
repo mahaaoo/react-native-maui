@@ -1,6 +1,6 @@
 import React, {useState, createContext, useCallback, useContext, useRef, useImperativeHandle, forwardRef} from 'react';
 import {View, StyleSheet, StatusBar, StatusBarStyle} from 'react-native';
-import Animated, { interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
 
 export interface OverlayRef {
@@ -86,6 +86,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     } else {
       nodeRef = React.createRef();
     }
+
     const onDisappear = node?.props?.onDisappear;
     const inner_key = key || 'overlay' + (elementsIndex.current + 1);
     elements.current.push({
@@ -187,9 +188,12 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
         </Animated.View>
         {elements.current.map((node: any) => {
           const pointerEvents = node.element.props.pointerEvents || 'auto';
-          
+          let extraStyle = {};
+          if (node.element.type.displayName === 'DrawerContainer') {
+            extraStyle = { zIndex: -10 }
+          }
           return (
-            <View key={node.key} pointerEvents={pointerEvents} style={styles.overlay}>
+            <View key={node.key} pointerEvents={pointerEvents} style={[styles.overlay, extraStyle]}>
               {node.element}
             </View>
           )
