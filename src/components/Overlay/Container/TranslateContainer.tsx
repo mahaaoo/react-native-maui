@@ -8,14 +8,14 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import {StyleSheet, Dimensions, View, TouchableWithoutFeedback} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { Extrapolate, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { clamp, snapPoint } from '../../../utils/redash';
 import {useOverlay} from '../Overlay';
 import { AnimationContainerProps } from './type';
 
 const {width, height} = Dimensions.get('window');
 
-const UNDERSCORE = 0.94;
+const UNDERSCORE = 0;
 
 interface TranslateContainerProps extends AnimationContainerProps {
   /**
@@ -286,7 +286,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
         } else {
           underScaleList = [1, UNDERSCORE];
         }
-        underScale.value = interpolate(translateY.value, [snapPoints1.value, snapPoints2.value], underScaleList)
+        underScale.value = interpolate(translateY.value, [snapPoints1.value, snapPoints2.value], underScaleList, Extrapolate.CLAMP)
       }
     } else {      
       translateX.value = clamp(offset.value + translationX, snapPoints1.value, snapPoints2.value);
@@ -307,7 +307,7 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
         } else {
           underScaleList = [UNDERSCORE, 1];
         }
-        underScale.value = interpolate(translateX.value, [snapPoints1.value, snapPoints2.value], underScaleList)
+        underScale.value = interpolate(translateX.value, [snapPoints1.value, snapPoints2.value], underScaleList, Extrapolate.CLAMP)
       }
     }
   })

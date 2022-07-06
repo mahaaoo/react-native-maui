@@ -1,6 +1,6 @@
 import React, {useState, createContext, useCallback, useContext, useRef, useImperativeHandle, forwardRef} from 'react';
 import {View, StyleSheet, StatusBar, StatusBarStyle} from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
 
 export interface OverlayRef {
@@ -158,7 +158,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const mainViewStyle = useAnimatedStyle(() => {
     return {
       transform: [{
-        scale: scale.value
+        scale: interpolate(scale.value, [0, 1], [0.94, 1], Extrapolate.CLAMP),
       }, {
         translateX: translateX.value
       }]
