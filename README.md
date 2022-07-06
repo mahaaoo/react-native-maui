@@ -22,23 +22,23 @@ All files are 100% typescript,and Support iOS & Android
 
 | Toast  | Pagination  |  Segmented  |
 | ------------- | ------------- | ------------- | 
-| <img src="./screenshoot/Toast.png" width="250" />  | <img src="./screenshoot/Pagination.png" width="250" />  |  <img src="./screenshoot/SilderSelect.png" width="250" /> |
+| <img src="./screenshoot/Toast.png" width="250" />  | <img src="./screenshoot/Pagination.png" width="250" />  |  <img src="./screenshoot/Segmented.png" width="250" /> |
 
 | Theme  | Collapse  |  Overlay  |
 | ------------- | ------------- | ------------- | 
 | <img src="./screenshoot/Theme.png" width="250" />  | <img src="./screenshoot/Collapse.png" width="250" />   |  <img src="./screenshoot/Overlay.png" width="250" /> |
 
-| ActionSheet  | SliderSheet  |  Picker  |
+| ActionSheet  | RefreshList  |  Picker  |
 | ------------- | ------------- | ------------- | 
-| <img src="./screenshoot/ActionSheet.png" width="250" />  | <img src="./screenshoot/SliderSheet.png" width="250" />  |  <img src="./screenshoot/Picker.png" width="250" /> |
+| <img src="./screenshoot/ActionSheet.png" width="250" />  | <img src="./screenshoot/RefreshList.png" width="250" />  |  <img src="./screenshoot/Picker.png" width="250" /> |
 
 | Skeleton  | Swiper  |  ImageViewer  |
 | ------------- | ------------- | ------------- | 
 | <img src="./screenshoot/Skeleton.gif" width="250" />  | <img src="./screenshoot/Swiper.png" width="250" />  |   <img src="./screenshoot/ImageViewer.png" width="250" /> |
 
-| RefreshList  | Switch  |
-| ------------- | ------------- |
-| <img src="./screenshoot/RefreshList.png" width="250" />  | <img src="./screenshoot/Switch.png" width="250" />  |
+| Switch  |
+| ------------- |
+| <img src="./screenshoot/Switch.png" width="250" />  |
 
 
 ## Installation

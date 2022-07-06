@@ -146,13 +146,6 @@ const exampleList: Example[] = [{
     </View>
   )
 }, {
-  title: 'SliderSheet',
-  content: (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ backgroundColor: 'white', height: '70%', width: 100, borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}/>
-    </View>
-  ),
-}, {
   title: 'Picker',
   content: (
     <View style={{ flex: 1, alignItems: 'center' }}>

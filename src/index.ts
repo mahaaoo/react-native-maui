@@ -55,11 +55,6 @@ export {
 export { Segmented } from './components/Segmented';
 
 export {
-  SliderSheet,
-  SliderSheetRef
-} from './components/SliderSheet';
-
-export {
   Swiper,
   BaseLayout,
   ScaleLayout,
