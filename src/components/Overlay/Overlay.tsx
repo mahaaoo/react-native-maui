@@ -1,5 +1,6 @@
 import React, {useState, createContext, useCallback, useContext, useRef, useImperativeHandle, forwardRef} from 'react';
-import {Animated, View, StyleSheet, StatusBar, StatusBarStyle} from 'react-native';
+import {View, StyleSheet, StatusBar, StatusBarStyle} from 'react-native';
+import Animated, { interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
 
 export interface OverlayRef {
@@ -26,7 +27,11 @@ export interface OverlayRef {
   isExist: (key: string) => boolean,
 }
 
-export const OverlayContext = createContext({} as OverlayRef);
+export interface OverlayContextProps extends OverlayRef {
+  underScale: Animated.SharedValue<number>;
+}
+
+export const OverlayContext = createContext({} as OverlayContextProps);
 export const useOverlay = () => useContext(OverlayContext);
 
 interface OverlayProps {
@@ -45,6 +50,8 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const [update, forceUpdate] = useState(0);
   const elementsIndex = useRef<number>(0);
   const {theme} = useTheme();
+
+  const scale = useSharedValue(1);
 
   /**
    * When call this function with key, the component will be unique
@@ -145,6 +152,14 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     return elements.current.some(element => element.key === key);
   }, []);
 
+  const mainViewStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{
+        scale: scale.value
+      }]
+    }
+  }, [])
+
   useImperativeHandle(ref, () => ({
     add: addNodeToOverlay,
     remove: deleteNodeFromOverlay,
@@ -153,15 +168,16 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   }), []);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: '#000'}}>
       <StatusBar barStyle={theme.statusBarColor as StatusBarStyle} animated={true} />
       <OverlayContext.Provider value={{
         add: addNodeToOverlay,
         remove: deleteNodeFromOverlay,
         removeAll: deleteAllNodeFromOverlay,
         isExist,
+        underScale: scale,
       }}>
-        <Animated.View style={{flex: 1}}>
+        <Animated.View style={[{flex: 1}, mainViewStyle]}>
           {children}
         </Animated.View>
         {elements.current.map((node: any) => {

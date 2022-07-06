@@ -120,6 +120,19 @@ export default function OverlayExample() {
       }}>
         <Text>从Right弹出-不需要遮罩</Text>
       </Button>
+      <Button onPress={() => {
+        OverlayUtil.add(
+          <TranslateContainer gesture={true} isScale>
+            <View style={{ height: 500, width, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+            </View>
+          </TranslateContainer>,
+          'pop-view-bottom'
+        )
+        elementIndex.current++;
+      }}>
+        <Text>从Bottom弹出-缩放下层View</Text>
+      </Button>
     </View>
   );
 }

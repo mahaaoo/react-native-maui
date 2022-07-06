@@ -24,7 +24,11 @@ interface TranslateContainerProps extends AnimationContainerProps {
   /**
    * gesture to close
    */
-  gesture?: boolean
+  gesture?: boolean,
+  /**
+   * is scale under View
+   */
+  isScale?: boolean
 };
 
 export interface TranslateContainerRef {
@@ -46,8 +50,9 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     innerKey,
     containerStyle,
     gesture = false,
+    isScale = false
   } = props;
-  const {remove} = useOverlay();
+  const {remove, underScale} = useOverlay();
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0);
@@ -127,11 +132,17 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
       translateY.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
+      if (isScale) {
+        underScale.value = withTiming(0.94, {duration});
+      }
     } else {
       console.log([dest]);
       translateX.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
+      if (isScale) {
+        underScale.value = withTiming(0.94, {duration});
+      }
     }
   }, [onAppear]);
 
@@ -170,11 +181,17 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     if (direction) {
       translateY.value = withTiming(dest, {duration}, () => {
         onDisappear && runOnJS(onDisappear)();
-      }); 
+      });
+      if (isScale) {
+        underScale.value = withTiming(1, {duration});
+      }
     } else {
       translateX.value = withTiming(dest, {duration}, () => {
         onDisappear && runOnJS(onDisappear)();
       });
+      if (isScale) {
+        underScale.value = withTiming(1, {duration});
+      }
     }
   }, [onDisappear]);
 
