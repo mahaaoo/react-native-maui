@@ -96,7 +96,7 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer from='left' modal={true}>
+          <TranslateContainer from='left' gesture={true} modal={true}>
             <View style={{ width: 200, height, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
@@ -109,7 +109,7 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer from='right' mask={false}>
+          <TranslateContainer from='right' mask={false} underView={{ isScale: true }}>
             <View style={{ width: 200, height, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
@@ -122,7 +122,7 @@ export default function OverlayExample() {
       </Button>
       <Button onPress={() => {
         OverlayUtil.add(
-          <TranslateContainer gesture={true} isScale>
+          <TranslateContainer from='bottom' gesture={true} underView={{ isScale: true }}>
             <View style={{ height: 500, width, backgroundColor: '#fff' }}>
               <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
             </View>
@@ -132,6 +132,32 @@ export default function OverlayExample() {
         elementIndex.current++;
       }}>
         <Text>从Bottom弹出-缩放下层View</Text>
+      </Button>
+      <Button onPress={() => {
+        OverlayUtil.add(
+          <TranslateContainer from='right' modal={true} gesture={true} mask={false} underView={{ isTranslate: true }}>
+            <View style={{ width: 300, height, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+            </View>
+          </TranslateContainer>,
+          'pop-view-left'
+        )
+        elementIndex.current++;
+      }}>
+        <Text>从Right弹出-平移下层View</Text>
+      </Button>
+      <Button onPress={() => {
+        OverlayUtil.add(
+          <TranslateContainer from='left' modal={true} gesture={true} mask={false} underView={{ isTranslate: true, isScale: true }}>
+            <View style={{ width: 300, height, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+            </View>
+          </TranslateContainer>,
+          'pop-view-left'
+        )
+        elementIndex.current++;
+      }}>
+        <Text>从Left弹出-平移下层View并缩放</Text>
       </Button>
     </View>
   );

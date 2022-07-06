@@ -29,6 +29,7 @@ export interface OverlayRef {
 
 export interface OverlayContextProps extends OverlayRef {
   underScale: Animated.SharedValue<number>;
+  underTranslateX: Animated.SharedValue<number>;
 }
 
 export const OverlayContext = createContext({} as OverlayContextProps);
@@ -52,6 +53,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const {theme} = useTheme();
 
   const scale = useSharedValue(1);
+  const translateX = useSharedValue(0);
 
   /**
    * When call this function with key, the component will be unique
@@ -156,6 +158,8 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     return {
       transform: [{
         scale: scale.value
+      }, {
+        translateX: translateX.value
       }]
     }
   }, [])
@@ -176,6 +180,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
         removeAll: deleteAllNodeFromOverlay,
         isExist,
         underScale: scale,
+        underTranslateX: translateX,
       }}>
         <Animated.View style={[{flex: 1}, mainViewStyle]}>
           {children}

@@ -8,12 +8,14 @@
 import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import {StyleSheet, Dimensions, View, TouchableWithoutFeedback} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { clamp, snapPoint } from '../../../utils/redash';
 import {useOverlay} from '../Overlay';
 import { AnimationContainerProps } from './type';
 
 const {width, height} = Dimensions.get('window');
+
+const UNDERSCORE = 0.94;
 
 interface TranslateContainerProps extends AnimationContainerProps {
   /**
@@ -28,7 +30,10 @@ interface TranslateContainerProps extends AnimationContainerProps {
   /**
    * is scale under View
    */
-  isScale?: boolean
+  underView?: {
+    isScale?: boolean, // support all directions
+    isTranslate?: boolean, // only supports left and right
+  }
 };
 
 export interface TranslateContainerRef {
@@ -50,9 +55,12 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     innerKey,
     containerStyle,
     gesture = false,
-    isScale = false
+    underView = {
+      isScale: false,
+      isTranslate: false,  
+    }
   } = props;
-  const {remove, underScale} = useOverlay();
+  const {remove, underScale, underTranslateX} = useOverlay();
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0);
@@ -62,6 +70,9 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
   const toWidth = useRef(0);
   const snapPoints1 = useSharedValue<number>(0);
   const snapPoints2 = useSharedValue<number>(0);
+
+  const appearHeight = useSharedValue(0);
+  const appearWidth = useSharedValue(0);
 
   const onLayout = useCallback(({
     nativeEvent: {
@@ -107,41 +118,44 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
       case (from === 'bottom'): {
         direction = true;
         dest = -toHeight.current;
+        appearHeight.value = -toHeight.current;
         break;
       }
       case (from === 'top'): {
         direction = true;
         dest = toHeight.current;
+        appearHeight.value = toHeight.current;
         break;
       }
       case (from === 'left'): {
         direction = false;
         dest = toWidth.current;
+        appearWidth.value = toWidth.current;
         break;
       }
       case (from === 'right'): {
         direction = false;
         dest = -toWidth.current;
+        appearWidth.value = -toWidth.current;
         break;
       }
     }
 
-    opacity.value = withTiming(mask ? 0.3 : 0, {duration})
+    opacity.value = withTiming(mask ? 0.3 : 0, {duration});
+    if (underView.isScale) {
+      underScale.value = withTiming(UNDERSCORE, {duration});
+    }
     if (direction) {
       console.log([dest]);
       translateY.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
-      if (isScale) {
-        underScale.value = withTiming(0.94, {duration});
-      }
     } else {
-      console.log([dest]);
       translateX.value = withTiming(dest, {duration}, () => {
         onAppear && runOnJS(onAppear)();
       });
-      if (isScale) {
-        underScale.value = withTiming(0.94, {duration});
+      if (underView.isTranslate) {
+        underTranslateX.value = withTiming(dest, {duration});
       }
     }
   }, [onAppear]);
@@ -177,20 +191,19 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     }
 
     opacity.value = withTiming(0, {duration});
-
+    if (underView.isScale) {
+      underScale.value = withTiming(1, {duration});
+    }
     if (direction) {
       translateY.value = withTiming(dest, {duration}, () => {
         onDisappear && runOnJS(onDisappear)();
       });
-      if (isScale) {
-        underScale.value = withTiming(1, {duration});
-      }
     } else {
       translateX.value = withTiming(dest, {duration}, () => {
         onDisappear && runOnJS(onDisappear)();
       });
-      if (isScale) {
-        underScale.value = withTiming(1, {duration});
+      if (underView.isTranslate) {
+        underTranslateX.value = withTiming(0, {duration: duration/2});
       }
     }
   }, [onDisappear]);
@@ -266,8 +279,36 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     if (!gesture) return;
     if (from === 'bottom' || from === 'top') {
       translateY.value = clamp(offset.value + translationY, snapPoints1.value, snapPoints2.value);
-    } else {
+      if (underView.isScale) {
+        let underScaleList = [];
+        if (from === 'bottom') {
+          underScaleList = [UNDERSCORE, 1];
+        } else {
+          underScaleList = [1, UNDERSCORE];
+        }
+        underScale.value = interpolate(translateY.value, [snapPoints1.value, snapPoints2.value], underScaleList)
+      }
+    } else {      
       translateX.value = clamp(offset.value + translationX, snapPoints1.value, snapPoints2.value);
+      if (underView.isTranslate) {
+        let underTranslateXList = [];
+        if (from === 'left') {
+          underTranslateXList = [0, appearWidth.value];
+        } else {
+          underTranslateXList = [appearWidth.value, 0];
+        }
+
+        underTranslateX.value = interpolate(translateX.value, [snapPoints1.value, snapPoints2.value], underTranslateXList);
+      }
+      if (underView.isScale) {
+        let underScaleList = [];
+        if (from === 'left') {
+          underScaleList = [1, UNDERSCORE];
+        } else {
+          underScaleList = [UNDERSCORE, 1];
+        }
+        underScale.value = interpolate(translateX.value, [snapPoints1.value, snapPoints2.value], underScaleList)
+      }
     }
   })
   .onEnd(({velocityY, velocityX}) => {
@@ -275,10 +316,24 @@ const TranslateContainer = forwardRef<TranslateContainerRef, TranslateContainerP
     let dest;
     if (from === 'bottom' || from === 'top') {
       dest = snapPoint(translateY.value, velocityY, [snapPoints1.value, snapPoints2.value]);
-      translateY.value = withTiming(dest);
+      translateY.value = withTiming(dest, {duration});
+      if (underView.isScale) {
+        if(dest == 0) {
+          underScale.value = withTiming(0, {duration});
+        } else {
+          underScale.value = withTiming(UNDERSCORE, {duration});
+        }
+      }
     } else {
       dest = snapPoint(translateX.value, velocityX, [snapPoints1.value, snapPoints2.value]);
-      translateX.value = withTiming(dest);
+      translateX.value = withTiming(dest, {duration});
+      if (underView.isTranslate) {
+        if(dest == 0) {
+          underTranslateX.value = withTiming(0, {duration});
+        } else {
+          underTranslateX.value = withTiming(appearWidth.value, {duration});
+        }
+      }
     }
     if (dest === 0) {
       runOnJS(removeSelf)();
