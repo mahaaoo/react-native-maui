@@ -25,11 +25,13 @@ export {
   NormalContainer,
   OpacityContainer,
   TranslateContainer,
+  DrawerContainer,
 
   OpacityContainerRef,
   TranslateContainerRef,
   BaseContainerProps,
-  AnimationContainerProps
+  AnimationContainerProps,
+  DrawerContainerRef
 } from './components/Overlay';
 
 export {

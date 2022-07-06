@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import { useOverlay, OverlayUtil, TranslateContainer, NormalContainer, OpacityContainer, Button } from 'react-native-maui';
+import { StyleSheet, View, Text, Dimensions, ScrollView } from 'react-native';
+import { useOverlay, OverlayUtil, TranslateContainer, NormalContainer, OpacityContainer, Button, DrawerContainer } from 'react-native-maui';
 
 const {width, height} = Dimensions.get('window');
 
@@ -9,7 +9,7 @@ export default function OverlayExample() {
   const elementIndex = React.useRef(0);
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Button onPress={() => {
         const index = add(
           <View style={{ marginTop: 100 }}>
@@ -172,7 +172,39 @@ export default function OverlayExample() {
       }}>
         <Text>从Left弹出-平移下层View并缩放</Text>
       </Button>
-    </View>
+      <Button onPress={() => {
+        let index = OverlayUtil.add(
+          <DrawerContainer position='left'>
+            <View style={{ width: 300, height, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+              <Text onPress={() => {
+                remove(index);
+              }} style={{ marginTop: 20, fontSize: 24 }}>关闭</Text>
+            </View>
+          </DrawerContainer>,
+          'draw-view-left'
+        )
+        elementIndex.current++;
+      }}>
+        <Text>Left抽屉</Text>
+      </Button>
+      <Button onPress={() => {
+        let index = OverlayUtil.add(
+          <DrawerContainer position='right'>
+            <View style={{ width: 220, height, backgroundColor: '#fff' }}>
+              <Text style={{ marginTop: 100, fontSize: 24 }}>Funtion子视图{elementIndex.current}</Text>
+              <Text onPress={() => {
+                remove(index);
+              }} style={{ marginTop: 20, fontSize: 24 }}>关闭</Text>
+            </View>
+          </DrawerContainer>,
+          'draw-view-right'
+        )
+        elementIndex.current++;
+      }}>
+        <Text>Right抽屉</Text>
+      </Button>
+    </ScrollView>
   );
 }
 
