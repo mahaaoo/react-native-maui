@@ -8,10 +8,11 @@ interface CircleLoadingProps {
   size?: number;
   circle?: number;
   color?: string;
+  duration?: number;
 };
 
 const CircleLoading: React.FC<CircleLoadingProps> = props => {
-  const {size = 30, circle = 120, color = '#1e90ff'} = props;
+  const {size = 30, circle = 120, color = '#1e90ff', duration=1000} = props;
   const progress = useSharedValue(0);
 
   const all = size * 2 * Math.PI * 0.8;
@@ -20,7 +21,7 @@ const CircleLoading: React.FC<CircleLoadingProps> = props => {
   useEffect(() => {
     progress.value = withRepeat(
       withTiming(1, {
-        duration: 800,
+        duration,
       }),
       -1,
       false,

@@ -18,7 +18,7 @@ export default function LoadingExample() {
             <Loading />
           </View>
           <View style={styles.content}>
-            <LoadingTitle title="wait" />
+            <LoadingTitle color="white" titleStyle={{ color: 'white' }} title="wait" />
           </View>
           <View style={styles.content}>
             <Spinner activeColor="#ff9900" inactiveColor="#f8e0b0" />

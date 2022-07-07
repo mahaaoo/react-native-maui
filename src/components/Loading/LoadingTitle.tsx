@@ -1,21 +1,22 @@
 import React from 'react';
-import {ActivityIndicator, View, StyleSheet, Text} from 'react-native';
+import {ActivityIndicator, View, StyleSheet, Text, TextStyle} from 'react-native';
+import {LoadingProps} from './Loading';
 
-interface LoadingTitleProps {
-  color?: string;
+interface LoadingTitleProps extends LoadingProps {
   title?: string;
+  titleStyle?: TextStyle;
 };
 
 const LoadingTitle: React.FC<LoadingTitleProps> = props => {
-  const {color = 'white', title = ''} = props;
+  const {title = '', titleStyle, ...options} = props;
 
   return (
     <View style={styles.loading}>
-      <ActivityIndicator color={color} animating={true} />
+      <ActivityIndicator {...{...options}} />
       {
         title.length > 0 && (
           <View style={styles.titleContainer}>
-            <Text style={{ color: 'white' }}>{title}</Text>
+            <Text style={titleStyle}>{title}</Text>
           </View>
         )
       }

@@ -1,16 +1,16 @@
 import React from 'react';
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 
-interface LoadingProps {
+export interface LoadingProps {
   color?: string;
+  size?: 'small' | 'large';
+  animating?: boolean;
 }
 
 const Loading: React.FC<LoadingProps> = props => {
-  const {color = '#1e90ff'} = props;
+  const {color, size, animating = true} = props;
   return (
-    <View>
-      <ActivityIndicator color={color} animating={true} />
-    </View>
+    <ActivityIndicator {...{color, size, animating}} />
   );
 }
 

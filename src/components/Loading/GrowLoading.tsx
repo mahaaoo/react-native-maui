@@ -8,17 +8,18 @@ const AnimationCircle = Animated.createAnimatedComponent(Circle);
 interface GrowLoadingProps {
   size?: number;
   color?: string;
+  duration?: number;
 };
 
 const GrowLoading: React.FC<GrowLoadingProps> = props => {
-  const {size = 30, color = '#1e90ff'} = props;
+  const {size = 30, color = '#1e90ff', duration=2000} = props;
   const progress = useSharedValue(0);
   const all = size * 2 * Math.PI * 0.8;  
 
   useEffect(() => {
     progress.value = withRepeat(
       withTiming(1, {
-        duration: 2000,
+        duration,
       }),
       -1,
       false,
