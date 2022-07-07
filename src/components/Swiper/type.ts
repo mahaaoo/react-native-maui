@@ -82,6 +82,7 @@ export interface BaseLayoutProps {
   horizontal: boolean;
   layoutOption?: LayoutOption;
   indexAtData: Animated.DerivedValue<number>;
+  translateIndex: Animated.DerivedValue<number>;
   container: {
     width: number;
     height: number;
@@ -89,4 +90,8 @@ export interface BaseLayoutProps {
 };
 
 export interface ScaleLayoutProps extends BaseLayoutProps {
+}
+
+export interface RotateLayoutProps extends BaseLayoutProps {
+  
 }

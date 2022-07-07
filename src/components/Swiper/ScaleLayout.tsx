@@ -3,7 +3,6 @@ import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
-  withTiming,
 } from 'react-native-reanimated';
 import {useItemOffset} from './utils';
 import { ScaleLayoutProps } from './type';
@@ -19,14 +18,18 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = props => {
     stepDistance, 
     horizontal,
     layoutOption,
-    indexAtData,
-    container
+    container,
+    translateIndex,
   } = props;
 
   const style = useAnimatedStyle(() => {
     const itemOffset = useItemOffset(-currentIndex.value, index, size, currentIndex.value, options);
-    const scale = interpolate(indexAtData.value, [index - 1, index, index + 1], [0.9, 1, 0.9], Extrapolate.CLAMP);
-    const zIndex = interpolate(indexAtData.value, [index - 1, index, index + 1], [1, 99, 1], Extrapolate.CLAMP);
+    let value = translateIndex.value;
+    if ((currentIndex.value == 0 || currentIndex.value == 1) && Math.floor(translateIndex.value) == size - 1 && index == 0) {
+      value = translateIndex.value - size;
+    }
+    const scale = interpolate(value, [index - 1, index, index + 1], [0.9, 1, 0.9], Extrapolate.CLAMP);
+    const zIndex = interpolate(value, [index - 1, index, index + 1], [1, 99, 1], Extrapolate.CLAMP);
     if (horizontal) {
       const offset = (container.width - layoutOption?.options.mainAxisSize) / 2 - layoutOption?.options.margin || 0;
       return {
@@ -36,7 +39,7 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = props => {
         }, {
           translateY: 0,
         }, {
-          scaleY: withTiming(scale),
+          scaleY: scale,
         }]
       };  
     } else {
@@ -48,11 +51,11 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = props => {
         }, {
           translateX: 0,
         }, {
-          scaleX: withTiming(scale),
+          scaleX: scale,
         }]
       };  
     } 
-  }, [currentIndex, horizontal, layoutOption, indexAtData, container]);
+  }, [currentIndex, horizontal, layoutOption, translateIndex, container]);
 
   const defaultStyle = useMemo(() => {
     if (horizontal) {      
@@ -78,6 +81,7 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = props => {
     >
       {children}
     </Animated.View>
-  );};
+  );
+};
 
 export default ScaleLayout;

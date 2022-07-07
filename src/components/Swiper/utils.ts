@@ -59,8 +59,10 @@ const useRange = (index: Animated.SharedValue<number>): DerivedValue<TurnRange> 
       index.value, 
       index.value + 1, 
     ];
+
     return {inputRange, outputRange}
   });
+
 
   return range;
 }

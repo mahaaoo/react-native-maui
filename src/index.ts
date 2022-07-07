@@ -60,6 +60,7 @@ export {
   Swiper,
   BaseLayout,
   ScaleLayout,
+  RotateLayout,
   SwiperRef,
 } from './components/Swiper';
 

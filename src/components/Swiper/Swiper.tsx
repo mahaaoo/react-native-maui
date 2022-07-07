@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { 
   runOnJS, 
+  useAnimatedReaction, 
   useDerivedValue, 
   useSharedValue,
   withSpring,
@@ -14,6 +15,7 @@ import {SwiperRef, SwiperProps, SwiperCallBack} from './type';
 import BaseLayout from './BaseLayout';
 import ScaleLayout from './ScaleLayout';
 import { Dot, Pagination } from '../Pagination';
+import RotateLayout from './RotateLayout';
 
 const {width} = Dimensions.get('window');
 
@@ -52,6 +54,8 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   const stepDistance = useMemo<number>(() => {
     if (layoutOption?.layout === ScaleLayout) {
       return layoutOption?.options.mainAxisSize + 2 * layoutOption?.options.margin;
+    } else if (layoutOption?.layout === RotateLayout) {
+      return layoutOption?.options.mainAxisSize;
     } else {
       if (horizontal) {
         return container.width;
@@ -70,7 +74,27 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     return group;
   });
 
-  const range = useRange(currentIndex);
+  const translateIndex = useDerivedValue(() => {
+    let group = (translate.value / stepDistance) % dataSource.length;
+    if (group < 0) {      
+      group = Math.abs(group);
+    } else if (group > 0) {
+      group = dataSource.length - group;
+    }
+
+    return group;
+  });
+
+  const range = useRange(currentIndex);  
+  // reset values
+  useAnimatedReaction(() => translate.value, (value: number) => {
+    const isReturn = Math.abs(value) % (dataSource.length * stepDistance) === 0;
+    
+    if (isReturn) {
+      currentIndex.value = 0;
+      translate.value = 0;
+    }
+  })
 
   const handleScollStart = useCallback(() => {
     onScollStart && onScollStart();
@@ -82,15 +106,8 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
 
   const scrollTo = useCallback((step, callback: () => void) => {
     'worklet';
-    currentIndex.value = step;
     translate.value = withSpring((step) * stepDistance, {overshootClamping: true}, () => {
-      // when goback to the first item, reset
-      'worklet'
-      if (indexAtData.value === 0) {
-        offset.value = 0;
-        translate.value = 0;
-        currentIndex.value = 0;
-      }  
+      currentIndex.value = step;
       runOnJS(callback)();
     });
   }, [stepDistance]);
@@ -132,7 +149,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     const distance = (translate.value + 0.2 * velocity) / stepDistance;
     const step = useStep(distance, range);
     touching.value = false;
-    
+      
     scrollTo(step, handleScollEnd);
   });
 
@@ -153,7 +170,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
       >
         <Layout
           size={dataSource.length}
-          {...{index, indexAtData, currentIndex, translate, options, stepDistance, horizontal, layoutOption, container}}
+          {...{index, indexAtData, currentIndex, translate, options, stepDistance, horizontal, layoutOption, container, translateIndex}}
         >
           {renderItem && renderItem(item)}
         </Layout>
@@ -177,8 +194,8 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
               bottom: 0,
               height: 30,
             }}>
-            <Pagination currentIndex={indexAtData} total={dataSource.length}>
-              <Dot />
+            <Pagination currentIndex={translateIndex} total={dataSource.length}>
+              <Dot activeColor='red' inActiveColor='pink' />
             </Pagination>
           </View>
         </Animated.View>
@@ -190,6 +207,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
 const styles = StyleSheet.create({
   container: {
     width,
+    backgroundColor: 'white'
   },
   swiper: {
     width: '100%',

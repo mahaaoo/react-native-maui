@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Swiper, SwiperRef, ScaleLayout } from 'react-native-maui';
+import { Swiper, SwiperRef, ScaleLayout, RotateLayout } from 'react-native-maui';
 
 const {width} = Dimensions.get('window');
 
@@ -40,7 +40,7 @@ export default function SwiperExample() {
 
   return (
     <ScrollView style={styles.container}>
-      <Swiper
+      {/* <Swiper
         ref={ref}
         interval={1000}
         dataSource={card2}
@@ -75,8 +75,28 @@ export default function SwiperExample() {
         }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Next</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <Swiper
+        ref={ref}
+        interval={1000}
+        dataSource={card}
+        renderItem={(item) => {
+          return <Image source={item.source} style={{ width: 250, height: 180 }} />
+        }}
+        auto={autoplay}
+        layoutOption={{
+          layout: RotateLayout,
+          options: {
+            mainAxisSize: 250,
+          }
+        }}
+        horizontal={true}
+        style={{
+          width,
+          height: 300,
+        }}
+      />
+      {/* <Swiper
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -89,14 +109,13 @@ export default function SwiperExample() {
             margin: 10,
           }
         }}
-        auto={true}
         horizontal={false}
         style={{
           width,
           height: 260,
         }}
-      />
-      <Swiper
+      /> */}
+      {/* <Swiper
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -109,7 +128,7 @@ export default function SwiperExample() {
             margin: -50,
           }
         }}
-        auto={true}
+        auto={false}
         horizontal={true}
         style={{
           width,
@@ -117,7 +136,7 @@ export default function SwiperExample() {
           marginTop: 40,
           marginBottom: 100,
         }}
-      />
+      /> */}
     </ScrollView>
   );
 }

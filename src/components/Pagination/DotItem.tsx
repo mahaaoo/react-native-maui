@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { ViewStyle } from 'react-native';
-import Animated, {Extrapolate, interpolate, useAnimatedStyle} from 'react-native-reanimated'
+import Animated, {Extrapolate, interpolate, interpolateColor, useAnimatedStyle} from 'react-native-reanimated'
 import { usePagination } from './Pagination';
 
 interface DotItemProps {
@@ -16,15 +16,29 @@ const DotItem: React.FC<DotItemProps> = (props) => {
   const {index, shape = 'circle', size = 8, activeColor = 'white', style, inActiveColor = 'white'} = props;
   const {currentIndex} = usePagination();
 
+  const value: number = useMemo(() => {
+    if (typeof currentIndex === 'number') {
+      return currentIndex;
+    }
+    return currentIndex.value
+  }, [currentIndex])
+
   const animationStyle = useAnimatedStyle(() => {
+    let value = 0;
+    if (typeof currentIndex === 'number') {
+      value =  currentIndex;
+    } else {
+      value = currentIndex.value;
+    }
+
     const inputRange = [index - 1, index, index + 1];
-    const opacity = interpolate(currentIndex, inputRange, [0.5, 1, 0.5], Extrapolate.CLAMP);
-    const scale = interpolate(currentIndex, inputRange, [1, 1.25, 1], Extrapolate.CLAMP);
+    const opacity = interpolate(value, inputRange, [0.5, 1, 0.5], Extrapolate.CLAMP);
+    const scale = interpolate(value, inputRange, [1, 1.25, 1], Extrapolate.CLAMP);
   
     return {
       opacity,
       transform: [{scale}],
-      backgroundColor: currentIndex === index ? activeColor : inActiveColor, 
+      backgroundColor: interpolateColor(value, inputRange, [inActiveColor, activeColor, inActiveColor]), 
     }
   })
 
