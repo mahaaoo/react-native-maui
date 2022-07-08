@@ -1,7 +1,4 @@
-import Collapse from "./Collapse";
-import CollapseGroup from "./CollapseGroup";
+import Collapse from './Collapse';
+import CollapseGroup from './CollapseGroup';
 
-export {
-  Collapse,
-  CollapseGroup
-}
+export { Collapse, CollapseGroup };

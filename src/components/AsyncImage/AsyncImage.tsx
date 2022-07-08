@@ -7,25 +7,28 @@ interface AsyncImageProps {
   style?: ViewStyle;
 
   resizeMode?: ImageResizeMode;
-};
+}
 
-const AsyncImage: React.FC<AsyncImageProps> = props => {
-  const {style, url, resizeMode='cover'} = props;
+const AsyncImage: React.FC<AsyncImageProps> = (props) => {
+  const { style, url, resizeMode = 'cover' } = props;
   const [finished, setFinished] = useState(false);
-  const [imageSize, setImageSize] = useState<{width: number | string, height: number | string}>(() => {
+  const [imageSize, setImageSize] = useState<{
+    width: number | string;
+    height: number | string;
+  }>(() => {
     return {
       width: style?.width || 0,
       height: style?.height || 0,
-    }
+    };
   });
 
   useState(() => {
-    if (imageSize.height == 0 || imageSize.width == 0) {
+    if (imageSize.height === 0 || imageSize.width === 0) {
       Image.getSize(url, (width: number, height: number) => {
-        const getWidth = imageSize.width == 0 ? width : imageSize.width;
-        const getHeight = imageSize.height == 0 ? height : imageSize.height;
+        const getWidth = imageSize.width === 0 ? width : imageSize.width;
+        const getHeight = imageSize.height === 0 ? height : imageSize.height;
 
-        setImageSize({ width: getWidth, height: getHeight })
+        setImageSize({ width: getWidth, height: getHeight });
       });
     }
   });
@@ -37,19 +40,23 @@ const AsyncImage: React.FC<AsyncImageProps> = props => {
   }, []);
 
   return (
-    <SkeletonContainer childAnimation={Breath} finished={finished} reverse={true}>
-      <SkeletonRect style={{...style, ...imageSize}}>
-        <Image 
-          source={{uri: url }}
+    <SkeletonContainer
+      childAnimation={Breath}
+      finished={finished}
+      reverse={true}
+    >
+      <SkeletonRect style={{ ...style, ...imageSize }}>
+        <Image
+          source={{ uri: url }}
           onLoad={loadFinish}
           style={{
-            ...imageSize
+            ...imageSize,
           }}
           resizeMode={resizeMode}
-        />  
+        />
       </SkeletonRect>
     </SkeletonContainer>
-  )
+  );
 };
 
 export default AsyncImage;

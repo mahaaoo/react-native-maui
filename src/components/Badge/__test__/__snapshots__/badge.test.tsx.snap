@@ -22,10 +22,14 @@ exports[`Test:Avatar render correctly 1`] = `
 >
   <Text
     style={
-      Object {
-        "color": "#fff",
-        "fontSize": 12,
-      }
+      Array [
+        Object {
+          "color": "#fff",
+        },
+        Object {
+          "fontSize": 12,
+        },
+      ]
     }
   >
     10

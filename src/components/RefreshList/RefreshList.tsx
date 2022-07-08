@@ -1,8 +1,19 @@
 import React, { useCallback, useMemo } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, FlatList, FlatListProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  FlatList,
+  FlatListProps,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 export enum RefreshState {
-  Idle = 0 << 1, 
+  Idle = 0 << 1,
   HeaderRefreshing = 1 << 2,
   FooterRefreshing = 2 << 3,
   NoMoreData = 3 << 4,
@@ -10,21 +21,21 @@ export enum RefreshState {
 }
 
 export interface RefreshListProps extends FlatListProps<any> {
-  data: Array<any>,
+  data: Array<any>;
 
-  refreshState: RefreshState,
-  onHeaderRefresh?: () => void,
-  onFooterRefresh?: () => void,
+  refreshState: RefreshState;
+  onHeaderRefresh?: () => void;
+  onFooterRefresh?: () => void;
 
-  footerContainerStyle?: StyleProp<ViewStyle>,
-  footerTextStyle?: StyleProp<TextStyle>,
+  footerContainerStyle?: StyleProp<ViewStyle>;
+  footerTextStyle?: StyleProp<TextStyle>;
 
-  footerRefreshingText?: string,
-  footerFailureText?: string,
-  footerNoMoreDataText?: string,
-  canRefresh?: boolean,
-  refreshListActivityIndicatorColor?: string,
-  ref?: any,
+  footerRefreshingText?: string;
+  footerFailureText?: string;
+  footerNoMoreDataText?: string;
+  canRefresh?: boolean;
+  refreshListActivityIndicatorColor?: string;
+  ref?: any;
 }
 
 const RefreshList: React.FC<RefreshListProps> = (props) => {
@@ -45,8 +56,10 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
   } = props;
 
   const shouldStartHeaderRefreshing = useMemo(() => {
-    if (refreshState === RefreshState.HeaderRefreshing ||
-      refreshState === RefreshState.FooterRefreshing) {
+    if (
+      refreshState === RefreshState.HeaderRefreshing ||
+      refreshState === RefreshState.FooterRefreshing
+    ) {
       return false;
     }
 
@@ -58,7 +71,7 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
       return false;
     }
 
-    return (refreshState === RefreshState.Idle);
+    return refreshState === RefreshState.Idle;
   }, [refreshState, data]);
 
   const headerRefresh = useCallback(() => {
@@ -81,7 +94,7 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
 
     switch (refreshState) {
       case RefreshState.Idle:
-        footer = (<View style={footerStyle} />);
+        footer = <View style={footerStyle} />;
         break;
       case RefreshState.Failure: {
         footer = (
@@ -98,22 +111,27 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
       }
       case RefreshState.FooterRefreshing: {
         footer = (
-          <View style={footerStyle} >
-            <ActivityIndicator size="small" color={refreshListActivityIndicatorColor} />
-            <Text style={[textStyle, { marginLeft: 7 }]}>{footerRefreshingText}</Text>
+          <View style={footerStyle}>
+            <ActivityIndicator
+              size="small"
+              color={refreshListActivityIndicatorColor}
+            />
+            <Text style={[textStyle, styles.footerLoading]}>
+              {footerRefreshingText}
+            </Text>
           </View>
         );
         break;
       }
       case RefreshState.NoMoreData: {
         if (data === null || data.length === 0) {
-          footer = <View />; 
+          footer = <View />;
         } else {
           footer = (
-            <View style={footerStyle} >
+            <View style={footerStyle}>
               <Text style={textStyle}>{footerNoMoreDataText}</Text>
             </View>
-          );  
+          );
         }
         break;
       }
@@ -124,8 +142,8 @@ const RefreshList: React.FC<RefreshListProps> = (props) => {
     return footer;
   };
 
-  if(!data || data.length === 0) {
-    return <Text>暂无数据</Text>
+  if (!data || data.length === 0) {
+    return <Text>暂无数据</Text>;
   }
 
   return (
@@ -154,7 +172,10 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-  }
+  },
+  footerLoading: {
+    marginLeft: 7,
+  },
 });
 
 export default RefreshList;

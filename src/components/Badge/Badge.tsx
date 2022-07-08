@@ -1,5 +1,5 @@
-import React, {useMemo} from 'react';
-import {View, StyleSheet, Text, ViewStyle} from 'react-native';
+import React, { useMemo } from 'react';
+import { View, StyleSheet, Text, ViewStyle } from 'react-native';
 
 interface BadgeProps {
   number: number;
@@ -10,13 +10,13 @@ interface BadgeProps {
   style?: ViewStyle;
 }
 
-const Badge: React.FC<BadgeProps> = props => {
+const Badge: React.FC<BadgeProps> = (props) => {
   const {
-    number, 
-    size = 15, 
+    number,
+    size = 15,
     fontSize = 0.8 * size,
     color = '#fc4840',
-    style
+    style,
   } = props;
 
   const content = useMemo(() => {
@@ -25,7 +25,7 @@ const Badge: React.FC<BadgeProps> = props => {
         title: '99+',
         width: 2 * size,
         height: 2 * size * 0.61,
-        borderRadius: 2 * size * 0.61 / 2  
+        borderRadius: (2 * size * 0.61) / 2,
       };
     }
     if (number > 9) {
@@ -33,14 +33,14 @@ const Badge: React.FC<BadgeProps> = props => {
         title: number,
         width: 1.5 * size,
         height: 1.5 * size * 0.61,
-        borderRadius: 1.5 * size * 0.61 / 2  
+        borderRadius: (1.5 * size * 0.61) / 2,
       };
     }
     return {
       title: number,
       width: size,
       height: size,
-      borderRadius: size / 2
+      borderRadius: size / 2,
     };
   }, [number, size]);
 
@@ -52,11 +52,16 @@ const Badge: React.FC<BadgeProps> = props => {
     <View
       style={[
         styles.container,
-        {height: content.height, borderRadius: content.borderRadius, width: content.width},
-        {backgroundColor: color},
-        style
-      ]}>
-      <Text style={{fontSize: fontSize, color: '#fff'}}>
+        {
+          height: content.height,
+          borderRadius: content.borderRadius,
+          width: content.width,
+        },
+        { backgroundColor: color },
+        style,
+      ]}
+    >
+      <Text style={[styles.textColor, { fontSize: fontSize }]}>
         {content.title}
       </Text>
     </View>
@@ -67,6 +72,9 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  textColor: {
+    color: '#fff',
   },
 });
 

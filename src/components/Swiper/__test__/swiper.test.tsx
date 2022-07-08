@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { render } from '@testing-library/react-native';
-import {
-  withReanimatedTimer
-} from 'react-native-reanimated/src/reanimated2/jestUtils'
+import { withReanimatedTimer } from 'react-native-reanimated/src/reanimated2/jestUtils';
 import { Dimensions, Image } from 'react-native';
 import { Swiper } from '../index';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 describe('Testing:Swiper', () => {
   it('base', () => {
@@ -25,28 +23,33 @@ describe('Testing:Swiper', () => {
           source: require('../../../../assets/d.jpg'),
         },
       ];
-  
+
       const onScollStartMock = jest.fn();
       const onScollEndMock = jest.fn();
-  
+
       const previousMock = jest.fn();
-      const nextMock =  jest.fn();
+      const nextMock = jest.fn();
       const getCurrentIndexMock = jest.fn();
       const useRef = {
         current: {
           previous: previousMock,
           next: nextMock,
           getCurrentIndex: getCurrentIndexMock,
-        }
+        },
       };
-  
-      const { getByTestId } = render(
+
+      render(
         <Swiper
           ref={useRef}
           interval={1000}
           dataSource={card}
           renderItem={(item) => {
-            return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
+            return (
+              <Image
+                source={item.source}
+                style={{ width: '100%', height: '100%' }}
+              />
+            );
           }}
           onScollStart={onScollStartMock}
           onScollEnd={onScollEndMock}
@@ -58,8 +61,8 @@ describe('Testing:Swiper', () => {
           }}
         />
       );
-  
-      const swiper = getByTestId('test-swiper');
+
+      // const swiper = getByTestId('test-swiper');
       // console.log(swiper);
 
       // expect(getCurrentIndexMock).toHaveBeenCalled();
@@ -70,4 +73,4 @@ describe('Testing:Swiper', () => {
       // expect(onScollEndMock).toHaveBeenCalled();
     });
   });
-})
+});

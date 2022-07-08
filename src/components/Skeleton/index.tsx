@@ -6,8 +6,8 @@ export {
   SkeletonContainer,
   SkeletonRect,
   Breath,
-  Shine, 
+  Shine,
   Normal,
   Load,
-  ShineOver
-}
+  ShineOver,
+};

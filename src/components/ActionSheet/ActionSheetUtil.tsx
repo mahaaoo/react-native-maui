@@ -1,6 +1,6 @@
 import React from 'react';
-import {overlayRef} from '../Overlay'
-import {TranslateContainer} from '../Overlay';
+import { overlayRef } from '../Overlay';
+import { TranslateContainer } from '../Overlay';
 import { ActionSheetProps } from './ActionSheet';
 
 export const ActionSheetUtil = {
@@ -16,5 +16,5 @@ export const ActionSheetUtil = {
     overlayRef.current?.add(component, ActionSheetUtil.key);
   },
   hide: () => overlayRef.current?.remove(ActionSheetUtil.key),
-  isExist: () => overlayRef.current?.isExist(ActionSheetUtil.key)
+  isExist: () => overlayRef.current?.isExist(ActionSheetUtil.key),
 };

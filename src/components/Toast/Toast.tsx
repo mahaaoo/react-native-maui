@@ -1,20 +1,20 @@
 import React from 'react';
-import {View, StyleSheet,Text, ViewStyle} from 'react-native';
+import { View, StyleSheet, Text, ViewStyle } from 'react-native';
 
 interface ToastProps {
   title: string;
-  style?: ViewStyle
-};
+  style?: ViewStyle;
+}
 
-const Toast: React.FC<ToastProps> = props => {
-  const {title, style} = props;
+const Toast: React.FC<ToastProps> = (props) => {
+  const { title, style } = props;
 
   return (
     <View style={[styles.container, style]}>
       <View style={styles.mask} />
       <Text style={styles.title}>{title}</Text>
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   mask: {
-    ...StyleSheet.absoluteFillObject, 
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: '#000',
     opacity: 0.3,
   },
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     color: 'white',
     fontSize: 16,
-  }
+  },
 });
 
 export default Toast;

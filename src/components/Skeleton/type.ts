@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
-import {Breath, Shine, Normal, Load, ShineOver} from './Animation';
+import { Breath, Shine, Normal, Load, ShineOver } from './Animation';
 
-export const SkeletonContext = React.createContext<SkeletonContextProps>({} as SkeletonContextProps);
+export const SkeletonContext = React.createContext<SkeletonContextProps>(
+  {} as SkeletonContextProps
+);
 export const useSkeletonStyle = () => useContext(SkeletonContext);
 
 export type ChildAnimationType = typeof Breath | typeof Shine | typeof Normal;
@@ -16,15 +18,15 @@ export interface SkeletonContextProps {
   /**
    * animationProgress will repeat animation from 0 to 1
    */
-  animationProgress: Animated.SharedValue<number>,
+  animationProgress: Animated.SharedValue<number>;
   /**
    * Skeleton finished
    */
-  finished: boolean,
+  finished: boolean;
   /**
    * type of childAnimation
    */
-  childAnimation: ContainerAnimationType,
+  childAnimation: ContainerAnimationType;
   color?: string;
 }
 
@@ -34,7 +36,7 @@ export interface SkeletonContainerProps {
   finished?: boolean;
   reverse?: boolean;
   color?: string;
-};
+}
 
 export interface BaseChildAnimationProps {
   style?: ViewStyle;

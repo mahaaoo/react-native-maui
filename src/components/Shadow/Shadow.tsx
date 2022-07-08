@@ -1,29 +1,49 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import {View} from 'react-native';
-import Svg, { Defs, LinearGradient, Path, RadialGradient, Stop } from 'react-native-svg';
+import { StyleSheet, View } from 'react-native';
+import Svg, {
+  Defs,
+  LinearGradient,
+  Path,
+  RadialGradient,
+  Stop,
+} from 'react-native-svg';
 
 interface ShadowProps {
   borderRadius?: number;
   color?: string;
   shadowWidth?: number;
   stopOpacity?: number;
-};
+}
 
-const Shadow: React.FC<ShadowProps> = props => {
-  const {borderRadius = 0, children, color = '#F8F8F8', shadowWidth=15, stopOpacity=1} = props;
+const Shadow: React.FC<ShadowProps> = (props) => {
+  const {
+    borderRadius = 0,
+    children,
+    color = '#F8F8F8',
+    shadowWidth = 15,
+    stopOpacity = 1,
+  } = props;
   const [viewport, setViewport] = useState({
     width: 0,
     height: 0,
   });
 
-  const handleLayout = useCallback(({nativeEvent: { layout: {width, height}}}) => {      
-    setViewport({
-      width, height
-    })
-  }, []);
+  const handleLayout = useCallback(
+    ({
+      nativeEvent: {
+        layout: { width, height },
+      },
+    }) => {
+      setViewport({
+        width,
+        height,
+      });
+    },
+    []
+  );
 
   const options = useMemo(() => {
-    const {width, height} = viewport;
+    const { width, height } = viewport;
 
     const xAxisLength = width - 2 * borderRadius;
     const yAxisLength = height - 2 * borderRadius;
@@ -36,7 +56,7 @@ const Shadow: React.FC<ShadowProps> = props => {
     const y12 = y11;
 
     // right line V
-    const x21 = width + 2 * shadowWidth - shadowWidth/2;
+    const x21 = width + 2 * shadowWidth - shadowWidth / 2;
     const y21 = shadowWidth + borderRadius;
 
     const x22 = x21;
@@ -44,13 +64,13 @@ const Shadow: React.FC<ShadowProps> = props => {
 
     // bottom line H
     const x31 = x11;
-    const y31 = height + 2 * shadowWidth - shadowWidth/2;
+    const y31 = height + 2 * shadowWidth - shadowWidth / 2;
 
     const x32 = x31 + xAxisLength;
     const y32 = y31;
 
     // left line V
-    const x41 = shadowWidth/2;
+    const x41 = shadowWidth / 2;
     const y41 = shadowWidth + borderRadius;
 
     const x42 = x41;
@@ -59,16 +79,31 @@ const Shadow: React.FC<ShadowProps> = props => {
     const circleR = borderRadius + shadowWidth / 2;
 
     return {
-      x11, y11, x12, y12,
-      x21, y21, x22, y22,
-      x31, y31, x32, y32,
-      x41, y41, x42, y42,
+      x11,
+      y11,
+      x12,
+      y12,
+      x21,
+      y21,
+      x22,
+      y22,
+      x31,
+      y31,
+      x32,
+      y32,
+      x41,
+      y41,
+      x42,
+      y42,
       circleR,
-    }
+    };
   }, [viewport, shadowWidth, borderRadius]);
 
   return (
-    <Svg height={viewport.height + 2 * shadowWidth} width={viewport.width + 2 * shadowWidth}>
+    <Svg
+      height={viewport.height + 2 * shadowWidth}
+      width={viewport.width + 2 * shadowWidth}
+    >
       <Defs>
         <LinearGradient id="top" x1="1" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor={color} stopOpacity="0" />
@@ -86,33 +121,62 @@ const Shadow: React.FC<ShadowProps> = props => {
           <Stop offset="0" stopColor={color} stopOpacity="0" />
           <Stop offset="1" stopColor={color} stopOpacity={stopOpacity} />
         </LinearGradient>
-        
-        <RadialGradient 
-          id="top-left" 
-          r="100%" cx="100%" cy="100%" fx="100%" fy="100%">
+
+        <RadialGradient
+          id="top-left"
+          r="100%"
+          cx="100%"
+          cy="100%"
+          fx="100%"
+          fy="100%"
+        >
           <Stop offset="0" stopColor={color} stopOpacity="1" />
-          <Stop offset={`${borderRadius / (borderRadius + shadowWidth)}`} stopColor={color} stopOpacity={stopOpacity} />
+          <Stop
+            offset={`${borderRadius / (borderRadius + shadowWidth)}`}
+            stopColor={color}
+            stopOpacity={stopOpacity}
+          />
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
-        <RadialGradient 
-          id="top-right" 
-          r="100%" cx="0" cy="100%" fx="0" fy="100%">
+        <RadialGradient
+          id="top-right"
+          r="100%"
+          cx="0"
+          cy="100%"
+          fx="0"
+          fy="100%"
+        >
           <Stop offset="0" stopColor={color} stopOpacity="1" />
-          <Stop offset={`${borderRadius / (borderRadius + shadowWidth)}`} stopColor={color} stopOpacity={stopOpacity} />
+          <Stop
+            offset={`${borderRadius / (borderRadius + shadowWidth)}`}
+            stopColor={color}
+            stopOpacity={stopOpacity}
+          />
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
-        <RadialGradient 
-          id="bottom-right" 
-          r="100%" cx="0" cy="0" fx="0" fy="0">
+        <RadialGradient id="bottom-right" r="100%" cx="0" cy="0" fx="0" fy="0">
           <Stop offset="0" stopColor={color} stopOpacity={stopOpacity} />
-          <Stop offset={`${borderRadius / (borderRadius + shadowWidth)}`} stopColor={color} stopOpacity={stopOpacity} />
+          <Stop
+            offset={`${borderRadius / (borderRadius + shadowWidth)}`}
+            stopColor={color}
+            stopOpacity={stopOpacity}
+          />
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
-        <RadialGradient 
-          id="bottom-left" 
-          r="100%" cx="100%" cy="0" fx="100%" fy="0">
+        <RadialGradient
+          id="bottom-left"
+          r="100%"
+          cx="100%"
+          cy="0"
+          fx="100%"
+          fy="0"
+        >
           <Stop offset="0" stopColor={color} stopOpacity="1" />
-          <Stop offset={`${borderRadius / (borderRadius + shadowWidth)}`} stopColor={color} stopOpacity={stopOpacity} />
+          <Stop
+            offset={`${borderRadius / (borderRadius + shadowWidth)}`}
+            stopColor={color}
+            stopOpacity={stopOpacity}
+          />
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
       </Defs>
@@ -157,21 +221,32 @@ const Shadow: React.FC<ShadowProps> = props => {
         stroke="url(#bottom-right)"
         strokeWidth={shadowWidth}
       />
-      <View 
+      <View
         onLayout={handleLayout}
-        style={{
-          position: 'absolute',
-          transform: [{
-            translateX: shadowWidth
-          }, {
-            translateY: shadowWidth
-          }]
-        }}
+        style={[
+          styles.content,
+          {
+            transform: [
+              {
+                translateX: shadowWidth,
+              },
+              {
+                translateY: shadowWidth,
+              },
+            ],
+          },
+        ]}
       >
         {children}
       </View>
-    </Svg>  
-  )
+    </Svg>
+  );
 };
+
+const styles = StyleSheet.create({
+  content: {
+    position: 'absolute',
+  },
+});
 
 export default Shadow;

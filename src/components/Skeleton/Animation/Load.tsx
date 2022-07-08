@@ -1,17 +1,16 @@
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 
-interface LoadProps {
-};
+interface LoadProps {}
 
-const Load: React.FC<LoadProps> = props => {
+const Load: React.FC<LoadProps> = (props) => {
   const {} = props;
 
   return (
     <View style={styles.mask}>
       <ActivityIndicator color="#1e90ff" />
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -20,6 +19,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-})
+});
 
 export default Load;

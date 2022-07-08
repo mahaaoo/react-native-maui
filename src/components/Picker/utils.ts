@@ -3,14 +3,14 @@ import { PickerProps, PickerDefaultProps, PickDefaultOptions } from './type';
 
 /**
  * 处理参数以及默认值
- * @param props 
- * @returns 
+ * @param props
+ * @returns
  */
 const useProps = (props: PickerProps): PickerDefaultProps => {
-  const {options, dataSource} = props;
+  const { options, dataSource } = props;
 
   if (dataSource.length === 0) {
-    throw new Error('dataSource can\'t be empty');
+    throw new Error("dataSource can't be empty");
   }
 
   const defaultOptions = {
@@ -21,35 +21,31 @@ const useProps = (props: PickerProps): PickerDefaultProps => {
   defaultOptions.itemHeight = options?.itemHeight || 30;
   defaultOptions.maxRender = options?.maxRender || 2;
 
-  return {...props, options: defaultOptions};
-}
+  return { ...props, options: defaultOptions };
+};
 
 /**
  * 初始化必须参数
- * @param options 
- * @param dataSource 
- * @returns 
+ * @param options
+ * @returns
  */
-const useInitialValue = (options: PickDefaultOptions, dataSource: any[]) => {
-  const defaultY = options.itemHeight*options.maxRender;
-  const translateY = useSharedValue(defaultY); 
+const useInitialValue = (options: PickDefaultOptions) => {
+  const defaultY = options.itemHeight * options.maxRender;
+  const translateY = useSharedValue(defaultY);
   const offset = useSharedValue(0);
   const currentIndex = useSharedValue(0);
 
   const timingOptions = {
     duration: 1000,
-    easing: Easing.bezier(0.22, 1, 0.36, 1),  
-  }
+    easing: Easing.bezier(0.22, 1, 0.36, 1),
+  };
 
   return {
     translateY,
     offset,
     currentIndex,
     timingOptions,
-  }
-}
+  };
+};
 
-export {
-  useProps,
-  useInitialValue
-}
+export { useProps, useInitialValue };

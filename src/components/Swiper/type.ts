@@ -1,10 +1,10 @@
-import { ViewStyle } from "react-native";
-import Animated from "react-native-reanimated";
+import { ViewStyle } from 'react-native';
+import Animated from 'react-native-reanimated';
 import BaseLayout from './BaseLayout';
 import ScaleLayout from './ScaleLayout';
 
 export type SwiperCallBack = (index: number) => void;
-export type SwiperCallBackFunction = (callback?: SwiperCallBack) => void
+export type SwiperCallBackFunction = (callback?: SwiperCallBack) => void;
 export interface SwiperOptions {
   maxComputed?: number; // 最大计算范围
   maxRender?: number; // 最大渲染范围
@@ -27,8 +27,8 @@ export interface SwiperProps {
   options?: SwiperOptions;
   horizontal?: boolean;
   style?: ViewStyle;
-  layoutOption?: LayoutOption
-};
+  layoutOption?: LayoutOption;
+}
 
 export interface SwiperDefaultOptions {
   maxComputed: number; // 最大计算范围
@@ -46,17 +46,17 @@ export interface SwiperDefaultProps {
   options: SwiperDefaultOptions;
   style?: ViewStyle;
   layoutOption?: LayoutOption;
-};
+}
 
 export interface SwiperRef {
   previous: SwiperCallBackFunction;
   next: SwiperCallBackFunction;
   getCurrentIndex: () => number;
-};
+}
 
 export interface TurnRange {
-  inputRange: Array<number>,
-  outputRange: Array<number>
+  inputRange: Array<number>;
+  outputRange: Array<number>;
 }
 
 export interface UseAutoScrollReturn {
@@ -70,7 +70,7 @@ export interface ItemWrapperProps {
   index: number;
   size: number;
   options: SwiperDefaultOptions;
-};
+}
 
 export interface BaseLayoutProps {
   currentIndex: Animated.SharedValue<number>;
@@ -86,12 +86,9 @@ export interface BaseLayoutProps {
   container: {
     width: number;
     height: number;
-  }
-};
-
-export interface ScaleLayoutProps extends BaseLayoutProps {
+  };
 }
 
-export interface RotateLayoutProps extends BaseLayoutProps {
-  
-}
+export interface ScaleLayoutProps extends BaseLayoutProps {}
+
+export interface RotateLayoutProps extends BaseLayoutProps {}

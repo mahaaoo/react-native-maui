@@ -1,35 +1,97 @@
-import React, { useEffect, useState } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
-import {SkeletonContainer, SkeletonRect, Breath, Shine, Normal, Load, ShineOver} from 'react-native-maui';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import {
+  SkeletonContainer,
+  SkeletonRect,
+  Breath,
+  Shine,
+  Normal,
+  Load,
+  ShineOver,
+} from 'react-native-maui';
 import Section from '../components/Section';
 
-interface SkeletonExampleProps {
-};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    width: '100%',
+    height: 200,
+  },
+  flex: {
+    flexDirection: 'row',
+  },
+  avatar: {
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+  },
+  flex1: {
+    flex: 1,
+  },
+  rect1: {
+    marginLeft: 15,
+    marginTop: 15,
+    height: 20,
+    width: 150,
+  },
+  rect2: {
+    height: 30,
+    marginHorizontal: 15,
+    marginTop: 15,
+  },
+  rect3: {
+    height: 30,
+    marginLeft: 15,
+    marginRight: 100,
+    marginTop: 15,
+  },
+  buttonContainer: {
+    marginVertical: 50,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    height: 50,
+    width: 200,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 14,
+  },
+});
 
 const Content = (
-  <View style={{width: '100%', height: 200 }}>
-    <View style={{ flexDirection: 'row' }}>
+  <View style={styles.content}>
+    <View style={styles.flex}>
       <View>
-        <SkeletonRect style={{ height: 50, width: 50, borderRadius: 25 }} />
+        <SkeletonRect style={styles.avatar} />
       </View>
-      <View style={{ flex: 1 }}>
-        <SkeletonRect style={{ marginLeft: 15, marginTop: 15, height: 20, width: 150 }}>
+      <View style={styles.flex1}>
+        <SkeletonRect style={styles.rect1}>
           <Text>Test Shine</Text>
         </SkeletonRect>
-        <SkeletonRect style={{ height: 30, marginHorizontal: 15, marginTop: 15 }} />
+        <SkeletonRect style={styles.rect2} />
       </View>
     </View>
-    <SkeletonRect style={{ height: 30, marginLeft: 15, marginRight: 100, marginTop: 15 }} />
-    <SkeletonRect style={{ height: 30, marginHorizontal: 15, marginTop: 15 }} />
+    <SkeletonRect style={styles.rect3} />
+    <SkeletonRect style={styles.rect2} />
   </View>
-)
+);
 
-const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
+interface SkeletonExampleProps {}
+
+const SkeletonExample: React.FC<SkeletonExampleProps> = (props) => {
   const {} = props;
   const [finished, setFinish] = useState(false);
-
-  useEffect(() => {
-  }, [])
 
   return (
     <ScrollView style={styles.container}>
@@ -39,43 +101,54 @@ const SkeletonExample: React.FC<SkeletonExampleProps> = props => {
         </SkeletonContainer>
       </Section>
       <Section title="动画效果-Breath">
-        <SkeletonContainer childAnimation={Breath} finished={finished} reverse={true}>
+        <SkeletonContainer
+          childAnimation={Breath}
+          finished={finished}
+          reverse={true}
+        >
           {Content}
         </SkeletonContainer>
       </Section>
       <Section title="动画效果-Load">
-        <SkeletonContainer childAnimation={Normal} finished={finished} containerAnimation={Load}>
+        <SkeletonContainer
+          childAnimation={Normal}
+          finished={finished}
+          containerAnimation={Load}
+        >
           {Content}
         </SkeletonContainer>
       </Section>
       <Section title="动画效果-Shine">
-        <SkeletonContainer childAnimation={Shine} finished={finished} reverse={false}>
+        <SkeletonContainer
+          childAnimation={Shine}
+          finished={finished}
+          reverse={false}
+        >
           {Content}
         </SkeletonContainer>
       </Section>
       <Section title="动画效果-ShineOver">
-        <SkeletonContainer childAnimation={Normal} finished={finished} reverse={false} containerAnimation={ShineOver}>
+        <SkeletonContainer
+          childAnimation={Normal}
+          finished={finished}
+          reverse={false}
+          containerAnimation={ShineOver}
+        >
           {Content}
         </SkeletonContainer>
       </Section>
-      <View style={{ marginVertical: 50, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <TouchableOpacity 
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
           onPress={() => {
             setFinish(!finished);
           }}
-          style={{ height: 50, width: 200, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', marginTop: 14 }}
+          style={styles.button}
         >
           <Text>stop</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
-  )
+  );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  }
-});
 
 export default SkeletonExample;

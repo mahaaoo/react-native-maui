@@ -8,7 +8,9 @@
     "npm-publish": "./script/npm-publish.sh",
     "test": "jest",
     "testc": "jest --coverage",
-    "testu": "jest --updateSnapshot"
+    "testu": "jest --updateSnapshot",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lintfix": "eslint . --ext .ts,.tsx --fix"
   },
   "keywords": [
     "react-native",
@@ -19,6 +21,7 @@
     "src"
   ],
   "devDependencies": {
+    "@react-native-community/eslint-config": "^3.0.3",
     "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
@@ -37,7 +40,13 @@
     "react-native-gesture-handler": "~2.2.0",
     "react-native-reanimated": "~2.8.0",
     "react-native-svg": "12.3.0",
-    "typescript": "~4.3.5"
+    "typescript": "~4.3.5",
+    "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.0.5",
+    "husky": "^4.2.5",
+    "lint-staged": "^11.1.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -61,5 +70,18 @@
   },
   "setupFilesAfterEnv": [
     "@testing-library/jest-native/extend-expect"
-  ]
+  ],
+  "lint-staged": {
+    "src/**/*.{js,ts,tsx}": [
+      "eslint"
+    ],
+    "example/**/*.{js,ts,tsx}": [
+      "eslint"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
 }

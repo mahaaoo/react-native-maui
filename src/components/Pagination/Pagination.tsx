@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import {View} from 'react-native';
-import Animated, { runOnJS, useAnimatedReaction } from 'react-native-reanimated';
+import React, { createContext, useContext, useMemo } from 'react';
+import { View } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 interface PaginationRef {
-  currentIndex: number | Animated.SharedValue<number>
+  currentIndex: number | Animated.SharedValue<number>;
   total: number;
 }
 
@@ -14,10 +14,10 @@ interface PaginationProps {
   currentIndex: number | Animated.SharedValue<number>;
   total: number;
   position?: 'left' | 'center' | 'right';
-};
+}
 
-const Pagination: React.FC<PaginationProps> = props => {
-  const {currentIndex, total, position = 'center', children} = props;
+const Pagination: React.FC<PaginationProps> = (props) => {
+  const { currentIndex, total, position = 'center', children } = props;
 
   const alignItemsType = useMemo(() => {
     if (position === 'left') return 'flex-start';
@@ -27,15 +27,17 @@ const Pagination: React.FC<PaginationProps> = props => {
   }, [position]);
 
   return (
-    <View style={{ alignItems: alignItemsType, marginHorizontal: 10 }}>
-      <PaginationContext.Provider value={{
-        currentIndex,
-        total,
-      }}>
+    <View style={{ alignItems: alignItemsType }}>
+      <PaginationContext.Provider
+        value={{
+          currentIndex,
+          total,
+        }}
+      >
         {children}
       </PaginationContext.Provider>
     </View>
-  )
+  );
 };
 
 export default Pagination;

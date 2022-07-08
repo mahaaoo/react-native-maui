@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from "react";
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import React, { useCallback, useEffect } from 'react';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,23 +7,23 @@ import Animated, {
   withTiming,
   interpolate,
   Extrapolate,
-} from "react-native-reanimated";
-import {useCollapse} from './type';
-import {Icon} from '../Icon';
+} from 'react-native-reanimated';
+import { useCollapse } from './type';
+import { Icon } from '../Icon';
 
 interface CollapseProps {
   title: string;
   tag: string;
-  
+
   active?: boolean;
   onChange?: () => void;
 }
 
-const Collapse: React.FC<CollapseProps> = props => {
-  const {children, title, onChange, active = false, tag} = props;
-  const {accordion, currentActive, handleOnChange} = useCollapse();
+const Collapse: React.FC<CollapseProps> = (props) => {
+  const { children, title, onChange, active = false, tag } = props;
+  const { accordion, currentActive, handleOnChange } = useCollapse();
 
-  const open = useSharedValue(accordion ? currentActive == tag : active);
+  const open = useSharedValue(accordion ? currentActive === tag : active);
   const height = useSharedValue(0);
   const transition = useDerivedValue(() => {
     return open.value === true ? withTiming(1) : withTiming(0);
@@ -33,19 +33,22 @@ const Collapse: React.FC<CollapseProps> = props => {
     if (currentActive !== tag) {
       open.value = false;
     }
-  }, [currentActive])
+  }, [currentActive]);
 
-  const handleLayout = useCallback(({
-    nativeEvent: {
-      layout: { height: h },
+  const handleLayout = useCallback(
+    ({
+      nativeEvent: {
+        layout: { height: h },
+      },
+    }) => {
+      height.value = h;
     },
-  }) => {
-    height.value = h;
-  }, []);
+    []
+  );
 
   const handleOnPress = useCallback(() => {
     open.value = !open.value;
-    onChange && onChange();  
+    onChange && onChange();
     if (accordion) {
       handleOnChange && handleOnChange(tag);
     }
@@ -55,21 +58,28 @@ const Collapse: React.FC<CollapseProps> = props => {
     return {
       height: transition.value * height.value + 1,
       opacity: transition.value === 0 ? 0 : 1,
-    }
+    };
   });
 
   const arrowStyle = useAnimatedStyle(() => {
-    const degress = interpolate(transition.value, [0, 1], [0, 90], Extrapolate.CLAMP);
+    const degress = interpolate(
+      transition.value,
+      [0, 1],
+      [0, 90],
+      Extrapolate.CLAMP
+    );
     return {
-      transform: [{
-        rotateZ: `${degress}deg`
-      }]
-    }
-  })
+      transform: [
+        {
+          rotateZ: `${degress}deg`,
+        },
+      ],
+    };
+  });
 
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback  onPress={handleOnPress}>
+      <TouchableWithoutFeedback onPress={handleOnPress}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
           <Animated.View style={arrowStyle}>
@@ -78,9 +88,7 @@ const Collapse: React.FC<CollapseProps> = props => {
         </View>
       </TouchableWithoutFeedback>
       <Animated.View style={[styles.items, style]}>
-        <View onLayout={handleLayout}>
-          {children}
-        </View>
+        <View onLayout={handleLayout}>{children}</View>
       </Animated.View>
     </View>
   );
@@ -88,20 +96,20 @@ const Collapse: React.FC<CollapseProps> = props => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   titleContainer: {
     padding: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   items: {
-    overflow: "hidden",
+    overflow: 'hidden',
   },
 });
 

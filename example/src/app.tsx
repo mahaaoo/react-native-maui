@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {useTheme} from 'react-native-maui';
+import { useTheme } from 'react-native-maui';
 
 import Index from './pages/index';
-import ButtonExample from "./pages/ButtonExample";
+import ButtonExample from './pages/ButtonExample';
 import BadgeExample from './pages/BadgeExample';
 import SegmentedExample from './pages/SegmentedExample';
 import SwitchExample from './pages/SwitchExample';
@@ -61,7 +61,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App: React.FC<{}> = () => {
-  const {theme} = useTheme();
+  const { theme } = useTheme();
 
   const headerOptions = React.useMemo(() => {
     return {
@@ -72,7 +72,7 @@ const App: React.FC<{}> = () => {
         backgroundColor: theme.navbarBgColor,
       },
       headerTintColor: theme.clickTextColor,
-    }
+    };
   }, [theme]);
 
   return (
@@ -209,7 +209,6 @@ const App: React.FC<{}> = () => {
       />
     </Stack.Navigator>
   );
-}
-
+};
 
 export default App;

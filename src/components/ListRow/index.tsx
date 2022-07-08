@@ -1,5 +1,3 @@
-import ListRow from "./ListRow";
+import ListRow from './ListRow';
 
-export {
-  ListRow
-}
+export { ListRow };

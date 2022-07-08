@@ -8,27 +8,30 @@ interface PercentProps {
 }
 
 const Percent: React.FC<PercentProps> = (props) => {
-  const {style} = props;
-  const {currentIndex, total} = usePagination();
+  const { style } = props;
+  const { currentIndex, total } = usePagination();
   const [index, setIndex] = useState(() => {
     if (typeof currentIndex === 'number') {
       return currentIndex;
     }
-    
+
     return currentIndex.value;
   });
 
-  useEffect(() => {    
-    if (typeof currentIndex === 'number') {      
+  useEffect(() => {
+    if (typeof currentIndex === 'number') {
       setIndex(currentIndex);
     }
   }, [currentIndex]);
 
-  useAnimatedReaction(() => currentIndex, (currentIndex) => {
-    if (typeof currentIndex !== 'number') {      
-      runOnJS(setIndex)(currentIndex.value);
+  useAnimatedReaction(
+    () => currentIndex,
+    (currentIndex) => {
+      if (typeof currentIndex !== 'number') {
+        runOnJS(setIndex)(currentIndex.value);
+      }
     }
-  })
+  );
 
   return (
     <View style={styles.container}>
@@ -36,13 +39,13 @@ const Percent: React.FC<PercentProps> = (props) => {
       <Text style={style}>/</Text>
       <Text style={style}>{total}</Text>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-  }
-})
+  },
+});
 
 export default Percent;

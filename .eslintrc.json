@@ -1,0 +1,24 @@
+{
+  "extends": ["@react-native-community", "prettier"],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "quoteProps": "preserve",
+        "singleQuote": true,
+        "tabWidth": 2,
+        "trailingComma": "es5",
+        "useTabs": false
+      }
+    ],
+    "no-bitwise": 0,
+    "prefer-const": "warn",
+    "no-console": 0,
+    "react-hooks/exhaustive-deps": 0,
+    "no-array-constructor": 0,
+    "@typescript-eslint/no-shadow": 0,
+    "jest/no-identical-title": 0,
+    "@typescript-eslint/no-unused-vars": "warn"
+  },
+  "plugins": ["prettier"]
+}

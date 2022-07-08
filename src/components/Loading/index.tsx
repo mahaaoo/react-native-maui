@@ -4,7 +4,7 @@ import Spinner from './Spinner';
 import CircleLoading from './CircleLoading';
 import GrowLoading from './GrowLoading';
 
-import {LoadingUtil} from './LoadingUtil';
+import { LoadingUtil } from './LoadingUtil';
 
 export {
   Loading,
@@ -13,4 +13,4 @@ export {
   Spinner,
   CircleLoading,
   GrowLoading,
-}
+};

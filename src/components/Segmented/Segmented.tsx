@@ -1,6 +1,18 @@
-import React, {useState, useCallback, useMemo} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, ViewStyle, TextStyle} from 'react-native';
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import React, { useState, useCallback, useMemo } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 interface SegmentedProps {
   items: Array<string>;
@@ -21,15 +33,15 @@ const SLIDER_DEFAULT_HEIGHT = 30;
 
 const Segmented: React.FC<SegmentedProps> = (props) => {
   const {
-    items, 
-    style, 
-    itemStyle, 
-    sliderStyle, 
-    sliderMargin = 2, 
-    onChange, 
-    didChange, 
+    items,
+    style,
+    itemStyle,
+    sliderStyle,
+    sliderMargin = 2,
+    onChange,
+    didChange,
     activeTextColor = '#fff',
-    inactiveTextColor = '#000'
+    inactiveTextColor = '#000',
   } = props;
   const [current, setCurrent] = useState(0);
   const translateX = useSharedValue(0);
@@ -46,50 +58,80 @@ const Segmented: React.FC<SegmentedProps> = (props) => {
     return {
       height,
       width,
-    }
-  }, [style])
+    };
+  }, [style]);
 
-  const handDidChange = useCallback((item: string, index: number) => {
-    didChange && didChange(item, index);
-  }, [didChange])
+  const handDidChange = useCallback(
+    (item: string, index: number) => {
+      didChange && didChange(item, index);
+    },
+    [didChange]
+  );
 
-  const handlePress = useCallback((item: string, index: number) => {
-    setCurrent(index);
-    onChange && onChange(item, index);
-    const dest = index * silderSize.width / items.length;
-    translateX.value = withSpring(dest, {overshootClamping: true}, () => {
-      runOnJS(handDidChange)(item, index);
-    });
-  }, [silderSize]);
+  const handlePress = useCallback(
+    (item: string, index: number) => {
+      setCurrent(index);
+      onChange && onChange(item, index);
+      const dest = (index * silderSize.width) / items.length;
+      translateX.value = withSpring(dest, { overshootClamping: true }, () => {
+        runOnJS(handDidChange)(item, index);
+      });
+    },
+    [silderSize]
+  );
 
   const animationStyle = useAnimatedStyle(() => {
     return {
-      transform: [{
-        translateX: translateX.value,
-      }]
-    }
-  })
+      transform: [
+        {
+          translateX: translateX.value,
+        },
+      ],
+    };
+  });
 
   return (
-    <View style={[styles.container, {...silderSize}, style]}>
-      <Animated.View style={[styles.item, styles.slider, animationStyle, {
-        top: sliderMargin,
-        left: sliderMargin,
-        width: silderSize.width / items.length - 2 * sliderMargin,
-        height: silderSize.height - 2 * sliderMargin, 
-        borderRadius: style?.borderRadius || 8,   
-      }, sliderStyle]}>
-      </Animated.View>
+    <View style={[styles.container, { ...silderSize }, style]}>
+      <Animated.View
+        style={[
+          styles.item,
+          styles.slider,
+          animationStyle,
+          {
+            top: sliderMargin,
+            left: sliderMargin,
+            width: silderSize.width / items.length - 2 * sliderMargin,
+            height: silderSize.height - 2 * sliderMargin,
+            borderRadius: style?.borderRadius || 8,
+          },
+          sliderStyle,
+        ]}
+      />
       {items.map((item, index) => {
         return (
-          <TouchableOpacity key={`Segmented_${index}`} activeOpacity={1} style={styles.item} onPress={() => handlePress(item, index)}>
-            <Text style={[itemStyle, { color: current === index ? activeTextColor : inactiveTextColor }]}>{item}</Text>
+          <TouchableOpacity
+            key={`Segmented_${index}`}
+            activeOpacity={1}
+            style={styles.item}
+            onPress={() => handlePress(item, index)}
+          >
+            <Text
+              style={[
+                itemStyle,
+                {
+                  color:
+                    current === index ? activeTextColor : inactiveTextColor,
+                },
+              ]}
+            >
+              {item}
+            </Text>
           </TouchableOpacity>
-        )
+        );
       })}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -106,7 +148,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#c0c0c0',
     opacity: 0.7,
-  }
-})
+  },
+});
 
 export default Segmented;

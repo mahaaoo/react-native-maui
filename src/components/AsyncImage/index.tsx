@@ -1,5 +1,3 @@
 import AsyncImage from './AsyncImage';
 
-export {
-  AsyncImage
-}
+export { AsyncImage };

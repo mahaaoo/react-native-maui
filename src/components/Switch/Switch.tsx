@@ -1,6 +1,12 @@
-import React, {useCallback, useState, useMemo, useEffect} from 'react';
-import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
-import Animated, {interpolateColor, runOnJS, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import Animated, {
+  interpolateColor,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface SwitchProps {
   style?: ViewStyle;
@@ -12,14 +18,14 @@ interface SwitchProps {
   onChange?: (value: boolean) => void;
 }
 
-const Switch: React.FC<SwitchProps> = props => {
+const Switch: React.FC<SwitchProps> = (props) => {
   const {
-    activeBackgroundColor = '#3279FD', 
-    inactiveBackgroundColor = '#dcdcdc', 
+    activeBackgroundColor = '#3279FD',
+    inactiveBackgroundColor = '#dcdcdc',
     style,
     value,
     onChange,
-    disabled
+    disabled,
   } = props;
   const [on, setOn] = useState<boolean>(value || false);
   const translateX = useSharedValue(0);
@@ -31,7 +37,7 @@ const Switch: React.FC<SwitchProps> = props => {
       width: typeof style?.width === 'number' ? style.width : 55,
       borderRadius: typeof style?.height === 'number' ? style?.height / 2 : 17,
       padding: typeof style?.padding === 'number' ? style?.padding : 2,
-    }
+    };
   }, [style]);
 
   useEffect(() => {
@@ -41,49 +47,70 @@ const Switch: React.FC<SwitchProps> = props => {
     } else {
       value = containerStyle.width - containerStyle.height;
     }
-    translateX.value = withTiming(value, {duration: 200}, () => runOnJS(handleOnChange)())
+    translateX.value = withTiming(value, { duration: 200 }, () =>
+      runOnJS(handleOnChange)()
+    );
   }, [on]);
 
   const handleOnChange = useCallback(() => {
     onChange && onChange(on);
-  }, [on])
+  }, [on]);
 
   const handlePress = useCallback(() => {
     if (disabled) return;
-    setOn(on => !on);
+    setOn((on) => !on);
   }, [disabled, value]);
 
   useEffect(() => {
-    if (!!value) {
+    if (value) {
       setOn(value);
     }
   }, [value]);
 
   const animationBackground = useAnimatedStyle(() => {
     return {
-      backgroundColor: interpolateColor(translateX.value, [0, containerStyle.height - containerStyle.padding * 2], [inactiveBackgroundColor, activeBackgroundColor])
-    }
+      backgroundColor: interpolateColor(
+        translateX.value,
+        [0, containerStyle.height - containerStyle.padding * 2],
+        [inactiveBackgroundColor, activeBackgroundColor]
+      ),
+    };
   });
 
   const animationStyle = useAnimatedStyle(() => {
     return {
-      transform: [{
-        translateX: translateX.value,
-      }]
-    }
-  })
+      transform: [
+        {
+          translateX: translateX.value,
+        },
+      ],
+    };
+  });
 
   return (
-    <TouchableOpacity activeOpacity={1} onPress={handlePress} testID={'test-switch'}>
-      <Animated.View style={[styles.container,containerStyle, animationBackground]}>
-        <Animated.View style={[styles.switch, {
-          height: containerStyle.height - containerStyle.padding * 2,
-          width: containerStyle.height - containerStyle.padding * 2,
-          borderRadius: (containerStyle.height - containerStyle.padding * 2) / 2
-        }, animationStyle]} />
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={handlePress}
+      testID={'test-switch'}
+    >
+      <Animated.View
+        style={[styles.container, containerStyle, animationBackground]}
+      >
+        <Animated.View
+          style={[
+            styles.switch,
+            {
+              height: containerStyle.height - containerStyle.padding * 2,
+              width: containerStyle.height - containerStyle.padding * 2,
+              borderRadius:
+                (containerStyle.height - containerStyle.padding * 2) / 2,
+            },
+            animationStyle,
+          ]}
+        />
       </Animated.View>
     </TouchableOpacity>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -92,7 +119,7 @@ const styles = StyleSheet.create({
   },
   switch: {
     backgroundColor: '#fff',
-  }
-})
+  },
+});
 
 export default Switch;

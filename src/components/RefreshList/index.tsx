@@ -1,7 +1,3 @@
-import RefreshList, {RefreshState, RefreshListProps} from "./RefreshList";
+import RefreshList, { RefreshState, RefreshListProps } from './RefreshList';
 
-export {
-  RefreshList,
-  RefreshState,
-  RefreshListProps
-}
+export { RefreshList, RefreshState, RefreshListProps };

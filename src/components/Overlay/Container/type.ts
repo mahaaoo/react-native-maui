@@ -1,4 +1,4 @@
-import { ViewStyle } from "react-native";
+import { ViewStyle } from 'react-native';
 
 /**
  * All Overlay Container Must exntent this interface
@@ -7,15 +7,15 @@ export interface BaseContainerProps {
   /**
    * overlay show componet
    */
-  children: React.ReactNode,
+  children: React.ReactNode;
   /**
    * this innerKey equals overlay.tsx's key, it ensure the overlay can remove itself
    */
-  readonly innerKey?: string,
+  readonly innerKey?: string;
   /**
    * containerStyle is the closest to children, you can set flex to control children's position
    */
-  containerStyle?: ViewStyle,
+  containerStyle?: ViewStyle;
 
   /**
    * will be called after the overlay mount
@@ -41,7 +41,7 @@ export interface AnimationContainerProps extends BaseContainerProps {
    */
   mask?: boolean;
   /**
-   * animation duration time 
+   * animation duration time
    * ms
    */
   duration?: number;

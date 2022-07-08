@@ -1,5 +1,3 @@
-import Segmented from "./Segmented";
+import Segmented from './Segmented';
 
-export {
-  Segmented
-}
+export { Segmented };

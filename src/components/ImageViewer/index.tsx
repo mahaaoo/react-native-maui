@@ -1,5 +1,3 @@
 import ImageViewer from './ImageViewer';
 
-export {
-  ImageViewer
-}
+export { ImageViewer };

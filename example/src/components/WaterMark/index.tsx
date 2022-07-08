@@ -1,13 +1,12 @@
 import React from 'react';
-import {Dimensions, View, StyleSheet} from 'react-native';
+import { Dimensions, View, StyleSheet } from 'react-native';
 import Svg, { Defs, Pattern, Rect, Text } from 'react-native-svg';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-interface WaterMarkExampleProps {
-};
+interface WaterMarkExampleProps {}
 
-const WaterMarkExample: React.FC<WaterMarkExampleProps> = props => {
+const WaterMarkExample: React.FC<WaterMarkExampleProps> = (props) => {
   const {} = props;
 
   return (
@@ -23,7 +22,8 @@ const WaterMarkExample: React.FC<WaterMarkExampleProps> = props => {
             height="150"
           >
             <Text
-              rotation="-50" origin="100, 50"
+              rotation="-50"
+              origin="100, 50"
               fill="none"
               stroke="#D8D8D8"
               fontSize="24"
@@ -37,11 +37,16 @@ const WaterMarkExample: React.FC<WaterMarkExampleProps> = props => {
             </Text>
           </Pattern>
         </Defs>
-        <Rect 
-          fill="url(#TriangleWaterMark)" x="0" y="0" width={width} height={height} />
+        <Rect
+          fill="url(#TriangleWaterMark)"
+          x="0"
+          y="0"
+          width={width}
+          height={height}
+        />
       </Svg>
     </View>
-  )
+  );
 };
 
 export default WaterMarkExample;

@@ -1,7 +1,3 @@
-import Theme, {useTheme, ThemeType} from "./Theme";
+import Theme, { useTheme, ThemeType } from './Theme';
 
-export {
-  Theme,
-  useTheme,
-  ThemeType
-}
+export { Theme, useTheme, ThemeType };

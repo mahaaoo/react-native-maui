@@ -1,6 +1,3 @@
-import Divider, {DividerProps} from './Divider';
+import Divider, { DividerProps } from './Divider';
 
-export {
-  Divider,
-  DividerProps
-}
+export { Divider, DividerProps };

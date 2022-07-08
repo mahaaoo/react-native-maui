@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, {Line} from 'react-native-svg';
+import Svg, { Line } from 'react-native-svg';
 
 export interface DividerProps {
   start: number;
@@ -11,8 +11,15 @@ export interface DividerProps {
   width?: number;
 }
 
-const Divider: React.FC<DividerProps> = props => {
-  const {vertical, strokeDasharray, color = '#e4e4e4', start, end, width=1} = props;
+const Divider: React.FC<DividerProps> = (props) => {
+  const {
+    vertical,
+    strokeDasharray,
+    color = '#e4e4e4',
+    start,
+    end,
+    width = 1,
+  } = props;
 
   if (vertical) {
     return (
@@ -27,7 +34,7 @@ const Divider: React.FC<DividerProps> = props => {
           strokeDasharray={strokeDasharray}
         />
       </Svg>
-    )
+    );
   }
 
   return (
@@ -42,7 +49,7 @@ const Divider: React.FC<DividerProps> = props => {
         strokeWidth={width}
       />
     </Svg>
-  )
-}
+  );
+};
 
 export default Divider;

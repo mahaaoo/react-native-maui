@@ -1,14 +1,20 @@
 import React, { useCallback } from 'react';
-import {View, Dimensions, StyleSheet, ViewStyle, TouchableOpacity} from 'react-native';
-import {DividerProps, Divider} from '../Divider';
-import {useProps} from './utils';
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  ViewStyle,
+  TouchableOpacity,
+} from 'react-native';
+import { DividerProps, Divider } from '../Divider';
+import { useProps } from './utils';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export type ContentType = string | React.ReactNode | null;
 
 export interface ListRowProps {
-  left: ContentType
+  left: ContentType;
   mid?: ContentType;
   right?: ContentType;
 
@@ -17,34 +23,43 @@ export interface ListRowProps {
   style?: ViewStyle;
 
   divider?: boolean;
-  dividerProps?: DividerProps
-};
+  dividerProps?: DividerProps;
+}
 
-const ListRow: React.FC<ListRowProps> = props => {
-  const {style, left, right, mid, onPress, divider = true, dividerProps, disabled = false} = useProps(props);
+const ListRow: React.FC<ListRowProps> = (props) => {
+  const {
+    style,
+    left,
+    right,
+    mid,
+    onPress,
+    divider = true,
+    dividerProps,
+    disabled = false,
+  } = useProps(props);
 
   const handlePress = useCallback(() => {
-    if (disabled == false) {
+    if (!disabled) {
       onPress && onPress();
     }
-  }, [])
+  }, []);
 
   return (
     <>
-      <TouchableOpacity onPress={handlePress} activeOpacity={disabled ? 1 : 0.3} style={[styles.listRow, style]}>
+      <TouchableOpacity
+        onPress={handlePress}
+        activeOpacity={disabled ? 1 : 0.3}
+        style={[styles.listRow, style]}
+      >
         <View style={styles.leftContent}>
           {left}
           {mid}
         </View>
-        <View>
-          {right}
-        </View>
+        <View>{right}</View>
       </TouchableOpacity>
-      {
-        divider && <Divider start={0} end={width} {...{...dividerProps}} />
-      }
+      {divider && <Divider start={0} end={width} {...{ ...dividerProps }} />}
     </>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -59,8 +74,7 @@ const styles = StyleSheet.create({
   },
   leftContent: {
     flexDirection: 'row',
-  }
-})
-
+  },
+});
 
 export default ListRow;

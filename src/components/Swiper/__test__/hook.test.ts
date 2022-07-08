@@ -1,61 +1,59 @@
-import {renderHook} from '@testing-library/react-hooks';
-import {
-  withReanimatedTimer
-} from 'react-native-reanimated/src/reanimated2/jestUtils'
+import { renderHook } from '@testing-library/react-hooks';
+import { withReanimatedTimer } from 'react-native-reanimated/src/reanimated2/jestUtils';
 import {
   useProps,
   useRange,
-  useJudgeRange,
-  useItemOffset,
+  judgeRange,
+  getItemOffset,
   useAutoScroll,
   useIndexAtData,
-  useTouching
+  useTouching,
 } from '../utils';
 
 describe('Test:Swiper->hook/useJudgeRange', () => {
   it('dataSource is empty', () => {
     const test1 = {
       dataSource: [],
-      renderItem: () => null
-    }
-    expect(() => useProps(test1)).toThrow('dataSource can\'t be empty');    
+      renderItem: () => null,
+    };
+    expect(() => useProps(test1)).toThrow("dataSource can't be empty");
   });
 
   it('dataSource length is 1', () => {
     const test2 = {
       dataSource: [1],
-      renderItem: () => null
-    }
+      renderItem: () => null,
+    };
     const result2 = useProps(test2);
-    expect(result2.dataSource).toEqual([1, 1, 1]);  
+    expect(result2.dataSource).toEqual([1, 1, 1]);
   });
 
   it('dataSource length is 2', () => {
     const test3 = {
       dataSource: [1, 2],
-      renderItem: () => null
-    }
+      renderItem: () => null,
+    };
     const result3 = useProps(test3);
-    expect(result3.dataSource).toEqual([1, 2, 2]);  
+    expect(result3.dataSource).toEqual([1, 2, 2]);
   });
 
   it('defaultOptions test', () => {
     const test4 = {
       dataSource: new Array(5),
-      renderItem: () => null
-    }
+      renderItem: () => null,
+    };
     const result4 = useProps(test4);
     expect(result4.options).toEqual({
       maxComputed: 2,
       maxRender: 2,
-    });  
+    });
   });
 
   it('defaultOptions test 2', () => {
     const test5 = {
       dataSource: new Array(10),
-      renderItem: () => null
-    }
+      renderItem: () => null,
+    };
     const result5 = useProps(test5);
     expect(result5.options).toEqual({
       maxComputed: 4,
@@ -68,9 +66,9 @@ describe('Test:Swiper->hook/useJudgeRange', () => {
       dataSource: new Array(5),
       renderItem: () => null,
       options: {
-        maxComputed: 3
-      }
-    }
+        maxComputed: 3,
+      },
+    };
     const result6 = useProps(test6);
     expect(result6.options).toEqual({
       maxComputed: 3,
@@ -83,9 +81,9 @@ describe('Test:Swiper->hook/useJudgeRange', () => {
       dataSource: new Array(5),
       renderItem: () => null,
       options: {
-        maxRender: 3
-      }
-    }
+        maxRender: 3,
+      },
+    };
     const result7 = useProps(test7);
     expect(result7.options).toEqual({
       maxComputed: 2,
@@ -98,35 +96,35 @@ describe('Test:Swiper->hook/useRange', () => {
   it('base', () => {
     withReanimatedTimer(() => {
       let range: {
-        inputRange: number[],
-        outputRange: number[],
+        inputRange: number[];
+        outputRange: number[];
       } = {
         inputRange: [],
         outputRange: [],
       };
-  
+
       renderHook(() => {
         range = useRange({
           value: 1,
         }).value;
       });
-  
-      if (!!range) {
+
+      if (range) {
         expect(range.inputRange).toEqual([0.5, 1, 1.5]);
-        expect(range.outputRange).toEqual([0, 1, 2])    
+        expect(range.outputRange).toEqual([0, 1, 2]);
       }
-    })
-  })
+    });
+  });
 });
 
 describe('Test:Swiper->hook/useJudgeRange', () => {
   it('render min', () => {
     const useJudgeRangeOption = (index: number, size: number, now: number) => {
-      return useJudgeRange(index, size, now, {
+      return judgeRange(index, size, now, {
         maxComputed: 1,
         maxRender: 1,
       });
-    }
+    };
     expect(useJudgeRangeOption(0, 10, 0)).toBe(true);
     expect(useJudgeRangeOption(0, 10, -1)).toBe(true);
     expect(useJudgeRangeOption(0, 10, 1)).toBe(true);
@@ -134,21 +132,21 @@ describe('Test:Swiper->hook/useJudgeRange', () => {
     expect(useJudgeRangeOption(0, 10, 3)).toBe(false);
     expect(useJudgeRangeOption(0, 10, 9)).toBe(true);
     expect(useJudgeRangeOption(0, 10, -9)).toBe(true);
-  
+
     expect(useJudgeRangeOption(3, 10, 0)).toBe(false);
     expect(useJudgeRangeOption(3, 10, 3)).toBe(false);
     expect(useJudgeRangeOption(3, 10, -2)).toBe(true);
     expect(useJudgeRangeOption(3, 10, -3)).toBe(true);
-    expect(useJudgeRangeOption(3, 10, 9)).toBe(false);  
+    expect(useJudgeRangeOption(3, 10, 9)).toBe(false);
   });
 
   it('render nomarlly', () => {
     const useJudgeRangeOption = (index: number, size: number, now: number) => {
-      return useJudgeRange(index, size, now, {
+      return judgeRange(index, size, now, {
         maxComputed: 3,
         maxRender: 3,
       });
-    }
+    };
     expect(useJudgeRangeOption(0, 10, 0)).toBe(true);
     expect(useJudgeRangeOption(0, 10, -3)).toBe(true);
     expect(useJudgeRangeOption(0, 10, 3)).toBe(true);
@@ -161,13 +159,18 @@ describe('Test:Swiper->hook/useJudgeRange', () => {
 
 describe('Test:Swiper->hook/useItemOffset', () => {
   it('base', () => {
-    const useItemOffsetOption = (offset: number, index: number, size: number, now: number) => {
-      return useItemOffset(offset, index, size, now, {
+    const useItemOffsetOption = (
+      offset: number,
+      index: number,
+      size: number,
+      now: number
+    ) => {
+      return getItemOffset(offset, index, size, now, {
         maxComputed: 1,
         maxRender: 1,
-      })
-    }
-  
+      });
+    };
+
     expect(useItemOffsetOption(0, 2, 3, 0)).toBe(-1);
     expect(useItemOffsetOption(2, 0, 3, -2)).toBe(1);
     expect(useItemOffsetOption(-1, 0, 3, 1)).toBe(0);
@@ -179,20 +182,20 @@ describe('Test:Swiper->hook/useAutoScroll', () => {
     const next = (callback: any) => {
       callback();
     };
-  
+
     renderHook(() => {
       const case1 = useAutoScroll(next, true, 1000);
       expect(case1.isRuning).toBe(true);
-  
+
       const case2 = useAutoScroll(next, false, 1000);
       expect(case2.isRuning).toBe(false);
-    });  
+    });
   });
 });
 
 describe('Test:Swiper->hook/useTouching', () => {
   it('is touching', () => {
-    withReanimatedTimer(() => {  
+    withReanimatedTimer(() => {
       renderHook(() => {
         const startMock = jest.fn();
         const endMock = jest.fn();
@@ -200,10 +203,10 @@ describe('Test:Swiper->hook/useTouching', () => {
         useTouching(startMock, endMock, { value: true });
         expect(startMock).toHaveBeenCalled();
       });
-    })
+    });
   });
   it('not touching', () => {
-    withReanimatedTimer(() => {  
+    withReanimatedTimer(() => {
       renderHook(() => {
         const startMock = jest.fn();
         const endMock = jest.fn();
@@ -211,27 +214,26 @@ describe('Test:Swiper->hook/useTouching', () => {
         useTouching(startMock, endMock, { value: false });
         expect(endMock).toHaveBeenCalled();
       });
-    })
+    });
   });
 });
 
 describe('Test:Swiper->hook/useIndexAtData', () => {
   it('index at dataSource', () => {
-    withReanimatedTimer(() => {  
+    withReanimatedTimer(() => {
       renderHook(() => {
-        const case1 = useIndexAtData({value: 1}, 4);
+        const case1 = useIndexAtData({ value: 1 }, 4);
         expect(case1.value).toBe(3);
-    
-        const case2 = useIndexAtData({value: -1}, 4);
+
+        const case2 = useIndexAtData({ value: -1 }, 4);
         expect(case2.value).toBe(1);
-    
-        const case3 = useIndexAtData({value: -5}, 4);
+
+        const case3 = useIndexAtData({ value: -5 }, 4);
         expect(case3.value).toBe(1);
 
-        const case4 = useIndexAtData({value: 0}, 4);
+        const case4 = useIndexAtData({ value: 0 }, 4);
         expect(case4.value).toBe(0);
       });
-    })
+    });
   });
 });
-

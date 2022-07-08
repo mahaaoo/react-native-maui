@@ -1,8 +1,8 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Dimensions, StyleSheet, View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Swiper, SwiperRef, ScaleLayout, RotateLayout } from 'react-native-maui';
+import React, { useRef } from 'react';
+import { Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
+import { Swiper, SwiperRef, RotateLayout } from 'react-native-maui';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const card = [
   {
@@ -17,26 +17,26 @@ const card = [
   {
     source: require('../../assets/d.jpg'),
   },
-]
+];
 
 let card2: any[] = [];
-for(let i = 0; i < 1; i++) {
+for (let i = 0; i < 1; i++) {
   card2 = card2.concat(card);
 }
 
 export default function SwiperExample() {
   const ref = useRef<SwiperRef>(null);
-  const [autoplay, setAutoplay] = useState(false);
-  const [curIndx, setCurrent] = useState<number>(0);
+  // const [autoplay, setAutoplay] = useState(false);
+  // const [curIndx, setCurrent] = useState<number>(0);
 
-  const handeEnd = useCallback((index) => {
-    // console.log('onScollEnd, currentIndex', index);
-    // setCurrent(index);
-  }, []);
+  // const handeEnd = useCallback((index) => {
+  //   // console.log('onScollEnd, currentIndex', index);
+  //   // setCurrent(index);
+  // }, []);
 
-  const handeStart = useCallback(() => {
-    // console.log('onScollStart');
-  }, []);
+  // const handeStart = useCallback(() => {
+  //   // console.log('onScollStart');
+  // }, []);
 
   return (
     <ScrollView style={styles.container}>
@@ -81,14 +81,14 @@ export default function SwiperExample() {
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
-          return <Image source={item.source} style={{ width: 250, height: 180 }} />
+          return <Image source={item.source} style={styles.image1} />;
         }}
-        auto={autoplay}
+        auto={true}
         layoutOption={{
           layout: RotateLayout,
           options: {
             mainAxisSize: 250,
-          }
+          },
         }}
         horizontal={true}
         style={{
@@ -144,5 +144,9 @@ export default function SwiperExample() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  image1: {
+    width: 250,
+    height: 180,
   },
 });

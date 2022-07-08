@@ -1,5 +1,3 @@
 import Picker from './Picker';
 
-export {
-  Picker
-}
+export { Picker };

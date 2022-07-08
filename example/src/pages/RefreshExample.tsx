@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
-import {RefreshList,RefreshState} from 'react-native-maui';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
+import { RefreshList, RefreshState } from 'react-native-maui';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-interface RefreshProps {
-};
+interface RefreshProps {}
 
 const mockArray = (): number[] => {
   const data = new Array(20).fill(0);
   const randomIndex = Math.floor(Math.random() * 100);
   for (let index = 0; index < data.length; index++) {
-    data[index] = randomIndex + index;  
+    data[index] = randomIndex + index;
   }
   return data;
-}
+};
 
-const Refresh: React.FC<RefreshProps> = props => {
+const Refresh: React.FC<RefreshProps> = () => {
   const [data, setData] = useState<number[]>([]);
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 
   useEffect(() => {
     const list = mockArray();
     setData(list);
-  }, [])
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -42,20 +41,20 @@ const Refresh: React.FC<RefreshProps> = props => {
           setStatus(RefreshState.FooterRefreshing);
           setTimeout(() => {
             const list = mockArray();
-            setData(data => data.concat(list));
+            setData((data) => data.concat(list));
             setStatus(RefreshState.Idle);
           }, 2000);
         }}
-        renderItem={({item, index}) => {
+        renderItem={({ item }) => {
           return (
             <View style={styles.item}>
               <Text>{item}</Text>
             </View>
-          )
+          );
         }}
       />
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'red',
-  }
-})
+  },
+});
 
 export default Refresh;

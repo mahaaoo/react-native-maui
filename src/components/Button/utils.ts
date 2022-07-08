@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { ViewStyle } from "react-native";
-import {ButtonType} from './type';
+import { useMemo } from 'react';
+import { ViewStyle } from 'react-native';
+import { ButtonType } from './type';
 
 export const useType = (type: ButtonType): ViewStyle => {
   const style: ViewStyle = useMemo(() => {
@@ -13,23 +13,23 @@ export const useType = (type: ButtonType): ViewStyle => {
           alignItems: 'center',
           backgroundColor: '#2593FC',
         };
-      case type === ButtonType.Default: 
+      case type === ButtonType.Default:
         return {
           padding: 15,
           borderRadius: 3,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: "#fff",
+          backgroundColor: '#fff',
           borderColor: '#D9D9D9',
-          borderWidth: 1,    
+          borderWidth: 1,
         };
-      case type === ButtonType.Link: 
+      case type === ButtonType.Link:
         return {
           padding: 15,
           justifyContent: 'center',
-          alignItems: 'center',    
+          alignItems: 'center',
         };
-      case type === ButtonType.Disabled: 
+      case type === ButtonType.Disabled:
         return {
           padding: 15,
           borderRadius: 3,
@@ -37,12 +37,12 @@ export const useType = (type: ButtonType): ViewStyle => {
           alignItems: 'center',
           backgroundColor: '#F5F5F5',
           borderColor: '#D9D9D9',
-          borderWidth: 1,    
-        }
-      default: 
+          borderWidth: 1,
+        };
+      default:
         return {};
     }
   }, [type]);
 
   return style;
-}
+};
