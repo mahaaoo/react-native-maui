@@ -8,37 +8,15 @@ All files are 100% typescript,and Support iOS & Android
 
 ## Preview
 
-| Button  | Badge  |  Divider  |
+| <img src="./screenshoot/Icon.png" width="250" /> | <img src="./screenshoot/Button.png" width="250" />  | <img src="./screenshoot/Badge.png" width="250" />  |
 | ------------- | ------------- | ------------- | 
-| <img src="./screenshoot/Button.png" width="250" />  | <img src="./screenshoot/Badge.png" width="250" />  |  <img src="./screenshoot/Divider.png" width="250" /> |
-
-| Avatar  | ListRow  |  AnimatedNumber  |
-| ------------- | ------------- | ------------- | 
-| <img src="./screenshoot/Avatar.png" width="250" />  | <img src="./screenshoot/ListRow.png" width="250" />  |  <img src="./screenshoot/AnimatedNumber.gif" width="250" /> |
-
-| Progress  | Shadow  |  Loading  |
-| ------------- | ------------- | ------------- | 
-| <img src="./screenshoot/Progress.gif" width="250" />  | <img src="./screenshoot/Shadow.png" width="250" />  |  <img src="./screenshoot/Loading.gif" width="250" /> |
-
-| Toast  | Pagination  |  Segmented  |
-| ------------- | ------------- | ------------- | 
+| <img src="./screenshoot/Divider.png" width="250" />  | <img src="./screenshoot/ListRow.png" width="250" />  |  <img src="./screenshoot/Switch.png" width="250" /> |
+| <img src="./screenshoot/Avatar.png" width="250" />  | <img src="./screenshoot/Shadow.png" width="250" />  |  <img src="./screenshoot/Loading.gif" width="250" /> |
 | <img src="./screenshoot/Toast.png" width="250" />  | <img src="./screenshoot/Pagination.png" width="250" />  |  <img src="./screenshoot/Segmented.png" width="250" /> |
-
-| Theme  | Collapse  |  Overlay  |
-| ------------- | ------------- | ------------- | 
 | <img src="./screenshoot/Theme.png" width="250" />  | <img src="./screenshoot/Collapse.png" width="250" />   |  <img src="./screenshoot/Overlay.png" width="250" /> |
-
-| ActionSheet  | RefreshList  |  Picker  |
-| ------------- | ------------- | ------------- | 
 | <img src="./screenshoot/ActionSheet.png" width="250" />  | <img src="./screenshoot/RefreshList.png" width="250" />  |  <img src="./screenshoot/Picker.png" width="250" /> |
-
-| Skeleton  | Swiper  |  ImageViewer  |
-| ------------- | ------------- | ------------- | 
-| <img src="./screenshoot/Skeleton.gif" width="250" />  | <img src="./screenshoot/Swiper.png" width="250" />  |   <img src="./screenshoot/ImageViewer.png" width="250" /> |
-
-| Switch  |
-| ------------- |
-| <img src="./screenshoot/Switch.png" width="250" />  |
+| <img src="./screenshoot/Progress.gif" width="250" />  |  <img src="./screenshoot/AnimatedNumber.gif" width="250" />  |   <img src="./screenshoot/ImageViewer.png" width="250" /> |
+| <img src="./screenshoot/Skeleton.gif" width="250" /> | <img src="./screenshoot/Swiper.png" width="250" />  | <img src="./screenshoot/WaterFallList.png" width="250" />
 
 
 ## Installation
