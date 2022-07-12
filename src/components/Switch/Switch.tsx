@@ -59,13 +59,7 @@ const Switch: React.FC<SwitchProps> = (props) => {
   const handlePress = useCallback(() => {
     if (disabled) return;
     setOn((on) => !on);
-  }, [disabled, value]);
-
-  useEffect(() => {
-    if (value) {
-      setOn(value);
-    }
-  }, [value]);
+  }, [disabled]);
 
   const animationBackground = useAnimatedStyle(() => {
     return {
