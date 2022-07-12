@@ -73,10 +73,10 @@
   ],
   "lint-staged": {
     "src/**/*.{js,ts,tsx}": [
-      "eslint"
+      "eslint --fix"
     ],
     "example/**/*.{js,ts,tsx}": [
-      "eslint"
+      "eslint --fix"
     ]
   },
   "husky": {
