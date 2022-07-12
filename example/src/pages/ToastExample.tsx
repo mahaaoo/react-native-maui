@@ -7,6 +7,7 @@ import {
   OpacityContainer,
   Button,
 } from 'react-native-maui';
+import Section from '../components/Section';
 
 interface ToastExampleProps {}
 
@@ -15,7 +16,7 @@ const ToastExample: React.FC<ToastExampleProps> = (props) => {
 
   return (
     <View>
-      <View style={styles.container}>
+      <Section title="基础用法">
         <Button
           onPress={() => {
             ToastUtil.template = (title: string) => (
@@ -30,11 +31,10 @@ const ToastExample: React.FC<ToastExampleProps> = (props) => {
             ToastUtil.show('This is toast one');
           }}
         >
-          <Text>show toast one</Text>
+          <Text>OpacityContainer Toast</Text>
         </Button>
-      </View>
-      <View style={styles.container2}>
         <Button
+          style={styles.marginLeft}
           onPress={() => {
             ToastUtil.template = (title: string) => (
               <TranslateContainer
@@ -48,9 +48,9 @@ const ToastExample: React.FC<ToastExampleProps> = (props) => {
             ToastUtil.show('This is toast two');
           }}
         >
-          <Text>show toast two</Text>
+          <Text>TranslateContainer Toast</Text>
         </Button>
-      </View>
+      </Section>
     </View>
   );
 };
@@ -72,6 +72,9 @@ const styles = StyleSheet.create({
   },
   margin: {
     marginBottom: 50,
+  },
+  marginLeft: {
+    marginLeft: 15,
   },
 });
 

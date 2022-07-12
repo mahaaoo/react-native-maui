@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   themeRight: {
     width: 20,
     height: 40,
-    backgroundColor: '#000',
+    backgroundColor: '#1e1e1e',
   },
   collapse: {
     width: '100%',

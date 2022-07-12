@@ -18,7 +18,7 @@ export default function SwitchExample() {
         <Switch
           style={styles.switch1}
           activeBackgroundColor={'cyan'}
-          inactiveBackgroundColor={'pink'}
+          inactiveBackgroundColor={'orange'}
         />
       </Section>
       <Section title="默认属性及回调">
