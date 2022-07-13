@@ -27,6 +27,8 @@ import AnimatedNumberExample from './pages/AnimatedNumberExample';
 import ShadowExample from './pages/ShadowExample';
 import IconExample from './pages/IconExample';
 import WaterFallListExample from './pages/WaterfallListExample';
+import PopoverExample from './pages/PopoverExample';
+import SwipeActionExample from './pages/SwipeActionExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -54,6 +56,8 @@ export type RootStackParamList = {
   ShadowExample: undefined;
   IconExample: undefined;
   WaterFallListExample: undefined;
+  PopoverExample: undefined;
+  SwipeActionExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -199,6 +203,16 @@ const App: React.FC<{}> = () => {
         name="WaterFallListExample"
         component={WaterFallListExample}
         options={{ headerTitle: 'WaterFallListExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="PopoverExample"
+        component={PopoverExample}
+        options={{ headerTitle: 'PopoverExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="SwipeActionExample"
+        component={SwipeActionExample}
+        options={{ headerTitle: 'SwipeActionExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );

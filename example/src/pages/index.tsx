@@ -17,7 +17,6 @@ export default function ComponentScreen() {
     >
       <WaterMark />
       <FlatList
-        showsVerticalScrollIndicator={false}
         style={styles.flatList}
         data={exampleList}
         numColumns={2}

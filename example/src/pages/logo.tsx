@@ -442,6 +442,14 @@ const exampleList: Example[] = [
       </View>
     ),
   },
+  {
+    title: 'Popover',
+    content: null,
+  },
+  {
+    title: 'SwipeAction',
+    content: null,
+  },
 ];
 
 export { exampleList };
