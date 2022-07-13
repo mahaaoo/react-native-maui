@@ -48,10 +48,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     borderRadius: 10,
   },
-  asyncImage: {
-    width: 100,
-    height: 50,
-  },
   paginationWhite: {
     width: 8,
     height: 8,
@@ -322,15 +318,6 @@ const exampleList: Example[] = [
       <Shadow borderRadius={10} shadowWidth={10} color="white">
         <View style={styles.shadow} />
       </Shadow>
-    ),
-  },
-  {
-    title: 'AsyncImage',
-    content: (
-      <AsyncImage
-        url={'https://picsum.photos/100/50/?random'}
-        style={styles.asyncImage}
-      />
     ),
   },
   {
