@@ -17,7 +17,6 @@ import {
   AnimatedNumber,
   Shadow,
   Icon,
-  AsyncImage,
 } from 'react-native-maui';
 import Arrow from '../components/Icon/arrow';
 

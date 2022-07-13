@@ -55,7 +55,7 @@ const WaterFallListExample: React.FC<WaterFallListExampleProps> = (props) => {
 
   return (
     <WaterfallList
-      numColumns={3}
+      numColumns={2}
       data={data}
       refreshState={status}
       onRefresh={() => {
@@ -82,7 +82,6 @@ const WaterFallListExample: React.FC<WaterFallListExampleProps> = (props) => {
             resizeMode="cover"
           />
           <Text style={styles.text}>index:{item.id}</Text>
-          <Text style={styles.text}>id:{item.text}</Text>
         </>
       )}
       imageSize={(item) => {
