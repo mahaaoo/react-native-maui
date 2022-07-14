@@ -10,22 +10,22 @@ const PopoverExample: React.FC<PopoverExampleProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginLeft: 114, marginTop: 88 }} />
       <Popover
         modal={modal}
         arrowColor={'black'}
-        placement={'bottom'}
+        placement={'bottom-start'}
         content={
-          <View
-            style={{
-              flexDirection: 'row',
-              backgroundColor: 'black',
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ color: 'white', padding: 10 }}>删除</Text>
-            <Text style={{ color: 'white', padding: 10 }}>全选</Text>
-            <Text style={{ color: 'white', padding: 10 }}>取消</Text>
+          <View style={styles.popContainer}>
+            <Text style={styles.options}>删除</Text>
+            <Text style={styles.options}>全选</Text>
+            <Text
+              onPress={() => {
+                setModal(false);
+              }}
+              style={styles.options}
+            >
+              取消
+            </Text>
           </View>
         }
         onPressMask={() => {
@@ -57,6 +57,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  popContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'black',
+    borderRadius: 5,
+    paddingHorizontal: 5,
+  },
+  options: {
+    fontSize: 16,
+    color: 'white',
+    padding: 10,
   },
 });
 

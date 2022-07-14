@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useRef } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -7,6 +7,7 @@ import Animated, {
 import { BaseContainerProps } from '../Overlay';
 import { Position, Placement, ArrowPlacement } from './type';
 import { getPosition } from './utils';
+import { useForceUpdate } from '../../utils/hooks';
 
 interface PopoverContainerRef {}
 
@@ -32,8 +33,10 @@ const PopoverContainer = forwardRef<PopoverContainerRef, PopoverContainerProps>(
     } = props;
     const opacity = useSharedValue(0);
     const popoverPosition = useRef({});
-    const arrowStyle = useRef({});
-    const [_, forceUpdate] = useState(0);
+    const arrowStyle = useRef({
+      borderWidth: arrowSize,
+    });
+    const { forceUpdate } = useForceUpdate();
 
     const handleLayout = useCallback(({ nativeEvent: { layout } }) => {
       const { popover, arrow } = getPosition(
@@ -45,8 +48,11 @@ const PopoverContainer = forwardRef<PopoverContainerRef, PopoverContainerProps>(
         arrowPosition
       );
       popoverPosition.current = popover;
-      arrowStyle.current = arrow;
-      forceUpdate((update) => update + 1);
+      arrowStyle.current = {
+        ...arrowStyle.current,
+        ...arrow,
+      };
+      forceUpdate();
       opacity.value = 1;
     }, []);
 
@@ -56,6 +62,7 @@ const PopoverContainer = forwardRef<PopoverContainerRef, PopoverContainerProps>(
 
     const animationStyle = useAnimatedStyle(() => {
       return {
+        position: 'absolute',
         opacity: opacity.value,
       };
     });
@@ -70,16 +77,14 @@ const PopoverContainer = forwardRef<PopoverContainerRef, PopoverContainerProps>(
           <View pointerEvents={'none'} style={[styles.overlay]} />
         </TouchableOpacity>
         <Animated.View
-          style={[
-            { position: 'absolute' },
-            popoverPosition.current,
-            animationStyle,
-          ]}
+          style={[popoverPosition.current, animationStyle]}
           onLayout={handleLayout}
         >
           {children}
         </Animated.View>
-        <View style={[styles.arrow, arrowStyle.current]} />
+        <Animated.View
+          style={[styles.arrow, arrowStyle.current, animationStyle]}
+        />
       </View>
     );
   }
@@ -90,17 +95,9 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   arrow: {
-    position: 'absolute',
     width: 0,
     height: 0,
-    borderTopWidth: 10,
-    borderTopColor: 'transparent',
-    borderRightWidth: 10,
-    borderRightColor: 'transparent',
-    borderLeftWidth: 10,
-    borderLeftColor: 'transparent',
-    borderBottomWidth: 10,
-    borderBottomColor: 'transparent',
+    borderColor: 'transparent',
   },
 });
 

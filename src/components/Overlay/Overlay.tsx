@@ -9,7 +9,6 @@
  * Overlay also accepts customize component, if offer unMount function, it will be invoked before remove
  */
 import React, {
-  useState,
   createContext,
   useCallback,
   useContext,
@@ -25,6 +24,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
+import { useForceUpdate } from '../../utils/hooks';
 
 export interface OverlayRef {
   /**
@@ -71,7 +71,7 @@ interface ElementType {
 const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const { children } = props;
   const elements = useRef<Array<ElementType>>([]); // all componets saved here
-  const [_, forceUpdate] = useState(0);
+  const { forceUpdate } = useForceUpdate();
   const elementsIndex = useRef<number>(0);
   const { theme } = useTheme();
 
@@ -118,7 +118,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
           ref: nodeRef,
           onDisappear: () => {
             console.log(`删除组件${inner_key}`);
-            forceUpdate((update) => update + 1);
+            forceUpdate();
             onDisappear && onDisappear();
           },
           innerKey: inner_key,
@@ -128,7 +128,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
       });
 
       elementsIndex.current++;
-      forceUpdate((update) => update + 1);
+      forceUpdate();
       return inner_key;
     },
     [elements]
@@ -163,7 +163,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
       if (!!deleteAnimation && typeof deleteAnimation === 'function') {
         deleteAnimation();
       } else {
-        forceUpdate((update) => update + 1);
+        forceUpdate();
       }
     },
     [elements]
@@ -174,7 +174,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
    */
   const deleteAllNodeFromOverlay = useCallback(() => {
     elements.current = [];
-    forceUpdate((update) => update + 1);
+    forceUpdate();
   }, []);
 
   /**
