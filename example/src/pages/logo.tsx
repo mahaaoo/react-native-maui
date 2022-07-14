@@ -238,6 +238,35 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginHorizontal: 1,
   },
+  popover: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  popoverContainer: {
+    width: 80,
+    height: 40,
+    backgroundColor: '#333',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  arrow: {
+    width: 0,
+    height: 0,
+    borderTopWidth: 10,
+    borderTopColor: '#333',
+    borderRightWidth: 10,
+    borderRightColor: 'transparent',
+    borderLeftWidth: 10,
+    borderLeftColor: 'transparent',
+    borderBottomWidth: 10,
+    borderBottomColor: 'transparent',
+  },
+  popoverText: {
+    color: 'white',
+    fontSize: 18,
+  },
 });
 
 interface Example {
@@ -444,7 +473,14 @@ const exampleList: Example[] = [
   },
   {
     title: 'Popover',
-    content: null,
+    content: (
+      <View style={styles.popover}>
+        <View style={styles.popoverContainer}>
+          <Text style={styles.popoverText}>Hello</Text>
+        </View>
+        <View style={styles.arrow} />
+      </View>
+    ),
   },
   {
     title: 'SwipeAction',
