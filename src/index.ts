@@ -76,3 +76,4 @@ export {
   getImageSize,
   AsyncImage,
 } from './components/WaterfallList';
+export { Popover } from './components/Popover';
