@@ -31,12 +31,24 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = (props) => {
       options
     );
     let value = translateIndex.value;
+    const direction = currentIndex.value - translate.value / stepDistance;
+
+    if (currentIndex.value === 0 && index === 0) {
+      if (direction < 0) {
+        value = translateIndex.value - size;
+      }
+    }
+
+    /**
+     * currentIndex.value === 1 and currentIndex.value === 1 - size is the same card
+     */
     if (
-      (currentIndex.value === 0 || currentIndex.value === 1) &&
-      Math.floor(translateIndex.value) === size - 1 &&
+      (currentIndex.value === 1 || currentIndex.value === 1 - size) &&
       index === 0
     ) {
-      value = translateIndex.value - size;
+      if (direction > 0) {
+        value = translateIndex.value - size;
+      }
     }
 
     const scale = interpolate(

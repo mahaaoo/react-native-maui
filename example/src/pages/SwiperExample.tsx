@@ -1,6 +1,11 @@
 import React, { useRef } from 'react';
 import { Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
-import { Swiper, SwiperRef, RotateLayout } from 'react-native-maui';
+import {
+  Swiper,
+  SwiperRef,
+  RotateLayout,
+  ScaleLayout,
+} from 'react-native-maui';
 
 const { width } = Dimensions.get('window');
 
@@ -83,7 +88,7 @@ export default function SwiperExample() {
         renderItem={(item) => {
           return <Image source={item.source} style={styles.image1} />;
         }}
-        auto={true}
+        auto={false}
         layoutOption={{
           layout: RotateLayout,
           options: {
@@ -91,10 +96,7 @@ export default function SwiperExample() {
           },
         }}
         horizontal={true}
-        style={{
-          width,
-          height: 300,
-        }}
+        style={styles.rotateSwiper}
       />
       {/* <Swiper
         interval={1000}
@@ -115,28 +117,23 @@ export default function SwiperExample() {
           height: 260,
         }}
       /> */}
-      {/* <Swiper
+      <Swiper
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
-          return <Image source={item.source} style={{ width: '100%', height: '100%' }} />
+          return <Image source={item.source} style={styles.image2} />;
         }}
         layoutOption={{
           layout: ScaleLayout,
           options: {
             mainAxisSize: width - 60,
             margin: -50,
-          }
+          },
         }}
         auto={false}
         horizontal={true}
-        style={{
-          width,
-          height: 200,
-          marginTop: 40,
-          marginBottom: 100,
-        }}
-      /> */}
+        style={styles.scaleSwiper}
+      />
     </ScrollView>
   );
 }
@@ -148,5 +145,19 @@ const styles = StyleSheet.create({
   image1: {
     width: 250,
     height: 180,
+  },
+  image2: {
+    width: '100%',
+    height: '100%',
+  },
+  rotateSwiper: {
+    width,
+    height: 300,
+  },
+  scaleSwiper: {
+    width,
+    height: 200,
+    marginTop: 40,
+    marginBottom: 100,
   },
 });

@@ -28,6 +28,7 @@ import ScaleLayout from './ScaleLayout';
 import { Dot, Pagination } from '../Pagination';
 import RotateLayout from './RotateLayout';
 
+import { clamp } from '../../utils/redash';
 const { width } = Dimensions.get('window');
 
 const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
@@ -169,9 +170,17 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     })
     .onUpdate(({ translationX, translationY }) => {
       if (horizontal) {
-        translate.value = translationX + offset.value;
+        translate.value = clamp(
+          translationX + offset.value,
+          (currentIndex.value - 1) * stepDistance,
+          (currentIndex.value + 1) * stepDistance
+        );
       } else {
-        translate.value = translationY + offset.value;
+        translate.value = clamp(
+          translationY + offset.value,
+          (currentIndex.value - 1) * stepDistance,
+          (currentIndex.value + 1) * stepDistance
+        );
       }
     })
     .onEnd(({ velocityX, velocityY }) => {
