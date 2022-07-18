@@ -4,7 +4,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import { getItemOffset } from './utils';
+import { getItemOffset, getLayoutValue } from './utils';
 import { ScaleLayoutProps } from './type';
 
 const ScaleLayout: React.FC<ScaleLayoutProps> = (props) => {
@@ -30,26 +30,16 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = (props) => {
       currentIndex.value,
       options
     );
-    let value = translateIndex.value;
-    const direction = currentIndex.value - translate.value / stepDistance;
 
-    if (currentIndex.value === 0 && index === 0) {
-      if (direction < 0) {
-        value = translateIndex.value - size;
-      }
-    }
-
-    /**
-     * currentIndex.value === 1 and currentIndex.value === 1 - size is the same card
-     */
-    if (
-      (currentIndex.value === 1 || currentIndex.value === 1 - size) &&
-      index === 0
-    ) {
-      if (direction > 0) {
-        value = translateIndex.value - size;
-      }
-    }
+    const value = getLayoutValue(
+      index,
+      translateIndex,
+      currentIndex,
+      translate,
+      stepDistance,
+      size,
+      false
+    );
 
     const scale = interpolate(
       value,

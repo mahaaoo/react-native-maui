@@ -1,5 +1,13 @@
-import React, { useRef } from 'react';
-import { Dimensions, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import {
+  Dimensions,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  Text,
+} from 'react-native';
 import {
   Swiper,
   SwiperRef,
@@ -31,58 +39,58 @@ for (let i = 0; i < 1; i++) {
 
 export default function SwiperExample() {
   const ref = useRef<SwiperRef>(null);
-  // const [autoplay, setAutoplay] = useState(false);
-  // const [curIndx, setCurrent] = useState<number>(0);
+  const [autoplay, setAutoplay] = useState(false);
 
-  // const handeEnd = useCallback((index) => {
-  //   // console.log('onScollEnd, currentIndex', index);
-  //   // setCurrent(index);
-  // }, []);
+  const handeEnd = useCallback((index) => {
+    console.log('onScollEnd, currentIndex', index);
+  }, []);
 
-  // const handeStart = useCallback(() => {
-  //   // console.log('onScollStart');
-  // }, []);
+  const handeStart = useCallback(() => {
+    // console.log('onScollStart');
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
-      {/* <Swiper
+      <Swiper
         ref={ref}
         interval={1000}
         dataSource={card2}
         renderItem={(item) => {
-          return <Image source={item.source} style={{ width: '100%', height: '100%'}} />
+          return <Image source={item.source} style={styles.image2} />;
         }}
         onScollStart={handeStart}
         onScollEnd={handeEnd}
         auto={autoplay}
         horizontal={true}
-        style={{
-          width,
-          height: 200,
-        }}
+        style={styles.swiper}
       />
-      <View style={{ flexDirection: 'row', marginTop: 20, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>{curIndx}</Text>
-      </View>
-      <View style={{ flexDirection: 'row', marginTop: 20 }}>
-        <TouchableOpacity onPress={() => {
-          ref.current?.previous();
-        }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={styles.buttonContent}>
+        <TouchableOpacity
+          onPress={() => {
+            ref.current?.previous();
+          }}
+          style={styles.buton}
+        >
           <Text>Pre</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          setAutoplay(auto => !auto);
-        }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <TouchableOpacity
+          onPress={() => {
+            setAutoplay((auto) => !auto);
+          }}
+          style={styles.buton}
+        >
           <Text>{`isAuto: ${autoplay}`}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          ref.current?.next();
-        }} style={{height: 50, flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <TouchableOpacity
+          onPress={() => {
+            ref.current?.next();
+          }}
+          style={styles.buton}
+        >
           <Text>Next</Text>
         </TouchableOpacity>
-      </View> */}
+      </View>
       <Swiper
-        ref={ref}
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -142,6 +150,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  buttonContent: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  buton: {
+    height: 50,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   image1: {
     width: 250,
     height: 180,
@@ -149,6 +167,10 @@ const styles = StyleSheet.create({
   image2: {
     width: '100%',
     height: '100%',
+  },
+  swiper: {
+    width,
+    height: 200,
   },
   rotateSwiper: {
     width,
