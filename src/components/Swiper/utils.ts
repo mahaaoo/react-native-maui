@@ -16,13 +16,15 @@ import {
   SwiperCallBackFunction,
 } from './type';
 
-const MIN_TRIGGER_DISTANCE = 0.5; // 最小触发翻页移动距离
+// min trggled swiper move distance, is percent width
+const MIN_TRIGGER_DISTANCE = 0.5;
+
 // 以下两个参数可以相等、为了防止滑动速度过快一般地 MAX_CAL  > 2 * MAX_RENDER
 // const MAX_CAL = 1; // 最大计算范围
 // const MAX_RENDER = 1; // 最大渲染范围
 
 /**
- * 处理参数
+ * pre check props
  * @param props SwiperProps
  * @returns SwiperProps
  */
@@ -57,9 +59,9 @@ const useProps = (props: SwiperProps): SwiperDefaultProps => {
 };
 
 /**
- *
- * @param index 当前所处的视图索引
- * @returns []
+ * current range
+ * @param index current index
+ * @returns TurnRange
  */
 const useRange = (
   index: Animated.SharedValue<number>
@@ -79,10 +81,10 @@ const useRange = (
 };
 
 /**
- *
- * @param distance 本次移动距离与width比值
- * @param range 本次移动的距离是否构成一次移动（上一页、保持不动、下一页）
- * @returns -1、0、1
+ * get distance per move
+ * @param distance distance
+ * @param range TurnRange
+ * @returns oneof [-1,0,1]
  */
 const getStep = (distance: number, range: DerivedValue<TurnRange>): number => {
   'worklet';
@@ -97,10 +99,10 @@ const getStep = (distance: number, range: DerivedValue<TurnRange>): number => {
 };
 
 /**
- * 判断当前index是否处于渲染范围内
- * @param index 子视图索引
- * @param size 数据规模
- * @param now 当前指向
+ * judge the index whether should be rendered
+ * @param index item index
+ * @param size datasource length
+ * @param now current index
  * @returns boolean
  */
 const judgeRange = (
@@ -137,11 +139,11 @@ const judgeRange = (
 };
 
 /**
- *
- * @param offset 本次移动距离
- * @param index 本视图索引
- * @param size data.length
- * @param now 当前swiper所展示的视图索引
+ * get move distance
+ * @param offset distance
+ * @param index item index
+ * @param size datasource length
+ * @param now distance index
  * @returns number
  */
 const getItemOffset = (
@@ -183,10 +185,10 @@ const getItemOffset = (
 };
 
 /**
- *
- * @param next 下一页
- * @param auto 是否自动播放
- * @param interval 播放间隔
+ * set autoplay for swiper
+ * @param next next page
+ * @param auto is autoplay
+ * @param interval timeout ms
  * @returns useAutoScrollReturn
  */
 const useAutoScroll = (
@@ -235,10 +237,10 @@ const useAutoScroll = (
 };
 
 /**
- *
- * @param start 开始播放
- * @param stop 停止播放
- * @param touching 当前是否处于被触摸状态
+ * when invoke gesture callback
+ * @param start start autoplay
+ * @param stop stop autoplay
+ * @param touching current is touching
  */
 const useTouching = (
   start: () => void,
@@ -263,10 +265,10 @@ const useTouching = (
 };
 
 /**
- * 获取当前所处数据源中的索引
- * @param currentIndex 当前位置
- * @param size 数据源
- * @returns 当前位置在数据源中的索引
+ * get index at data
+ * @param currentIndex curentIndex
+ * @param size datasource length
+ * @returns index at data, range is [0, data.length-1]
  */
 const useIndexAtData = (
   currentIndex: Animated.SharedValue<number>,
@@ -285,6 +287,62 @@ const useIndexAtData = (
   return index;
 };
 
+/**
+ * animation layout interpolate value
+ * @param index item index
+ * @param translateIndex translate to index at data, the value is Dynamic
+ * @param currentIndex pre index
+ * @param translate translate value
+ * @param stepDistance distance per move
+ * @param size datasource length
+ * @param converse animation value is converse, example: [-40, 0, 40] is true, [0.9, 1, 0.9] is false
+ * @returns interpolate value
+ */
+const getLayoutValue = (
+  index: number,
+  translateIndex: Animated.SharedValue<number>,
+  currentIndex: Animated.SharedValue<number>,
+  translate: Animated.SharedValue<number>,
+  stepDistance: number,
+  size: number,
+  converse: boolean
+): number => {
+  'worklet';
+  let value = translateIndex.value;
+  // current gesture dirction, left > 0 and right < 0, 0 is freeze
+  const direction = currentIndex.value - translate.value / stepDistance;
+  /**
+   * when current index is 0, control 0 card's left card and right card to converse dirction
+   */
+  if (currentIndex.value === 0) {
+    // left card
+    if (index === size - 1 && converse) {
+      if (direction >= 0) {
+        value = size + translateIndex.value; // make value index + 1 to index + 2;
+      }
+    }
+    // right card
+    if (index === 0 || index === 1) {
+      if (direction < 0) {
+        value = translateIndex.value - size; // make value 0 to -1;
+      }
+    }
+  }
+
+  /**
+   * when current index is last card, currentIndex.value === 1 and currentIndex.value === 1 - size are the same
+   * control 0 card, make it value from -1 to 0
+   */
+  if (
+    (currentIndex.value === 1 || currentIndex.value === 1 - size) &&
+    index === 0
+  ) {
+    value = translateIndex.value - size;
+  }
+
+  return value;
+};
+
 export {
   useProps,
   useRange,
@@ -294,4 +352,5 @@ export {
   useAutoScroll,
   useTouching,
   useIndexAtData,
+  getLayoutValue,
 };
