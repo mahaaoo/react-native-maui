@@ -8,6 +8,7 @@ import {
   useAutoScroll,
   useIndexAtData,
   useTouching,
+  getLayoutValue,
 } from '../utils';
 
 describe('Test:Swiper->hook/useJudgeRange', () => {
@@ -235,5 +236,33 @@ describe('Test:Swiper->hook/useIndexAtData', () => {
         expect(case4.value).toBe(0);
       });
     });
+  });
+});
+
+describe('Test:Swiper->hook/getLayoutValue', () => {
+  it('getLayoutValue', () => {
+    const value = getLayoutValue(
+      0,
+      { value: 0 },
+      { value: 0 },
+      { value: 0 },
+      200,
+      4,
+      false
+    );
+
+    expect(value).toBe(0);
+
+    const value2 = getLayoutValue(
+      0,
+      { value: 0.5 },
+      { value: 0 },
+      { value: 100 },
+      200,
+      4,
+      false
+    );
+
+    expect(value2).toBe(-3.5);
   });
 });
