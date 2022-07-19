@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { Popover, Button } from 'react-native-maui';
+
+const { width } = Dimensions.get('window');
 
 interface PopoverExampleProps {}
 
 const PopoverExample: React.FC<PopoverExampleProps> = (props) => {
   const {} = props;
   const [modal, setModal] = useState(false);
-
   return (
     <View style={styles.container}>
       <Popover
+        style={styles.popover}
         modal={modal}
         arrowColor={'black'}
-        placement={'bottom-start'}
+        placement={'bottom'}
+        arrowPosition={'center'}
         content={
           <View style={styles.popContainer}>
-            <Text style={styles.options}>删除</Text>
-            <Text style={styles.options}>全选</Text>
+            <Text style={styles.options}>Hello</Text>
             <Text
               onPress={() => {
                 setModal(false);
@@ -33,13 +35,12 @@ const PopoverExample: React.FC<PopoverExampleProps> = (props) => {
         }}
       >
         <Button
+          style={styles.button}
           onPress={() => {
             setModal(true);
           }}
         >
-          <View style={styles.content}>
-            <Text>点击</Text>
-          </View>
+          <Text>点击</Text>
         </Button>
       </Popover>
     </View>
@@ -49,11 +50,17 @@ const PopoverExample: React.FC<PopoverExampleProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
+  },
+  popover: {
+    marginLeft: (width - 150) / 2,
+    marginTop: 100,
+  },
+  button: {
+    width: 150,
+    height: 80,
   },
   content: {
-    width: 100,
-    height: 45,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',

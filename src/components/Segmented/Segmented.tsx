@@ -16,6 +16,8 @@ import Animated, {
 
 interface SegmentedProps {
   items: Array<string>;
+
+  defaultIndex?: number;
   style?: ViewStyle;
   itemStyle?: TextStyle;
   sliderStyle?: ViewStyle;
@@ -36,6 +38,7 @@ const Segmented: React.FC<SegmentedProps> = (props) => {
     items,
     style,
     itemStyle,
+    defaultIndex = 0,
     sliderStyle,
     sliderMargin = 2,
     onChange,
@@ -43,8 +46,6 @@ const Segmented: React.FC<SegmentedProps> = (props) => {
     activeTextColor = '#fff',
     inactiveTextColor = '#000',
   } = props;
-  const [current, setCurrent] = useState(0);
-  const translateX = useSharedValue(0);
 
   const silderSize = useMemo(() => {
     let height: number = SLIDER_DEFAULT_HEIGHT;
@@ -61,6 +62,13 @@ const Segmented: React.FC<SegmentedProps> = (props) => {
     };
   }, [style]);
 
+  const step = useMemo(() => {
+    return silderSize.width / items.length;
+  }, [silderSize, items]);
+
+  const [current, setCurrent] = useState(defaultIndex);
+  const translateX = useSharedValue(step * defaultIndex);
+
   const handDidChange = useCallback(
     (item: string, index: number) => {
       didChange && didChange(item, index);
@@ -72,12 +80,12 @@ const Segmented: React.FC<SegmentedProps> = (props) => {
     (item: string, index: number) => {
       setCurrent(index);
       onChange && onChange(item, index);
-      const dest = (index * silderSize.width) / items.length;
+      const dest = index * step;
       translateX.value = withSpring(dest, { overshootClamping: true }, () => {
         runOnJS(handDidChange)(item, index);
       });
     },
-    [silderSize]
+    [step]
   );
 
   const animationStyle = useAnimatedStyle(() => {
