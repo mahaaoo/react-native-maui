@@ -1,6 +1,6 @@
 {
   "name": "react-native-maui",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "React Native UI Library",
   "main": "src/index",
   "scripts": {
