@@ -12,13 +12,15 @@ import Animated, {
   runOnJS,
   interpolate,
   Extrapolate,
-  withSpring,
 } from 'react-native-reanimated';
 import { useOverlay } from '../Overlay';
 
 import { AnimationContainerProps } from './type';
 
-interface ScaleContainerRef {}
+interface ScaleContainerRef {
+  mount: (callback?: () => void) => void;
+  unMount: (callback?: () => void) => void;
+}
 
 interface ScaleContainerProps extends AnimationContainerProps {}
 
