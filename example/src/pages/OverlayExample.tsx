@@ -8,6 +8,7 @@ import {
   OpacityContainer,
   Button,
   DrawerContainer,
+  ScaleContainer,
 } from 'react-native-maui';
 import Section from '../components/Section';
 
@@ -521,6 +522,45 @@ export default function OverlayExample() {
           <Text>Right</Text>
         </Button>
       </Section>
+      <Section title="ScaleContainer">
+        <Button
+          onPress={() => {
+            add(
+              <ScaleContainer>
+                <View style={styles.scaleContainer}>
+                  <Text>子视图{elementIndex.current}</Text>
+                </View>
+              </ScaleContainer>
+            );
+            elementIndex.current++;
+          }}
+        >
+          <Text>Scale</Text>
+        </Button>
+        <Button
+          style={styles.marginLeft}
+          onPress={() => {
+            const index = add(
+              <ScaleContainer modal={true}>
+                <View style={styles.scaleContainer}>
+                  <Text>子视图{elementIndex.current}</Text>
+                  <Text
+                    onPress={() => {
+                      remove(index);
+                    }}
+                    style={styles.close}
+                  >
+                    关闭
+                  </Text>
+                </View>
+              </ScaleContainer>
+            );
+            elementIndex.current++;
+          }}
+        >
+          <Text>Scale-Close</Text>
+        </Button>
+      </Section>
     </ScrollView>
   );
 }
@@ -581,5 +621,12 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  scaleContainer: {
+    width: 150,
+    height: 150,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
 });

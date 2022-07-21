@@ -29,6 +29,7 @@ export {
   OpacityContainer,
   TranslateContainer,
   DrawerContainer,
+  ScaleContainer,
   OpacityContainerRef,
   TranslateContainerRef,
   BaseContainerProps,

@@ -10,6 +10,7 @@ import TranslateContainer, {
 import DrawerContainer, {
   DrawerContainerRef,
 } from './Container/DrawerContainer';
+import ScaleContainer from './Container/ScaleContainer';
 
 import { BaseContainerProps, AnimationContainerProps } from './Container/type';
 
@@ -24,6 +25,7 @@ export {
   OpacityContainer,
   TranslateContainer,
   DrawerContainer,
+  ScaleContainer,
   TranslateContainerRef,
   OpacityContainerRef,
   BaseContainerProps,
