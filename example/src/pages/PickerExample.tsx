@@ -67,7 +67,7 @@ const PickerExample: React.FC<PickerExampleProps> = (props) => {
           />
         </View>
       </Section>
-      <Section title="时间选择器">
+      {/* <Section title="时间选择器">
         <View style={styles.picker2}>
           <Picker
             style={styles.flex}
@@ -100,7 +100,7 @@ const PickerExample: React.FC<PickerExampleProps> = (props) => {
             }}
           />
         </View>
-      </Section>
+      </Section> */}
     </View>
   );
 };
