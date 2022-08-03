@@ -17,17 +17,17 @@ const getPosition = (
   let arrow = {};
 
   switch (true) {
-    case placement == 'top-start' ||
-      placement == 'top' ||
-      placement == 'top-end': {
+    case placement === 'top-start' ||
+      placement === 'top' ||
+      placement === 'top-end': {
       top = pageY - h - 2 * arrowSize;
-      if (placement == 'top-start') {
+      if (placement === 'top-start') {
         left = pageX;
       }
-      if (placement == 'top') {
+      if (placement === 'top') {
         left = pageX - (w - width) / 2;
       }
-      if (placement == 'top-end') {
+      if (placement === 'top-end') {
         left = pageX - (w - width);
       }
 
@@ -36,20 +36,20 @@ const getPosition = (
         top: pageY - 2 * arrowSize,
       };
 
-      if (arrowPosition == 'start') {
+      if (arrowPosition === 'start') {
         arrow = {
           ...arrow,
           left: pageX + arrowSize,
         };
       }
-      if (arrowPosition == 'center') {
+      if (arrowPosition === 'center') {
         arrow = {
           ...arrow,
           left: pageX + width / 2 - arrowSize,
         };
       }
 
-      if (arrowPosition == 'end') {
+      if (arrowPosition === 'end') {
         arrow = {
           ...arrow,
           left: pageX + width - 2 * arrowSize,
@@ -58,18 +58,18 @@ const getPosition = (
 
       break;
     }
-    case placement == 'bottom-start' ||
-      placement == 'bottom' ||
-      placement == 'bottom-end': {
+    case placement === 'bottom-start' ||
+      placement === 'bottom' ||
+      placement === 'bottom-end': {
       top = pageY + height + 2 * arrowSize;
 
-      if (placement == 'bottom-start') {
+      if (placement === 'bottom-start') {
         left = pageX;
       }
-      if (placement == 'bottom') {
+      if (placement === 'bottom') {
         left = pageX - (w - width) / 2;
       }
-      if (placement == 'bottom-end') {
+      if (placement === 'bottom-end') {
         left = pageX - (w - width);
       }
 
@@ -78,20 +78,20 @@ const getPosition = (
         top: pageY + height,
       };
 
-      if (arrowPosition == 'start') {
+      if (arrowPosition === 'start') {
         arrow = {
           ...arrow,
           left: pageX + arrowSize,
         };
       }
-      if (arrowPosition == 'center') {
+      if (arrowPosition === 'center') {
         arrow = {
           ...arrow,
           left: pageX + width / 2 - arrowSize,
         };
       }
 
-      if (arrowPosition == 'end') {
+      if (arrowPosition === 'end') {
         arrow = {
           ...arrow,
           left: pageX + width - 2 * arrowSize,
@@ -99,18 +99,18 @@ const getPosition = (
       }
       break;
     }
-    case placement == 'left-start' ||
-      placement == 'left' ||
-      placement == 'left-end': {
+    case placement === 'left-start' ||
+      placement === 'left' ||
+      placement === 'left-end': {
       left = pageX - w - 2 * arrowSize;
 
-      if (placement == 'left-start') {
+      if (placement === 'left-start') {
         top = pageY;
       }
-      if (placement == 'left') {
+      if (placement === 'left') {
         top = pageY - (h - height) / 2;
       }
-      if (placement == 'left-end') {
+      if (placement === 'left-end') {
         top = pageY - (h - height);
       }
 
@@ -119,20 +119,20 @@ const getPosition = (
         left: pageX - 2 * arrowSize,
       };
 
-      if (arrowPosition == 'start') {
+      if (arrowPosition === 'start') {
         arrow = {
           ...arrow,
           top: pageY,
         };
       }
-      if (arrowPosition == 'center') {
+      if (arrowPosition === 'center') {
         arrow = {
           ...arrow,
           top: pageY + height / 2 - arrowSize,
         };
       }
 
-      if (arrowPosition == 'end') {
+      if (arrowPosition === 'end') {
         arrow = {
           ...arrow,
           top: pageY + height - 2 * arrowSize,
@@ -141,17 +141,17 @@ const getPosition = (
 
       break;
     }
-    case placement == 'right-start' ||
-      placement == 'right' ||
-      placement == 'right-end': {
+    case placement === 'right-start' ||
+      placement === 'right' ||
+      placement === 'right-end': {
       left = pageX + width + 2 * arrowSize;
-      if (placement == 'right-start') {
+      if (placement === 'right-start') {
         top = pageY;
       }
-      if (placement == 'right') {
+      if (placement === 'right') {
         top = pageY - (h - height) / 2;
       }
-      if (placement == 'right-end') {
+      if (placement === 'right-end') {
         top = pageY - (h - height);
       }
 
@@ -160,20 +160,20 @@ const getPosition = (
         left: pageX + width,
       };
 
-      if (arrowPosition == 'start') {
+      if (arrowPosition === 'start') {
         arrow = {
           ...arrow,
           top: pageY,
         };
       }
-      if (arrowPosition == 'center') {
+      if (arrowPosition === 'center') {
         arrow = {
           ...arrow,
           top: pageY + height / 2 - arrowSize,
         };
       }
 
-      if (arrowPosition == 'end') {
+      if (arrowPosition === 'end') {
         arrow = {
           ...arrow,
           top: pageY + height - 2 * arrowSize,
