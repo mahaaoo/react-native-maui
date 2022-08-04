@@ -1,50 +1,25 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
   interpolate,
-  runOnJS,
   useAnimatedStyle,
-  useDerivedValue,
 } from 'react-native-reanimated';
 import { PickerItemProps } from './type';
 
 const PickerItem: React.FC<PickerItemProps> = (props) => {
-  const { index, translateY, children, options, paningIndex } = props;
-  const [offWindow, setOffWindow] = useState(false);
-
-  const changeState = useCallback(
-    (mount: boolean) => {
-      if (mount !== offWindow) {
-        setOffWindow(mount);
-      }
-    },
-    [offWindow]
-  );
-
-  const outOffWindow = useDerivedValue(() => {
-    return (
-      Math.abs(index - paningIndex.value) > Math.ceil(1.5 * options.maxRender)
-    );
-  });
+  const { translateY, children, options, paningIndex, item } = props;
 
   const style = useAnimatedStyle(() => {
-    if (outOffWindow.value) {
-      runOnJS(changeState)(false);
-      return {};
-    }
-
-    runOnJS(changeState)(true);
-
     const visibleRotateX = [50, 30, 20, 0, -20, -30, -50];
     const visibleOffsetY = [-15, -5, 0, 0, 0, 5, 15];
     const visibleIndex = [
-      index - 3,
-      index - 2,
-      index - 1,
-      index,
-      index + 1,
-      index + 2,
-      index + 3,
+      item - 3,
+      item - 2,
+      item - 1,
+      item,
+      item + 1,
+      item + 2,
+      item + 3,
     ];
     const rotateX = interpolate(
       paningIndex.value,
@@ -64,7 +39,7 @@ const PickerItem: React.FC<PickerItemProps> = (props) => {
         [0.2, 0.4, 0.6, 1, 0.6, 0.4, 0.2]
       ),
       transform: [
-        { translateY: translateY.value + offsetY },
+        { translateY: translateY.value + item * options.itemHeight + offsetY },
         { perspective: 1500 },
         { rotateX: `${rotateX}deg` },
         {
@@ -95,7 +70,7 @@ const PickerItem: React.FC<PickerItemProps> = (props) => {
         style,
       ]}
     >
-      {offWindow ? children : null}
+      {children}
     </Animated.View>
   );
 };
@@ -105,6 +80,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
   },
 });
 

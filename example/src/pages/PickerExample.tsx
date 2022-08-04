@@ -57,12 +57,12 @@ const PickerExample: React.FC<PickerExampleProps> = (props) => {
         <View style={styles.picker1}>
           <Picker
             style={styles.flex}
-            dataSource={new Array(100).fill(0).map((_, index) => index)}
+            dataSource={new Array(500).fill(0).map((_, index) => index)}
             renderItem={(item) => {
               return <Text style={styles.title}>{item}</Text>;
             }}
             options={{
-              maxRender: 4,
+              maxRender: 3,
             }}
           />
         </View>

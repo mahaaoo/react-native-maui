@@ -1,23 +1,29 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
-  useDerivedValue,
   withTiming,
+  useAnimatedReaction,
+  useSharedValue,
 } from 'react-native-reanimated';
 import PickerItem from './PickerItem';
 import { PickerProps } from './type';
 import { useProps, useInitialValue } from './utils';
+
+const CACEL = 4;
 
 const Picker: React.FC<PickerProps> = (props) => {
   const { dataSource, style, renderItem, onChange, options } = useProps(props);
   const { translateY, offset, currentIndex, timingOptions } =
     useInitialValue(options);
 
-  const paningIndex = useDerivedValue(() => {
-    return options.maxRender - translateY.value / options.itemHeight;
-  });
+  const [data, setData] = useState(
+    dataSource.slice(0, CACEL * options.maxRender)
+  );
+  const paningIndex = useSharedValue(0);
+  const minTop = useSharedValue(0);
+  const maxBottom = useSharedValue(CACEL * options.maxRender);
 
   useEffect(() => {
     // 立即执行一次onChange，保证父组件第一次也能拿到值
@@ -27,6 +33,41 @@ const Picker: React.FC<PickerProps> = (props) => {
   const handleChange = useCallback((index: number) => {
     onChange && onChange(dataSource[index]);
   }, []);
+
+  const next = (value: number) => {
+    'worklet';
+    const maxIndex =
+      value + CACEL * options.maxRender > dataSource.length
+        ? dataSource.length
+        : value + CACEL * options.maxRender;
+    const minIndex =
+      value - CACEL * options.maxRender > 0
+        ? value - CACEL * options.maxRender
+        : 0;
+    const newData = dataSource.slice(minIndex, maxIndex);
+
+    maxBottom.value = maxIndex;
+    minTop.value = minIndex;
+
+    runOnJS(setData)(newData);
+  };
+
+  useAnimatedReaction(
+    () => translateY.value,
+    (value) => {
+      paningIndex.value = options.maxRender - value / options.itemHeight;
+      const onTimeIndex = Math.ceil(paningIndex.value);
+      if (maxBottom.value - onTimeIndex < options.maxRender + 1) {
+        next(onTimeIndex);
+      }
+      if (
+        minTop.value > 0 &&
+        onTimeIndex - minTop.value < options.maxRender + 1
+      ) {
+        next(onTimeIndex);
+      }
+    }
+  );
 
   const panGesture = Gesture.Pan()
     .onBegin(() => {
@@ -62,7 +103,8 @@ const Picker: React.FC<PickerProps> = (props) => {
   const renderPickerItem = useCallback((item: any, index: number) => {
     return (
       <PickerItem
-        key={`key_${index}`}
+        key={`key_${item}`}
+        item={item}
         {...{ index, currentIndex, translateY, options, paningIndex }}
       >
         {renderItem && renderItem(item, index)}
@@ -73,8 +115,8 @@ const Picker: React.FC<PickerProps> = (props) => {
   return (
     <GestureDetector gesture={panGesture}>
       <View style={[styles.scollContainer, style, mustStyle]}>
-        <Animated.View style={styles.container}>
-          {dataSource?.map(renderPickerItem)}
+        <Animated.View style={[styles.container]}>
+          {data?.map(renderPickerItem)}
         </Animated.View>
         <View
           style={[
