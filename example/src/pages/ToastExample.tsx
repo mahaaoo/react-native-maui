@@ -16,7 +16,7 @@ const ToastExample: React.FC<ToastExampleProps> = (props) => {
 
   return (
     <View>
-      <Section title="基础用法">
+      <Section title="OpacityContainer">
         <Button
           onPress={() => {
             ToastUtil.template = (title: string) => (
@@ -33,8 +33,9 @@ const ToastExample: React.FC<ToastExampleProps> = (props) => {
         >
           <Text>OpacityContainer Toast</Text>
         </Button>
+      </Section>
+      <Section title="TranslateContainer">
         <Button
-          style={styles.marginLeft}
           onPress={() => {
             ToastUtil.template = (title: string) => (
               <TranslateContainer
@@ -72,9 +73,6 @@ const styles = StyleSheet.create({
   },
   margin: {
     marginBottom: 50,
-  },
-  marginLeft: {
-    marginLeft: 15,
   },
 });
 
