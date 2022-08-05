@@ -11,7 +11,7 @@ import PickerItem from './PickerItem';
 import { PickerProps } from './type';
 import { useProps, useInitialValue } from './utils';
 
-const CACEL = 4;
+const CACEL = 6;
 
 const Picker: React.FC<PickerProps> = (props) => {
   const { dataSource, style, renderItem, onChange, options } = useProps(props);
@@ -57,7 +57,10 @@ const Picker: React.FC<PickerProps> = (props) => {
     (value) => {
       paningIndex.value = options.maxRender - value / options.itemHeight;
       const onTimeIndex = Math.ceil(paningIndex.value);
-      if (maxBottom.value - onTimeIndex < options.maxRender + 1) {
+      if (
+        maxBottom.value < dataSource.length &&
+        maxBottom.value - onTimeIndex < options.maxRender + 1
+      ) {
         next(onTimeIndex);
       }
       if (
