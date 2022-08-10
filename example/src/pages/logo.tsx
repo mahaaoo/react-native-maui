@@ -486,6 +486,10 @@ const exampleList: Example[] = [
     title: 'SwipeAction',
     content: null,
   },
+  {
+    title: 'RefreshControl',
+    content: null,
+  },
 ];
 
 export { exampleList };
