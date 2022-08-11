@@ -79,4 +79,6 @@ export {
 } from './components/WaterfallList';
 export { Popover } from './components/Popover';
 
+export { RefreshControl } from './components/RefreshControl';
+
 export { snapPoint, clamp } from './utils/redash';
