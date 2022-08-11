@@ -9,6 +9,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import { Loading } from 'react-native-maui';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
@@ -85,6 +86,28 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
     };
   });
 
+  const refreshView = useAnimatedStyle(() => {
+    return {
+      top: -100 + refreshTransitionY.value,
+      opacity: interpolate(refreshTransitionY.value, [0, 100], [0, 1]),
+    };
+  });
+
+  const stickey = useAnimatedStyle(() => {
+    return {
+      zIndex: 10,
+      transform: [
+        {
+          translateY: interpolate(
+            scrollViewTransitionY.value,
+            [0, height, height + 1],
+            [0, 0, 1]
+          ),
+        },
+      ],
+    };
+  });
+
   return (
     <GestureDetector gesture={panGesture}>
       <Animated.View>
@@ -96,7 +119,13 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
             directionalLockEnabled={true}
             animatedProps={animatedProps}
           >
+            <Animated.View style={[styles.refresh, refreshView]}>
+              <Loading />
+            </Animated.View>
             <Animated.View style={animatedStyle}>
+              <View style={styles.item} />
+              <Animated.View style={[styles.stickey, stickey]} />
+              <View style={styles.item} />
               <View style={styles.item} />
             </Animated.View>
           </AnimatedScrollView>
@@ -112,8 +141,20 @@ const styles = StyleSheet.create({
   },
   item: {
     width,
-    height: 4 * height,
+    height,
     backgroundColor: 'pink',
+  },
+  stickey: {
+    width,
+    height: 30,
+    backgroundColor: 'red',
+  },
+  refresh: {
+    width,
+    height: 100,
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
 });
 
