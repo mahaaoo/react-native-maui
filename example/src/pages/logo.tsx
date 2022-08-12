@@ -267,6 +267,39 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
+  swipeAction: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  swipeAction1: {
+    width: '50%',
+    height: 40,
+    backgroundColor: 'white',
+  },
+  swipeAction2: {
+    width: '20%',
+    height: 40,
+    backgroundColor: 'orange',
+  },
+  swipeAction3: {
+    width: '20%',
+    height: 40,
+    backgroundColor: '#d11a2d',
+  },
+  refreshControl: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  refreshControlContent: {
+    backgroundColor: 'white',
+    height: '50%',
+    width: 100,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
 });
 
 interface Example {
@@ -293,7 +326,7 @@ const exampleList: Example[] = [
   },
   {
     title: 'Divider',
-    content: <Divider start={30} end={140} color={'white'} width={2} />,
+    content: <Divider start={30} end={130} color={'white'} width={2} />,
   },
   {
     title: 'Avatar',
@@ -335,7 +368,7 @@ const exampleList: Example[] = [
         radius
         value={10}
         toValue={80}
-        activeColor="pink"
+        activeColor="#d11a2d"
         inactiveColor="white"
       />
     ),
@@ -371,10 +404,12 @@ const exampleList: Example[] = [
     content: <Segmented style={styles.segmented} items={['one', 'two']} />,
   },
   {
-    title: 'RefreshList',
+    title: 'SwipeAction',
     content: (
-      <View style={styles.refreshList}>
-        <View style={styles.refreshListContent} />
+      <View style={styles.swipeAction}>
+        <View style={styles.swipeAction1} />
+        <View style={styles.swipeAction2} />
+        <View style={styles.swipeAction3} />
       </View>
     ),
   },
@@ -409,6 +444,23 @@ const exampleList: Example[] = [
     ),
   },
   {
+    title: 'RefreshList',
+    content: (
+      <View style={styles.refreshList}>
+        <View style={styles.refreshListContent} />
+      </View>
+    ),
+  },
+  {
+    title: 'RefreshControl',
+    content: (
+      <View style={styles.refreshControl}>
+        <Loading />
+        <View style={styles.refreshControlContent} />
+      </View>
+    ),
+  },
+  {
     title: 'ActionSheet',
     content: (
       <View style={styles.actionSheet}>
@@ -417,6 +469,17 @@ const exampleList: Example[] = [
           <View style={styles.actionSheet3} />
         </View>
         <View style={styles.actionSheet4} />
+      </View>
+    ),
+  },
+  {
+    title: 'Popover',
+    content: (
+      <View style={styles.popover}>
+        <View style={styles.popoverContainer}>
+          <Text style={styles.popoverText}>Hello</Text>
+        </View>
+        <View style={styles.arrow} />
       </View>
     ),
   },
@@ -470,25 +533,6 @@ const exampleList: Example[] = [
         <View style={styles.waterFallListDown} />
       </View>
     ),
-  },
-  {
-    title: 'Popover',
-    content: (
-      <View style={styles.popover}>
-        <View style={styles.popoverContainer}>
-          <Text style={styles.popoverText}>Hello</Text>
-        </View>
-        <View style={styles.arrow} />
-      </View>
-    ),
-  },
-  {
-    title: 'SwipeAction',
-    content: null,
-  },
-  {
-    title: 'RefreshControl',
-    content: null,
   },
 ];
 
