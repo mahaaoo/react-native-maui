@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "./index.js",
   "scripts": {
-    "start": "expo start --dev-client",
+    "start": "expo start",
+    "startdec": "expo start  --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
@@ -21,7 +22,7 @@
     "jest-expo": "^45.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-native": "0.68.2",
+    "react-native": "0.68.1",
     "react-native-gesture-handler": "~2.2.0",
     "react-native-reanimated": "~2.8.0",
     "react-native-redash": "^16.2.4",

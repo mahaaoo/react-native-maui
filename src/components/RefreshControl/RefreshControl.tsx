@@ -9,6 +9,7 @@ import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
+  useDerivedValue,
 } from 'react-native-reanimated';
 import { Loading } from '../Loading';
 
@@ -28,11 +29,14 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
   const scrollRef = useRef();
 
   const scrollViewTransitionY = useSharedValue(0);
+
   const refreshTransitionY = useSharedValue(0);
   const offset = useSharedValue(0);
-  const canRefresh = useSharedValue(true);
-
   const refreshHeight = useSharedValue(0);
+
+  const canRefresh = useDerivedValue(() => {
+    return scrollViewTransitionY.value < 1;
+  });
 
   useEffect(() => {
     if (refreshing) {
@@ -52,15 +56,12 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
   const onScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollViewTransitionY.value = event.contentOffset.y;
-      if (scrollViewTransitionY.value < 1) {
-        canRefresh.value = true;
-      } else {
-        canRefresh.value = false;
-      }
+      // console.log(scrollViewTransitionY.value);
     },
   });
 
   const panGesture = Gesture.Pan()
+    .activeOffsetY([-10, 10])
     .simultaneousWithExternalGesture(scrollRef)
     .onBegin(() => {
       offset.value = refreshTransitionY.value;
@@ -70,6 +71,7 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
       if (!canRefresh.value) {
         return;
       }
+      // console.log(refreshHeight.value);
       refreshHeight.value = translationY + offset.value;
       refreshTransitionY.value = interpolate(
         translationY + offset.value,
@@ -135,7 +137,6 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
             bounces={false}
             scrollEventThrottle={16}
             onScroll={onScroll}
-            directionalLockEnabled={true}
             animatedProps={animatedProps}
           >
             <Animated.View style={[styles.refresh, refreshView]}>
