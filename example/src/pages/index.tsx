@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { navigate } from '../navigate';
 
 import Card from '../components/Card';
-import { exampleList } from './logo';
+import { exampleList } from './thumbnail';
 
 import { useTheme } from 'react-native-maui';
 import WaterMark from '../components/WaterMark';
