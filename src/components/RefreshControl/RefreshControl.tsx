@@ -69,7 +69,7 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
     onScroll: (event, context) => {
       const { scrollBeginY, scrollBeginTime } = context;
       scrollViewTransitionY.value = event.contentOffset.y;
-      if (scrollViewTransitionY.value === 0) {
+      if (scrollViewTransitionY.value === 0 && !scrollBounse.value) {
         const endTime = new Date().valueOf();
         const velocityY = Math.min(
           Math.abs(
@@ -78,8 +78,10 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
           ),
           MAX_SCROLL_VELOCITY_Y
         );
+        if (velocityY < 0.5) return;
+
         const ratio = (Math.PI / 2 / MAX_SCROLL_VELOCITY_Y) * velocityY;
-        const bounceDistance = triggleHeight * 2 * Math.sin(ratio);
+        const bounceDistance = (height / 3) * Math.sin(ratio);
         const duration = 50 + 100 * Math.cos(ratio);
 
         scrollBounse.value = true;
