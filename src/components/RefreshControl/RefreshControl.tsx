@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { ScrollView, StyleSheet, Dimensions, Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -10,8 +10,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   useDerivedValue,
+  withSequence,
 } from 'react-native-reanimated';
-import { Loading } from '../Loading';
 
 const { width, height } = Dimensions.get('window');
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
@@ -23,16 +23,21 @@ interface RefreshControlProps {
   triggleHeight?: number;
 }
 
+const MAX_SCROLL_VELOCITY_Y = 20;
+
 const RefreshControl: React.FC<RefreshControlProps> = (props) => {
   const { children, refreshing, onRefresh, triggleHeight = 100 } = props;
 
   const scrollRef = useRef();
+  const panRef = useRef();
 
   const scrollViewTransitionY = useSharedValue(0);
 
   const refreshTransitionY = useSharedValue(0);
   const offset = useSharedValue(0);
   const refreshHeight = useSharedValue(0);
+
+  const scrollBounse = useSharedValue(false);
 
   const canRefresh = useDerivedValue(() => {
     return scrollViewTransitionY.value < 1;
@@ -53,14 +58,43 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
     onRefresh && onRefresh();
   }, []);
 
-  const onScroll = useAnimatedScrollHandler({
-    onScroll: (event) => {
+  const onScroll = useAnimatedScrollHandler<{
+    scrollBeginTime: number;
+    scrollBeginY: number;
+  }>({
+    onBeginDrag: (event, context) => {
+      context.scrollBeginTime = new Date().valueOf();
+      context.scrollBeginY = event.contentOffset.y;
+    },
+    onScroll: (event, context) => {
+      const { scrollBeginY, scrollBeginTime } = context;
       scrollViewTransitionY.value = event.contentOffset.y;
-      // console.log(scrollViewTransitionY.value);
+      if (scrollViewTransitionY.value === 0) {
+        const endTime = new Date().valueOf();
+        const velocityY = Math.min(
+          Math.abs(
+            (scrollViewTransitionY.value - scrollBeginY) /
+              (endTime - scrollBeginTime)
+          ),
+          MAX_SCROLL_VELOCITY_Y
+        );
+        const ratio = (Math.PI / 2 / MAX_SCROLL_VELOCITY_Y) * velocityY;
+        const bounceDistance = triggleHeight * 2 * Math.sin(ratio);
+        const duration = 50 + 100 * Math.cos(ratio);
+
+        scrollBounse.value = true;
+        refreshTransitionY.value = withSequence(
+          withTiming(bounceDistance, { duration }),
+          withTiming(0, { duration }, () => {
+            scrollBounse.value = false;
+          })
+        );
+      }
     },
   });
 
   const panGesture = Gesture.Pan()
+    .withRef(panRef)
     .activeOffsetY([-10, 10])
     .simultaneousWithExternalGesture(scrollRef)
     .onBegin(() => {
@@ -71,7 +105,6 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
       if (!canRefresh.value) {
         return;
       }
-      // console.log(refreshHeight.value);
       refreshHeight.value = translationY + offset.value;
       refreshTransitionY.value = interpolate(
         translationY + offset.value,
@@ -119,6 +152,12 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
   });
 
   const refreshView = useAnimatedStyle(() => {
+    if (scrollBounse.value) {
+      return {
+        height: 0,
+        opacity: 0,
+      };
+    }
     return {
       height: refreshHeight.value / 2,
       opacity: interpolate(
@@ -140,7 +179,7 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
             animatedProps={animatedProps}
           >
             <Animated.View style={[styles.refresh, refreshView]}>
-              <Loading size="large" />
+              <Text>刷新中...</Text>
             </Animated.View>
             <Animated.View style={animatedStyle}>{children}</Animated.View>
           </AnimatedScrollView>
