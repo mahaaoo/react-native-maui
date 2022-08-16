@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, Dimensions, Text } from 'react-native';
+import { ScrollView, Dimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -11,33 +11,43 @@ import Animated, {
   useSharedValue,
   useDerivedValue,
   withSequence,
+  withDelay,
 } from 'react-native-reanimated';
+import { RefreshContainerContext, RefreshStatus } from './type';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
-interface RefreshControlProps {
+interface RefreshContainerProps {
   refreshing: boolean;
+  refreshControl: React.ReactNode;
   onRefresh: () => void;
 
   triggleHeight?: number;
 }
 
 const MAX_SCROLL_VELOCITY_Y = 20;
+const MIN_SCROLL_VELOCITY_Y = 0.5;
+const DEFAULT_TRIGGLE_HEIGHT = 100;
 
-const RefreshControl: React.FC<RefreshControlProps> = (props) => {
-  const { children, refreshing, onRefresh, triggleHeight = 100 } = props;
+const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
+  const {
+    children,
+    refreshing,
+    onRefresh,
+    refreshControl,
+    triggleHeight = DEFAULT_TRIGGLE_HEIGHT,
+  } = props;
 
   const scrollRef = useRef();
   const panRef = useRef();
 
   const scrollViewTransitionY = useSharedValue(0);
-
   const refreshTransitionY = useSharedValue(0);
   const offset = useSharedValue(0);
-  const refreshHeight = useSharedValue(0);
-
   const scrollBounse = useSharedValue(false);
+
+  const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
 
   const canRefresh = useDerivedValue(() => {
     return scrollViewTransitionY.value < 1;
@@ -45,11 +55,18 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
 
   useEffect(() => {
     if (refreshing) {
+      refreshStatus.value = RefreshStatus.Holding;
       refreshTransitionY.value = withTiming(triggleHeight);
-      refreshHeight.value = withTiming(2 * triggleHeight);
     } else {
-      refreshTransitionY.value = withTiming(0);
-      refreshHeight.value = withTiming(0);
+      if (refreshTransitionY.value > 0) {
+        refreshStatus.value = RefreshStatus.Done;
+        refreshTransitionY.value = withDelay(
+          500,
+          withTiming(0, {}, () => {
+            refreshStatus.value = RefreshStatus.Idle;
+          })
+        );
+      }
     }
   }, [refreshing]);
 
@@ -78,7 +95,7 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
           ),
           MAX_SCROLL_VELOCITY_Y
         );
-        if (velocityY < 0.5) return;
+        if (velocityY < MIN_SCROLL_VELOCITY_Y) return;
 
         const ratio = (Math.PI / 2 / MAX_SCROLL_VELOCITY_Y) * velocityY;
         const bounceDistance = (height / 3) * Math.sin(ratio);
@@ -101,30 +118,35 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
     .simultaneousWithExternalGesture(scrollRef)
     .onBegin(() => {
       offset.value = refreshTransitionY.value;
-      refreshHeight.value = refreshTransitionY.value;
     })
     .onUpdate(({ translationY }) => {
       if (!canRefresh.value) {
         return;
       }
-      refreshHeight.value = translationY + offset.value;
       refreshTransitionY.value = interpolate(
         translationY + offset.value,
         [0, height],
         [0, height / 2]
       );
+      if (!refreshing) {
+        if (refreshTransitionY.value >= triggleHeight) {
+          refreshStatus.value = RefreshStatus.Reached;
+        } else {
+          refreshStatus.value = RefreshStatus.Pulling;
+        }
+      }
     })
     .onEnd(() => {
       if (refreshing) {
         refreshTransitionY.value = withTiming(triggleHeight);
-        refreshHeight.value = withTiming(2 * triggleHeight);
         return;
       }
       if (refreshTransitionY.value >= triggleHeight) {
         runOnJS(handleOnRefresh)();
       } else {
-        refreshTransitionY.value = withTiming(0);
-        refreshHeight.value = withTiming(0);
+        refreshTransitionY.value = withTiming(0, {}, () => {
+          refreshStatus.value = RefreshStatus.Idle;
+        });
       }
     });
 
@@ -153,51 +175,33 @@ const RefreshControl: React.FC<RefreshControlProps> = (props) => {
     };
   });
 
-  const refreshView = useAnimatedStyle(() => {
-    if (scrollBounse.value) {
-      return {
-        height: 0,
-        opacity: 0,
-      };
-    }
-    return {
-      height: refreshHeight.value / 2,
-      opacity: interpolate(
-        refreshTransitionY.value,
-        [0, triggleHeight],
-        [0, 1]
-      ),
-    };
-  });
-
   return (
-    <GestureDetector gesture={panGesture}>
-      <Animated.View>
-        <GestureDetector gesture={nativeGesture}>
-          <AnimatedScrollView
-            bounces={false}
-            scrollEventThrottle={16}
-            onScroll={onScroll}
-            animatedProps={animatedProps}
-          >
-            <Animated.View style={[styles.refresh, refreshView]}>
-              <Text>刷新中...</Text>
-            </Animated.View>
-            <Animated.View style={animatedStyle}>{children}</Animated.View>
-          </AnimatedScrollView>
-        </GestureDetector>
-      </Animated.View>
-    </GestureDetector>
+    <RefreshContainerContext.Provider
+      value={{
+        transitionY: refreshTransitionY,
+        scrollBounse: scrollBounse,
+        triggleHeight,
+        refreshing,
+        refreshStatus,
+      }}
+    >
+      <GestureDetector gesture={panGesture}>
+        <Animated.View>
+          <GestureDetector gesture={nativeGesture}>
+            <AnimatedScrollView
+              bounces={false}
+              scrollEventThrottle={16}
+              onScroll={onScroll}
+              animatedProps={animatedProps}
+            >
+              {refreshControl}
+              <Animated.View style={animatedStyle}>{children}</Animated.View>
+            </AnimatedScrollView>
+          </GestureDetector>
+        </Animated.View>
+      </GestureDetector>
+    </RefreshContainerContext.Provider>
   );
 };
 
-const styles = StyleSheet.create({
-  refresh: {
-    width,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...StyleSheet.absoluteFillObject,
-  },
-});
-
-export default RefreshControl;
+export default RefreshContainer;

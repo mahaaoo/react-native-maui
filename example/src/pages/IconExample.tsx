@@ -21,6 +21,8 @@ const allIcons = [
   'favorites',
   'favorites-fill',
   'search',
+  'arrow-line-up',
+  'arrow-line-down',
 ];
 
 const IconExample: React.FC<IconExampleProps> = (props) => {

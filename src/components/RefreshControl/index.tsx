@@ -1,3 +1,4 @@
-import RefreshControl from './RefreshControl';
+import RefreshContainer from './RefreshContainer';
+import NormalControl from './NormalControl';
 
-export { RefreshControl };
+export { RefreshContainer, NormalControl };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { RefreshControl } from 'react-native-maui';
+import { RefreshContainer, NormalControl } from 'react-native-maui';
 
 const { width, height } = Dimensions.get('window');
 
@@ -11,8 +11,9 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
   const [refresh, setFresh] = useState(false);
 
   return (
-    <RefreshControl
+    <RefreshContainer
       refreshing={refresh}
+      refreshControl={<NormalControl />}
       onRefresh={() => {
         setFresh(true);
         console.log('下拉刷新');
@@ -24,7 +25,7 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
       <View style={styles.item} />
       <View style={styles.item} />
       <View style={styles.item} />
-    </RefreshControl>
+    </RefreshContainer>
   );
 };
 
