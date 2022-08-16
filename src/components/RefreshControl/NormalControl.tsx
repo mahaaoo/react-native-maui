@@ -75,7 +75,11 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
     }
     return {
       height: transitionY.value,
-      opacity: interpolate(transitionY.value, [0, triggleHeight], [0.3, 1]),
+      opacity: interpolate(
+        transitionY.value,
+        [0, triggleHeight / 3, triggleHeight],
+        [0, 0, 1]
+      ),
     };
   });
 

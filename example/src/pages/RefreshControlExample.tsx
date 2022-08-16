@@ -22,9 +22,9 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
         }, 2000);
       }}
     >
-      <View style={styles.item} />
-      <View style={styles.item} />
-      <View style={styles.item} />
+      <View style={styles.item1} />
+      <View style={styles.item2} />
+      <View style={styles.item3} />
     </RefreshContainer>
   );
 };
@@ -33,10 +33,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  item: {
+  item1: {
     width,
     height,
     backgroundColor: 'pink',
+  },
+  item2: {
+    width,
+    height,
+    backgroundColor: 'orange',
+  },
+  item3: {
+    width,
+    height,
+    backgroundColor: 'red',
   },
 });
 

@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest",
-    "testc": "jest --coverage"
+    "testc": "jest --coverage",
+    "buildios": "npx expo run:ios"
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.10",
