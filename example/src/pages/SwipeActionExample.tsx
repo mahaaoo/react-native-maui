@@ -2,7 +2,6 @@ import React from 'react';
 import { Dimensions, View, StyleSheet, Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -10,7 +9,7 @@ import Animated, {
 import { snapPoint } from 'react-native-maui';
 
 const { width } = Dimensions.get('window');
-const snapPoints = [-100, 0];
+const snapPoints = [-width, -100, 0];
 
 interface SwipeActionExampleProps {}
 
@@ -18,6 +17,8 @@ const SwipeActionExample: React.FC<SwipeActionExampleProps> = (props) => {
   const {} = props;
   const translateX = useSharedValue(0);
   const offset = useSharedValue(0);
+  const canDelete = useSharedValue(false);
+  const height = useSharedValue(50);
 
   const panGesture = Gesture.Pan()
     .onBegin(() => {
@@ -29,12 +30,26 @@ const SwipeActionExample: React.FC<SwipeActionExampleProps> = (props) => {
     })
     .onEnd(({ velocityX }) => {
       const dest = snapPoint(translateX.value, velocityX, snapPoints);
-      translateX.value = withTiming(dest);
+      console.log(dest);
+      if (dest === 0) {
+        translateX.value = withTiming(0);
+        canDelete.value = false;
+      } else if (dest === -100) {
+        translateX.value = withTiming(dest);
+        canDelete.value = true;
+      } else if (dest === -width && canDelete.value) {
+        translateX.value = withTiming(dest);
+        height.value = withTiming(0);
+        canDelete.value = false;
+      } else {
+        translateX.value = withTiming(-100);
+        canDelete.value = true;
+      }
     });
 
   const swiperStyle = useAnimatedStyle(() => {
     return {
-      height: interpolate(translateX.value, [-width, -100, 0], [0, 50, 50]),
+      height: height.value,
       transform: [
         {
           translateX: translateX.value,
@@ -49,18 +64,39 @@ const SwipeActionExample: React.FC<SwipeActionExampleProps> = (props) => {
     };
   });
 
+  const silderStyle2 = useAnimatedStyle(() => {
+    return {
+      width: 2 * Math.abs(translateX.value),
+    };
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.item} />
       <GestureDetector gesture={panGesture}>
-        <View>
-          <Animated.View style={[styles.item, swiperStyle]} />
-          <Animated.View style={[styles.silder, silderStyle]}>
+        <View style={{ overflow: 'hidden' }}>
+          <Animated.View style={[styles.item, swiperStyle]}>
+            <Text>content</Text>
+          </Animated.View>
+          <Animated.View style={[styles.silder2, silderStyle2]}>
             <Text
               numberOfLines={1}
               style={[styles.cancel]}
               onPress={() => {
                 translateX.value = withTiming(-width);
+                height.value = withTiming(0);
+              }}
+            >
+              删除
+            </Text>
+          </Animated.View>
+          <Animated.View style={[styles.silder, silderStyle]}>
+            <Text
+              numberOfLines={1}
+              style={[styles.cancel]}
+              onPress={() => {
+                translateX.value = withTiming(0);
+                canDelete.value = false;
               }}
             >
               取消
@@ -84,6 +120,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   silder: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: 'orange',
+    height: 50,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  silder2: {
     position: 'absolute',
     right: 0,
     top: 0,
