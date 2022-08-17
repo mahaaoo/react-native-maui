@@ -1,3 +1,7 @@
+/**
+ * Refresh Control Implement
+ * Every Control can get props from useRefresh()
+ */
 import React, { useState } from 'react';
 import { Text, StyleSheet, Dimensions } from 'react-native';
 import Animated, {

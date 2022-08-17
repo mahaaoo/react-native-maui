@@ -15,13 +15,16 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { RefreshContainerContext, RefreshStatus } from './type';
+import NormalControl from './NormalControl';
 
 const { height } = Dimensions.get('window');
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
+type ControlType = typeof NormalControl | React.ReactNode;
+
 interface RefreshContainerProps {
   refreshing: boolean;
-  refreshControl: React.ReactNode;
+  refreshControl: ControlType;
   onRefresh: () => void;
 
   triggleHeight?: number;
