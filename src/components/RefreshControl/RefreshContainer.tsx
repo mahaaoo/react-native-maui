@@ -12,6 +12,7 @@ import Animated, {
   useDerivedValue,
   withSequence,
   withDelay,
+  Easing,
 } from 'react-native-reanimated';
 import { RefreshContainerContext, RefreshStatus } from './type';
 
@@ -28,7 +29,8 @@ interface RefreshContainerProps {
 
 const MAX_SCROLL_VELOCITY_Y = 20;
 const MIN_SCROLL_VELOCITY_Y = 0.5;
-const DEFAULT_TRIGGLE_HEIGHT = 100;
+const DEFAULT_TRIGGLE_HEIGHT = 80;
+const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
 
 const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
   const {
@@ -62,9 +64,15 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         refreshStatus.value = RefreshStatus.Done;
         refreshTransitionY.value = withDelay(
           500,
-          withTiming(0, {}, () => {
-            refreshStatus.value = RefreshStatus.Idle;
-          })
+          withTiming(
+            0,
+            {
+              easing: RESET_TIMING_EASING,
+            },
+            () => {
+              refreshStatus.value = RefreshStatus.Idle;
+            }
+          )
         );
       }
     }
@@ -104,9 +112,16 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         scrollBounse.value = true;
         refreshTransitionY.value = withSequence(
           withTiming(bounceDistance, { duration }),
-          withTiming(0, { duration }, () => {
-            scrollBounse.value = false;
-          })
+          withTiming(
+            0,
+            {
+              duration,
+              easing: RESET_TIMING_EASING,
+            },
+            () => {
+              scrollBounse.value = false;
+            }
+          )
         );
       }
     },
@@ -144,9 +159,15 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
       if (refreshTransitionY.value >= triggleHeight) {
         runOnJS(handleOnRefresh)();
       } else {
-        refreshTransitionY.value = withTiming(0, {}, () => {
-          refreshStatus.value = RefreshStatus.Idle;
-        });
+        refreshTransitionY.value = withTiming(
+          0,
+          {
+            easing: RESET_TIMING_EASING,
+          },
+          () => {
+            refreshStatus.value = RefreshStatus.Idle;
+          }
+        );
       }
     });
 
