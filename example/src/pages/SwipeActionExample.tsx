@@ -30,7 +30,6 @@ const SwipeActionExample: React.FC<SwipeActionExampleProps> = (props) => {
     })
     .onEnd(({ velocityX }) => {
       const dest = snapPoint(translateX.value, velocityX, snapPoints);
-      console.log(dest);
       if (dest === 0) {
         translateX.value = withTiming(0);
         canDelete.value = false;
@@ -60,13 +59,13 @@ const SwipeActionExample: React.FC<SwipeActionExampleProps> = (props) => {
 
   const silderStyle = useAnimatedStyle(() => {
     return {
-      width: Math.abs(translateX.value),
+      width: Math.abs(translateX.value) * 0.5,
     };
   });
 
   const silderStyle2 = useAnimatedStyle(() => {
     return {
-      width: 2 * Math.abs(translateX.value),
+      width: Math.abs(translateX.value),
     };
   });
 
@@ -76,7 +75,7 @@ const SwipeActionExample: React.FC<SwipeActionExampleProps> = (props) => {
       <GestureDetector gesture={panGesture}>
         <View style={{ overflow: 'hidden' }}>
           <Animated.View style={[styles.item, swiperStyle]}>
-            <Text>content</Text>
+            <Text>contentcontentcontentcontentcontent</Text>
           </Animated.View>
           <Animated.View style={[styles.silder2, silderStyle2]}>
             <Text

@@ -28,6 +28,7 @@ interface RefreshContainerProps {
   onRefresh: () => void;
 
   triggleHeight?: number;
+  canOffset?: boolean;
 }
 
 const MAX_SCROLL_VELOCITY_Y = 20;
@@ -42,6 +43,7 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     onRefresh,
     refreshControl,
     triggleHeight = DEFAULT_TRIGGLE_HEIGHT,
+    canOffset = true,
   } = props;
 
   const scrollRef = useRef();
@@ -180,7 +182,7 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     return {
       transform: [
         {
-          translateY: refreshTransitionY.value,
+          translateY: canOffset ? refreshTransitionY.value : 0,
         },
       ],
     };
@@ -218,8 +220,8 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
               onScroll={onScroll}
               animatedProps={animatedProps}
             >
-              {refreshControl}
               <Animated.View style={animatedStyle}>{children}</Animated.View>
+              {refreshControl}
             </AnimatedScrollView>
           </GestureDetector>
         </Animated.View>
