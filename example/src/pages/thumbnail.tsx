@@ -534,6 +534,10 @@ const exampleList: Example[] = [
       </View>
     ),
   },
+  {
+    title: 'TabView',
+    content: null,
+  },
 ];
 
 export { exampleList };

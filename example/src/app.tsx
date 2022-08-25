@@ -30,6 +30,7 @@ import WaterFallListExample from './pages/WaterfallListExample';
 import PopoverExample from './pages/PopoverExample';
 import SwipeActionExample from './pages/SwipeActionExample';
 import RefreshControlExample from './pages/RefreshControlExample';
+import TabViewExample from './pages/TabViewExample';
 
 export type RootStackParamList = {
   ComponentScreen: undefined;
@@ -60,6 +61,7 @@ export type RootStackParamList = {
   PopoverExample: undefined;
   SwipeActionExample: undefined;
   RefreshControlExample: undefined;
+  TabViewExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -220,6 +222,11 @@ const App: React.FC<{}> = () => {
         name="RefreshControlExample"
         component={RefreshControlExample}
         options={{ headerTitle: 'RefreshControlExample', ...headerOptions }}
+      />
+      <Stack.Screen
+        name="TabViewExample"
+        component={TabViewExample}
+        options={{ headerTitle: 'TabViewExample', ...headerOptions }}
       />
     </Stack.Navigator>
   );
