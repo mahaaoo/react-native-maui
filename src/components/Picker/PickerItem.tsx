@@ -31,16 +31,14 @@ const PickerItem: React.FC<PickerItemProps> = (props) => {
     const offsetY = interpolate(
       paningIndex.value,
       visibleIndex,
-      visibleOffsetY,
-      Extrapolate.CLAMP
+      visibleOffsetY
     );
 
     return {
       opacity: interpolate(
         paningIndex.value,
         visibleIndex,
-        [0.2, 0.4, 0.6, 1, 0.6, 0.4, 0.2],
-        Extrapolate.CLAMP
+        [0.2, 0.4, 0.6, 1, 0.6, 0.4, 0.2]
       ),
       transform: [
         { translateY: translateY.value + item * options.itemHeight + offsetY },

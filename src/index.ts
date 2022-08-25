@@ -82,3 +82,4 @@ export { Popover } from './components/Popover';
 export { RefreshContainer, NormalControl } from './components/RefreshControl';
 
 export { snapPoint, clamp } from './utils/redash';
+export { Freeze } from './utils/Freeze';

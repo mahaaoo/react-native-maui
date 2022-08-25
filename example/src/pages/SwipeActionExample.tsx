@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
 import {
   Dimensions,
@@ -14,8 +13,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { snapPoint } from 'react-native-maui';
-import { Freeze } from './Freeze';
-
 
 const { width } = Dimensions.get('window');
 const snapPoints = [-width, -100, 0];
@@ -24,7 +21,6 @@ interface SwipeActionExampleProps {}
 
 const SwipeActionExample: React.FC<SwipeActionExampleProps> = (props) => {
   const {} = props;
-  const [count, setCount] = useState(0);
   const translateX = useSharedValue(0);
   const offset = useSharedValue(0);
   const canDelete = useSharedValue(false);
@@ -114,14 +110,6 @@ const SwipeActionExample: React.FC<SwipeActionExampleProps> = (props) => {
         </View>
       </GestureDetector>
       <View style={styles.item} />
-      <Freeze freeze={true}>
-        <View style={styles.item}>
-          <Text>{count}</Text>
-        </View>
-      </Freeze>
-      <TouchableOpacity onPress={() => setCount((count) => count + 1)}>
-        <Text>点击</Text>
-      </TouchableOpacity>
     </View>
   );
 };
