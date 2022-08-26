@@ -1,12 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolate,
@@ -15,19 +8,11 @@ import Animated, {
   useSharedValue,
   interpolate,
 } from 'react-native-reanimated';
-import { Freeze } from '../../utils/Freeze';
+
+import TabViewItem from './TabViewItem';
 
 const { width } = Dimensions.get('window');
 const TABBAR_WIDTH = 100;
-const TabListColor = [
-  'orange',
-  '#666',
-  'cyan',
-  '#e82c1c',
-  'purple',
-  'orange',
-  '#666',
-];
 
 interface TabViewProps {
   tabBar: Array<string>;
@@ -152,25 +137,15 @@ const TabView: React.FC<TabViewProps> = (props) => {
       </Animated.View>
       <Animated.View style={[styles.slider, tarbarStyle]} />
       <GestureDetector gesture={panGesture}>
-        <Animated.View style={[styles.contentContainer, animatedStyle]}>
-          {tabBar.map((item, index) => {
-            return (
-              <Freeze freeze={index !== currentIndex.value}>
-                <ScrollView>
-                  <View
-                    style={{
-                      backgroundColor: TabListColor[index],
-                      width,
-                      height: 2000,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Text style={{ fontSize: 30 }}>{item}</Text>
-                  </View>
-                </ScrollView>
-              </Freeze>
-            );
+        <Animated.View
+          style={[
+            styles.contentContainer,
+            { width: TOTAL_WIDTH },
+            animatedStyle,
+          ]}
+        >
+          {tabBar.map((_, index) => {
+            return <TabViewItem currentIndex={currentIndex} index={index} />;
           })}
         </Animated.View>
       </GestureDetector>
