@@ -18,7 +18,7 @@ import {
   Shadow,
   Icon,
 } from 'react-native-maui';
-import Arrow from '../components/Icon/arrow';
+import Arrow from './components/Icon/arrow';
 
 const styles = StyleSheet.create({
   avatar: {
@@ -300,6 +300,29 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },
+  tabViewContainer: {
+    flexDirection: 'row',
+    height: 40,
+    width: 120,
+    backgroundColor: 'white',
+    alignItems: 'center',
+  },
+  tabViewSelected: {
+    flex: 1,
+    fontSize: 16,
+    textAlign: 'center',
+    color: 'blue',
+  },
+  tabViewUnSelected: {
+    flex: 1,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  tabViewLine: {
+    width: 60,
+    height: 3,
+    backgroundColor: 'blue',
+  },
 });
 
 interface Example {
@@ -536,7 +559,15 @@ const exampleList: Example[] = [
   },
   {
     title: 'TabView',
-    content: null,
+    content: (
+      <View>
+        <View style={styles.tabViewContainer}>
+          <Text style={styles.tabViewSelected}>Tab1</Text>
+          <Text style={styles.tabViewUnSelected}>Tab2</Text>
+        </View>
+        <View style={styles.tabViewLine} />
+      </View>
+    ),
   },
 ];
 
