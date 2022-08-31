@@ -12,7 +12,7 @@ import Animated, {
 import TabViewItem from './TabViewItem';
 
 const { width } = Dimensions.get('window');
-const TABBAR_WIDTH = 100;
+const TABBAR_WIDTH = 120;
 
 interface TabViewProps {
   tabBar: Array<string>;

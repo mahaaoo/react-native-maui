@@ -23,17 +23,23 @@ const TabListColor = [
   '#666',
 ];
 
+enum FreezeType {
+  UNSHOW,
+  SHOWING,
+  DIDSHOW,
+}
+
 const TabViewItem: React.FC<TabViewItemProps> = (props) => {
   const { index, currentIndex } = props;
-  const [freeze, setFreeze] = useState(false);
+  const [freeze, setFreeze] = useState<FreezeType>(FreezeType.UNSHOW);
 
   useAnimatedReaction(
     () => currentIndex.value,
     (value) => {
       if (index === value) {
-        runOnJS(setFreeze)(false);
+        runOnJS(setFreeze)(FreezeType.SHOWING);
       } else {
-        runOnJS(setFreeze)(true);
+        runOnJS(setFreeze)(FreezeType.DIDSHOW);
       }
     }
   );

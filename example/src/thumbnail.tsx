@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     textAlign: 'center',
-    color: 'blue',
+    color: '#1e90ff',
   },
   tabViewUnSelected: {
     flex: 1,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   tabViewLine: {
     width: 60,
     height: 3,
-    backgroundColor: 'blue',
+    backgroundColor: '#1e90ff',
   },
 });
 
