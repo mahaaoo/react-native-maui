@@ -41,41 +41,40 @@ describe('Testing:Swiper', () => {
         },
       };
 
-      function SwiperComponent() {
-        return (
-          <Swiper
-            ref={useRef}
-            interval={1000}
-            dataSource={card}
-            renderItem={(item) => {
-              return (
-                <Image
-                  source={item.source}
-                  style={{ width: '100%', height: '100%' }}
-                />
-              );
-            }}
-            onScollStart={onScollStartMock}
-            onScollEnd={onScollEndMock}
-            auto={false}
-            horizontal={true}
-            style={{
-              width,
-              height: 200,
-            }}
-          />
-        );
-      }
+      const { getByTestId } = render(
+        <Swiper
+          ref={useRef}
+          interval={1000}
+          dataSource={card}
+          renderItem={(item) => {
+            return (
+              <Image
+                source={item.source}
+                style={{ width: '100%', height: '100%' }}
+              />
+            );
+          }}
+          onScollStart={onScollStartMock}
+          onScollEnd={onScollEndMock}
+          auto={false}
+          horizontal={true}
+          style={{
+            width,
+            height: 200,
+          }}
+        />
+      );
 
-      const swiperRender = render(<SwiperComponent />);
+      const swiper = getByTestId('test-swiper');
 
-      expect(currentIndex).toBe(0);
+      console.log(swiper.props);
+      // expect(currentIndex).toBe(2);
 
-      act(() => {
-        useRef.current.next();
-      });
+      // act(() => {
+      //   useRef.current.next();
+      // });
 
-      expect(currentIndex).toBe(0);
+      // expect(currentIndex).toBe(0);
 
       // // const swiper = getByTestId('test-swiper');
       // // console.log(swiper);
