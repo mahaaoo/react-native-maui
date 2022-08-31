@@ -1,3 +1,4 @@
 import AnimatedNumber from './AnimatedNumber';
+import ScrollNumber from './ScrollNumber';
 
-export { AnimatedNumber };
+export { AnimatedNumber, ScrollNumber };
