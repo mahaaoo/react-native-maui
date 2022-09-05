@@ -19,6 +19,7 @@ exports[`Test:Avatar render correctly 1`] = `
       undefined,
     ]
   }
+  testID="MAUI-BADGE-ID"
 >
   <Text
     style={

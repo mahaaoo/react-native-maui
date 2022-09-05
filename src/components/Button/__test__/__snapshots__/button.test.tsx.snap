@@ -24,6 +24,7 @@ exports[`Test:Button render correctly 1`] = `
       "padding": 15,
     }
   }
+  testID="MAUI-BASE-BUTTON-ID"
 >
   <Text>
     默认样式

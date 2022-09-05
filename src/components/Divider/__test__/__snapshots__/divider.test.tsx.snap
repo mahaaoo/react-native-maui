@@ -19,6 +19,7 @@ exports[`Test:Divider render correctly 1`] = `
       },
     ]
   }
+  testID="MAUI-DIVIDER-ID"
   width="100%"
 >
   <RNSVGGroup>
