@@ -247,7 +247,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   }, [horizontal]);
 
   return (
-    <View style={[styles.container, style]} testID={'test-swiper'}>
+    <View style={[styles.container, style]} testID={'MAUI-SWIPER-ID'}>
       <GestureDetector gesture={panGesture}>
         <Animated.View style={styles.swiperContainer}>
           <View style={[styles.swiper, direction]}>

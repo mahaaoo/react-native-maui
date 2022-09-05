@@ -28,6 +28,7 @@ const BaseButton: React.FC<BaseButtonProps> = (props) => {
 
   return (
     <TouchableOpacity
+      testID="MAUI-BASE-BUTTON-ID"
       activeOpacity={withoutFeedback ? 1 : activeOpacity}
       onPress={handlePress}
       style={style}

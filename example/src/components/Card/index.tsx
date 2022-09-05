@@ -45,7 +45,11 @@ const Card: React.FC<CardProps> = (props) => {
           {content}
         </View>
       </View>
-      <TouchableOpacity style={styles.titleContainer} onPress={onPress}>
+      <TouchableOpacity
+        testID={`Navigate-Button-${title}`}
+        style={styles.titleContainer}
+        onPress={onPress}
+      >
         <Text style={{ color: theme.clickTextColor }}>more</Text>
       </TouchableOpacity>
     </View>

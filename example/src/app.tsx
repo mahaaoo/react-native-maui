@@ -78,6 +78,7 @@ const App: React.FC<{}> = () => {
         backgroundColor: theme.navbarBgColor,
       },
       headerTintColor: theme.clickTextColor,
+      headerBackTitle: 'Back',
     };
   }, [theme]);
 

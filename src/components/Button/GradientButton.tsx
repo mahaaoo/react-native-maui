@@ -31,7 +31,7 @@ const GradientButton: React.FC<GradientButtonProps> = (props) => {
     ...options
   } = props;
   return (
-    <View>
+    <View testID="MAUI-GRADIENT-BUTTON-ID">
       <Svg width={width} height={height}>
         <Defs>
           <LinearGradient

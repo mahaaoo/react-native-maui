@@ -50,6 +50,7 @@ const Badge: React.FC<BadgeProps> = (props) => {
 
   return (
     <View
+      testID="MAUI-BADGE-ID"
       style={[
         styles.container,
         {

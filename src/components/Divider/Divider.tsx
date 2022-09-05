@@ -23,7 +23,7 @@ const Divider: React.FC<DividerProps> = (props) => {
 
   if (vertical) {
     return (
-      <Svg height={'100%'} width={width}>
+      <Svg testID="MAUI-DIVIDER-ID" height={'100%'} width={width}>
         <Line
           x1="0"
           y1={start}
@@ -38,7 +38,7 @@ const Divider: React.FC<DividerProps> = (props) => {
   }
 
   return (
-    <Svg height={width} width={'100%'}>
+    <Svg testID="MAUI-DIVIDER-ID" height={width} width={'100%'}>
       <Line
         x1={start}
         y1="0"

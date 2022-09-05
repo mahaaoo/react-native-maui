@@ -68,7 +68,7 @@ describe('Testing:Swiper', () => {
         />
       );
 
-      const swiper = getByTestId('test-swiper');
+      const swiper = getByTestId('MAUI-SWIPER-ID');
 
       console.log(swiper.props);
       // expect(currentIndex).toBe(2);

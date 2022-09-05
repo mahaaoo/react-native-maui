@@ -17,6 +17,7 @@ export default function ComponentScreen() {
     >
       <WaterMark />
       <FlatList
+        testID="EXAMPLE-FLAT-LIST"
         style={styles.flatList}
         data={exampleList}
         numColumns={2}
