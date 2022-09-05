@@ -70,7 +70,7 @@ export { Theme, useTheme, ThemeType } from './components/Theme';
 export { Toast, ToastUtil } from './components/Toast';
 
 export { Progress, CircleProgress } from './components/Progress';
-export { AnimatedNumber } from './components/AnimatedNumber';
+export { AnimatedNumber, ScrollNumber } from './components/AnimatedNumber';
 export { Shadow } from './components/Shadow';
 export {
   WaterfallList,

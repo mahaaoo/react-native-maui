@@ -12,7 +12,6 @@ import {
 
 interface AnimatedNumberProps {
   value: number;
-  toValue: number;
 
   style?: TextStyle;
   toFixed?: number;
@@ -25,7 +24,6 @@ interface AnimatedNumberProps {
 const AnimatedNumber: React.FC<AnimatedNumberProps> = (props) => {
   const {
     value,
-    toValue,
     style,
     toFixed = 0,
     duration = 1000,
@@ -47,9 +45,9 @@ const AnimatedNumber: React.FC<AnimatedNumberProps> = (props) => {
   useEffect(() => {
     animation.value = withDelay(
       delay,
-      withTiming(toValue, { duration, easing: initialEasing })
+      withTiming(value, { duration, easing: initialEasing })
     );
-  }, []);
+  }, [value]);
 
   useAnimatedReaction(
     () => Number(animation.value.toFixed(toFixed)),
