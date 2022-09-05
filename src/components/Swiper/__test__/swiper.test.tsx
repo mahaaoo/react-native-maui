@@ -6,6 +6,9 @@ import { Swiper } from '../index';
 
 const { width } = Dimensions.get('window');
 
+/**
+ * this case can't work, because react-native-gesture-handler refrences
+ */
 describe('Testing:Swiper', () => {
   it('base', () => {
     withReanimatedTimer(async () => {
