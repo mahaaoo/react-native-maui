@@ -7,11 +7,12 @@ import React, {
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
+  Easing,
   runOnJS,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import {
   useRange,
@@ -45,9 +46,13 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     layoutOption,
   } = useProps(props);
 
-  const offset = useSharedValue(0);
+  // swiper translate: Vertical OR Horizontal, only one direction can work at one time
   const translate = useSharedValue(0);
+  const offset = useSharedValue(0);
+
+  // swiper current position
   const currentIndex = useSharedValue(0);
+  // fingers is touching the swiper, autoplay will be paused
   const touching = useSharedValue<boolean>(false);
 
   const container = useMemo(() => {
@@ -63,6 +68,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     };
   }, []);
 
+  // Every Swiper move distance
   const stepDistance = useMemo<number>(() => {
     if (layoutOption?.layout === ScaleLayout) {
       return (
@@ -78,6 +84,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     }
   }, []);
 
+  // map curentIndex to index at dataSource
   const indexAtData = useDerivedValue(() => {
     let group = currentIndex.value % dataSource.length;
     if (group < 0) {
@@ -99,8 +106,10 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     return group;
   });
 
+  // next index must be in range
   const range = useRange(currentIndex);
-  // reset values
+
+  // Reset value, Prevent integer overflow
   useAnimatedReaction(
     () => translate.value,
     (value: number) => {
@@ -122,12 +131,16 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     onScollEnd && onScollEnd(indexAtData.value);
   }, []);
 
+  // Swiper Animation will be move actually in this function
   const scrollTo = useCallback(
     (step, callback: () => void) => {
       'worklet';
-      translate.value = withSpring(
+      translate.value = withTiming(
         step * stepDistance,
-        { overshootClamping: true },
+        {
+          duration: 600,
+          easing: Easing.bezier(0, 0.55, 0.45, 1),
+        },
         () => {
           currentIndex.value = step;
           runOnJS(callback)();
@@ -137,6 +150,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     [stepDistance]
   );
 
+  // Pre Page
   const previous = useCallback(
     (callback?: SwiperCallBack) => {
       handleScollStart();
@@ -148,6 +162,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     [scrollTo]
   );
 
+  // Next Page
   const next = useCallback(
     (callback?: SwiperCallBack) => {
       handleScollStart();
@@ -159,6 +174,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     [scrollTo]
   );
 
+  // inital autoplay props
   const { start, stop } = useAutoScroll(next, auto, interval);
   useTouching(start, stop, touching);
 
@@ -169,6 +185,10 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
       offset.value = translate.value;
     })
     .onUpdate(({ translationX, translationY }) => {
+      /**
+       * !!!IMPORTANT!!!
+       * every gesture can only move one stepDistance
+       */
       if (horizontal) {
         translate.value = clamp(
           translationX + offset.value,
