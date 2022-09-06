@@ -19,7 +19,8 @@ const PopoverExample: React.FC<PopoverExampleProps> = (props) => {
         arrowPosition={'center'}
         content={
           <View style={styles.popContainer}>
-            <Text style={styles.options}>Hello</Text>
+            <Text style={styles.options}>复制</Text>
+            <Text style={styles.options}>粘贴</Text>
             <Text
               onPress={() => {
                 setModal(false);
