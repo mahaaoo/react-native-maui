@@ -298,6 +298,8 @@ const useIndexAtData = (
  * @param converse animation value is converse, example: [-40, 0, 40] is true, [0.9, 1, 0.9] is false
  * @returns interpolate value
  */
+
+// TODO: 在切换到最后一条的时候，有明显的白屏加载过程，应提前计算
 const getLayoutValue = (
   index: number,
   translateIndex: Animated.SharedValue<number>,

@@ -106,25 +106,23 @@ export default function SwiperExample() {
         horizontal={true}
         style={styles.rotateSwiper}
       />
-      {/* <Swiper
+      <Swiper
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
-          return <Image source={item.source} style={{ width: '100%', height: '100%' }} />
+          return <Image source={item.source} style={styles.image2} />;
         }}
         layoutOption={{
           layout: ScaleLayout,
           options: {
             mainAxisSize: 200,
-            margin: 10,
-          }
+            margin: -10,
+          },
         }}
+        auto={true}
         horizontal={false}
-        style={{
-          width,
-          height: 260,
-        }}
-      /> */}
+        style={styles.scaleSwiperV}
+      />
       <Swiper
         interval={1000}
         dataSource={card}
@@ -175,6 +173,10 @@ const styles = StyleSheet.create({
   rotateSwiper: {
     width,
     height: 300,
+  },
+  scaleSwiperV: {
+    width,
+    height: 260,
   },
   scaleSwiper: {
     width,

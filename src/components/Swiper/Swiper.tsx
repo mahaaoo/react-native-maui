@@ -138,8 +138,8 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
       translate.value = withTiming(
         step * stepDistance,
         {
-          duration: 800,
-          easing: Easing.bezier(0, 0.55, 0.45, 1),
+          duration: 600,
+          easing: Easing.bezier(0.22, 1, 0.36, 1),
         },
         () => {
           currentIndex.value = step;
