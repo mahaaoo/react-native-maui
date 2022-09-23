@@ -27,14 +27,18 @@ interface RefreshContainerProps {
   refreshControl: ControlType;
   onRefresh: () => void;
 
+  handleOnLoadMore?: () => void;
   triggleHeight?: number;
   canOffset?: boolean;
+  bounces?: boolean;
 }
 
 const MAX_SCROLL_VELOCITY_Y = 20;
 const MIN_SCROLL_VELOCITY_Y = 0.5;
 const DEFAULT_TRIGGLE_HEIGHT = 80;
 const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
+
+const HEADER_HEIGHT = 91;
 
 const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
   const {
@@ -44,6 +48,8 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     refreshControl,
     triggleHeight = DEFAULT_TRIGGLE_HEIGHT,
     canOffset = true,
+    bounces = true,
+    handleOnLoadMore,
   } = props;
 
   const scrollRef = useRef();
@@ -56,30 +62,38 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
 
   const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
 
+  const scrollViewTotalHeight = useSharedValue(0);
+
   const canRefresh = useDerivedValue(() => {
-    return scrollViewTransitionY.value < 1;
+    const marginTop = scrollViewTransitionY.value;
+    const marginBottom =
+      scrollViewTotalHeight.value -
+      height -
+      scrollViewTransitionY.value +
+      HEADER_HEIGHT;
+
+    return marginTop < 1 || marginBottom < 1;
   });
 
   useEffect(() => {
     if (refreshing) {
       refreshStatus.value = RefreshStatus.Holding;
-      refreshTransitionY.value = withTiming(triggleHeight);
+      const direction = refreshTransitionY.value > 0 ? 1 : -1;
+      refreshTransitionY.value = withTiming(triggleHeight * direction);
     } else {
-      if (refreshTransitionY.value > 0) {
-        refreshStatus.value = RefreshStatus.Done;
-        refreshTransitionY.value = withDelay(
-          500,
-          withTiming(
-            0,
-            {
-              easing: RESET_TIMING_EASING,
-            },
-            () => {
-              refreshStatus.value = RefreshStatus.Idle;
-            }
-          )
-        );
-      }
+      refreshStatus.value = RefreshStatus.Done;
+      refreshTransitionY.value = withDelay(
+        500,
+        withTiming(
+          0,
+          {
+            easing: RESET_TIMING_EASING,
+          },
+          () => {
+            refreshStatus.value = RefreshStatus.Idle;
+          }
+        )
+      );
     }
   }, [refreshing]);
 
@@ -99,7 +113,15 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     onScroll: (event, context) => {
       const { scrollBeginY, scrollBeginTime } = context;
       scrollViewTransitionY.value = event.contentOffset.y;
-      if (scrollViewTransitionY.value === 0 && !scrollBounse.value) {
+
+      const marginTop = scrollViewTransitionY.value;
+      const marginBottom =
+        scrollViewTotalHeight.value -
+        height -
+        scrollViewTransitionY.value +
+        HEADER_HEIGHT;
+
+      if ((marginTop === 0 || marginBottom === 0) && !scrollBounse.value) {
         const endTime = new Date().valueOf();
         const velocityY = Math.min(
           Math.abs(
@@ -108,15 +130,17 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
           ),
           MAX_SCROLL_VELOCITY_Y
         );
-        if (velocityY < MIN_SCROLL_VELOCITY_Y) return;
+        if (!bounces || velocityY < MIN_SCROLL_VELOCITY_Y) return;
 
         const ratio = (Math.PI / 2 / MAX_SCROLL_VELOCITY_Y) * velocityY;
         const bounceDistance = (height / 3) * Math.sin(ratio);
         const duration = 50 + 100 * Math.cos(ratio);
 
+        const direction = marginTop === 0 ? 1 : -1;
+
         scrollBounse.value = true;
         refreshTransitionY.value = withSequence(
-          withTiming(bounceDistance, { duration }),
+          withTiming(bounceDistance * direction, { duration }),
           withTiming(
             0,
             {
@@ -145,9 +169,12 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
       }
       refreshTransitionY.value = interpolate(
         translationY + offset.value,
-        [0, height],
-        [0, height / 2]
+        [-height, 0, height],
+        [-height / 2, 0, height / 2]
       );
+      refreshTransitionY.value = translationY + offset.value;
+      console.log('refreshTransitionY', refreshTransitionY.value);
+
       if (!refreshing) {
         if (refreshTransitionY.value >= triggleHeight) {
           refreshStatus.value = RefreshStatus.Reached;
@@ -161,9 +188,15 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         refreshTransitionY.value = withTiming(triggleHeight);
         return;
       }
-      if (refreshTransitionY.value >= triggleHeight) {
-        runOnJS(handleOnRefresh)();
+      console.log('taggle handleOnRefresh', refreshTransitionY.value);
+      if (Math.abs(refreshTransitionY.value) >= triggleHeight) {
+        if (refreshTransitionY.value > 0) {
+          runOnJS(handleOnRefresh)();
+        } else {
+          handleOnLoadMore && runOnJS(handleOnLoadMore)();
+        }
       } else {
+        console.log('RESET_TIMING_EASING', refreshTransitionY.value);
         refreshTransitionY.value = withTiming(
           0,
           {
@@ -193,7 +226,7 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
 
     return {
       scrollIndicatorInsets: {
-        top: top,
+        top: top - 1,
         left: 0,
         bottom: 0,
         right: 0,
@@ -220,7 +253,14 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
               onScroll={onScroll}
               animatedProps={animatedProps}
             >
-              <Animated.View style={animatedStyle}>{children}</Animated.View>
+              <Animated.View
+                onLayout={(e) => {
+                  scrollViewTotalHeight.value = e.nativeEvent.layout.height;
+                }}
+                style={animatedStyle}
+              >
+                {children}
+              </Animated.View>
               {refreshControl}
             </AnimatedScrollView>
           </GestureDetector>
