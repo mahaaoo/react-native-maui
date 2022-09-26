@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { RefreshContainer, NormalControl } from 'react-native-maui';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useHeaderHeight } from '@react-navigation/elements';
+// import { useSafeAreaInsets } from 'react-native-safe-area-context';
+// import { useHeaderHeight } from '@react-navigation/elements';
 
 const { width, height } = Dimensions.get('window');
 
@@ -12,15 +12,14 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
   const {} = props;
   const [refresh, setFresh] = useState(false);
 
-  const insets = useSafeAreaInsets();
-  console.log(insets);
-  const headerHeight = useHeaderHeight();
-  console.log(headerHeight);
+  // const insets = useSafeAreaInsets();
+  // const headerHeight = useHeaderHeight();
 
   return (
     <RefreshContainer
       refreshing={refresh}
-      refreshControl={<NormalControl />}
+      refreshComponent={<NormalControl position="top" />}
+      loadComponent={<NormalControl position="bottom" />}
       onRefresh={() => {
         setFresh(true);
         console.log('下拉刷新');

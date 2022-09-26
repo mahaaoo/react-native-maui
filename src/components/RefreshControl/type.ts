@@ -24,6 +24,12 @@ interface SkeletonContextProps {
    * When transitionY.value reach some point, it will change
    */
   refreshStatus: Animated.SharedValue<RefreshStatus>;
+  /**
+   * ScrollView pulling direction
+   * 1: down
+   * -1: up
+   *  */
+  direction: Animated.DerivedValue<1 | -1>;
 }
 
 export const RefreshContainerContext = createContext<SkeletonContextProps>(

@@ -13,6 +13,7 @@ import Animated, {
   withSequence,
   withDelay,
   Easing,
+  useAnimatedReaction,
 } from 'react-native-reanimated';
 import { RefreshContainerContext, RefreshStatus } from './type';
 import NormalControl from './NormalControl';
@@ -24,7 +25,8 @@ type ControlType = typeof NormalControl | React.ReactNode;
 
 interface RefreshContainerProps {
   refreshing: boolean;
-  refreshControl: ControlType;
+  refreshComponent: ControlType;
+  loadComponent: ControlType;
   onRefresh: () => void;
 
   handleOnLoadMore?: () => void;
@@ -45,7 +47,8 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     children,
     refreshing,
     onRefresh,
-    refreshControl,
+    refreshComponent,
+    loadComponent,
     triggleHeight = DEFAULT_TRIGGLE_HEIGHT,
     canOffset = true,
     bounces = true,
@@ -59,10 +62,12 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
   const refreshTransitionY = useSharedValue(0);
   const offset = useSharedValue(0);
   const scrollBounse = useSharedValue(false);
-
   const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
-
   const scrollViewTotalHeight = useSharedValue(0);
+
+  const direction = useDerivedValue(() => {
+    return refreshTransitionY.value > 0 ? 1 : -1;
+  }, [refreshTransitionY]);
 
   const canRefresh = useDerivedValue(() => {
     const marginTop = scrollViewTransitionY.value;
@@ -75,11 +80,17 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     return marginTop < 1 || marginBottom < 1;
   });
 
+  useAnimatedReaction(
+    () => refreshStatus.value,
+    (value) => {
+      console.log('当前scrollView状态是', value);
+    }
+  );
+
   useEffect(() => {
     if (refreshing) {
       refreshStatus.value = RefreshStatus.Holding;
-      const direction = refreshTransitionY.value > 0 ? 1 : -1;
-      refreshTransitionY.value = withTiming(triggleHeight * direction);
+      refreshTransitionY.value = withTiming(triggleHeight * direction.value);
     } else {
       refreshStatus.value = RefreshStatus.Done;
       refreshTransitionY.value = withDelay(
@@ -172,11 +183,8 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         [-height, 0, height],
         [-height / 2, 0, height / 2]
       );
-      refreshTransitionY.value = translationY + offset.value;
-      console.log('refreshTransitionY', refreshTransitionY.value);
-
       if (!refreshing) {
-        if (refreshTransitionY.value >= triggleHeight) {
+        if (Math.abs(refreshTransitionY.value) >= triggleHeight) {
           refreshStatus.value = RefreshStatus.Reached;
         } else {
           refreshStatus.value = RefreshStatus.Pulling;
@@ -185,10 +193,9 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     })
     .onEnd(() => {
       if (refreshing) {
-        refreshTransitionY.value = withTiming(triggleHeight);
+        refreshTransitionY.value = withTiming(triggleHeight * direction.value);
         return;
       }
-      console.log('taggle handleOnRefresh', refreshTransitionY.value);
       if (Math.abs(refreshTransitionY.value) >= triggleHeight) {
         if (refreshTransitionY.value > 0) {
           runOnJS(handleOnRefresh)();
@@ -196,7 +203,6 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
           handleOnLoadMore && runOnJS(handleOnLoadMore)();
         }
       } else {
-        console.log('RESET_TIMING_EASING', refreshTransitionY.value);
         refreshTransitionY.value = withTiming(
           0,
           {
@@ -242,11 +248,12 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         triggleHeight,
         refreshing,
         refreshStatus,
+        direction,
       }}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View>
-          <GestureDetector gesture={nativeGesture}>
+        <GestureDetector gesture={nativeGesture}>
+          <>
             <AnimatedScrollView
               bounces={false}
               scrollEventThrottle={16}
@@ -261,10 +268,11 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
               >
                 {children}
               </Animated.View>
-              {refreshControl}
             </AnimatedScrollView>
-          </GestureDetector>
-        </Animated.View>
+            {refreshComponent}
+            {loadComponent}
+          </>
+        </GestureDetector>
       </GestureDetector>
     </RefreshContainerContext.Provider>
   );

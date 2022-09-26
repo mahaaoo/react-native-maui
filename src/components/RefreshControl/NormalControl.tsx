@@ -25,6 +25,7 @@ interface NormalControlProps {
     refresing: string;
     done: string;
   };
+  position: 'top' | 'bottom';
 }
 
 const NormalControl: React.FC<NormalControlProps> = (props) => {
@@ -35,8 +36,9 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
       refresing: '努力刷新中',
       done: '刷新成功',
     },
+    position,
   } = props;
-  const { scrollBounse, transitionY, triggleHeight, refreshStatus } =
+  const { scrollBounse, transitionY, triggleHeight, refreshStatus, direction } =
     useRefresh();
   const [refreshText, setRefreshText] = useState(textConfig.normal);
   const [loading, setLoading] = useState(false);
@@ -66,21 +68,35 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
         runOnJS(setRefreshTextByStatus)(textConfig.done);
         runOnJS(setLoading)(false);
       }
-    },
-    [transitionY]
+    }
   );
 
   const refreshView = useAnimatedStyle(() => {
-    if (scrollBounse.value) {
+    if (
+      scrollBounse.value ||
+      (position === 'top' && direction.value === -1) ||
+      (position === 'bottom' && direction.value === 1)
+    ) {
       return {
         height: 0,
         opacity: 0,
       };
     }
+    let positionStyle = {};
+    if (position === 'top') {
+      positionStyle = {
+        top: 0,
+      };
+    } else {
+      positionStyle = {
+        bottom: 0,
+      };
+    }
     return {
-      height: transitionY.value,
+      ...positionStyle,
+      height: transitionY.value * direction.value,
       opacity: interpolate(
-        transitionY.value,
+        transitionY.value * direction.value,
         [0, triggleHeight / 3, triggleHeight],
         [0, 0, 1]
       ),
@@ -88,9 +104,12 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
   });
 
   const arrowStyle = useAnimatedStyle(() => {
-    degree.value = withTiming(transitionY.value >= triggleHeight ? 180 : 0, {
-      duration: 200,
-    });
+    degree.value = withTiming(
+      transitionY.value >= triggleHeight * direction.value ? 180 : 0,
+      {
+        duration: 200,
+      }
+    );
 
     return {
       transform: [
@@ -107,7 +126,11 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
         <Loading />
       ) : (
         <Animated.View style={arrowStyle}>
-          <Icon name={'arrow-line-down'} size={18} color={'grey'} />
+          <Icon
+            name={position === 'top' ? 'arrow-line-down' : 'arrow-line-up'}
+            size={18}
+            color={'grey'}
+          />
         </Animated.View>
       )}
       <Text style={styles.textStyle}>{refreshText}</Text>
@@ -120,8 +143,8 @@ const styles = StyleSheet.create({
     width,
     alignItems: 'center',
     justifyContent: 'center',
-    ...StyleSheet.absoluteFillObject,
     flexDirection: 'row',
+    position: 'absolute',
   },
   textStyle: {
     marginHorizontal: 10,
