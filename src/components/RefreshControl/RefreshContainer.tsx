@@ -133,6 +133,8 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         HEADER_HEIGHT;
 
       if ((marginTop === 0 || marginBottom === 0) && !scrollBounse.value) {
+        const direction = marginTop === 0 ? 1 : -1;
+
         const endTime = new Date().valueOf();
         const velocityY = Math.min(
           Math.abs(
@@ -144,10 +146,8 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         if (!bounces || velocityY < MIN_SCROLL_VELOCITY_Y) return;
 
         const ratio = (Math.PI / 2 / MAX_SCROLL_VELOCITY_Y) * velocityY;
-        const bounceDistance = (height / 3) * Math.sin(ratio);
-        const duration = 50 + 100 * Math.cos(ratio);
-
-        const direction = marginTop === 0 ? 1 : -1;
+        const bounceDistance = (height / 4) * Math.sin(ratio);
+        const duration = 150 + 100 * Math.sin(ratio * 2);
 
         scrollBounse.value = true;
         refreshTransitionY.value = withSequence(
