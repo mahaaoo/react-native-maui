@@ -17,6 +17,7 @@ export {
   Spinner,
   CircleLoading,
   GrowLoading,
+  ScaleLoading,
 } from './components/Loading';
 export { Icon } from './components/Icon';
 

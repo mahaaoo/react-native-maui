@@ -10,6 +10,7 @@ import {
   Spinner,
   CircleLoading,
   GrowLoading,
+  ScaleLoading,
 } from 'react-native-maui';
 import Section from '../components/Section';
 
@@ -39,12 +40,14 @@ export default function LoadingExample() {
         </View>
         <View style={styles.circleContainer}>
           <View style={styles.content}>
+            <ScaleLoading color={'red'} />
+          </View>
+          <View style={styles.content}>
             <CircleLoading color="#3E2AD1" />
           </View>
           <View style={styles.content}>
             <GrowLoading />
           </View>
-          <View style={styles.content} />
         </View>
       </Section>
       <Button
