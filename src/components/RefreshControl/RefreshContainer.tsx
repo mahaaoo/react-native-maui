@@ -16,17 +16,16 @@ import Animated, {
   useAnimatedReaction,
 } from 'react-native-reanimated';
 import { RefreshContainerContext, RefreshStatus } from './type';
-import NormalControl from './NormalControl';
+import TopContainer from './TopContainer';
+import BottomContainer from './BottomContainer';
 
 const { height } = Dimensions.get('window');
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
-type ControlType = typeof NormalControl | React.ReactNode;
-
 interface RefreshContainerProps {
   refreshing: boolean;
-  refreshComponent: ControlType;
-  loadComponent: ControlType;
+  refreshComponent: () => React.ReactNode;
+  loadComponent: () => React.ReactNode;
   onRefresh: () => void;
 
   handleOnLoadMore?: () => void;
@@ -93,18 +92,27 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
       refreshTransitionY.value = withTiming(triggleHeight * direction.value);
     } else {
       refreshStatus.value = RefreshStatus.Done;
-      refreshTransitionY.value = withDelay(
-        500,
-        withTiming(
-          0,
-          {
-            easing: RESET_TIMING_EASING,
-          },
-          () => {
+      if (direction.value === 1) {
+        refreshTransitionY.value = withDelay(
+          500,
+          withTiming(
+            0,
+            {
+              easing: RESET_TIMING_EASING,
+            },
+            () => {
+              refreshStatus.value = RefreshStatus.Idle;
+            }
+          )
+        );
+      } else {
+        withDelay(
+          500,
+          withTiming(0, {}, () => {
             refreshStatus.value = RefreshStatus.Idle;
-          }
-        )
-      );
+          })
+        );
+      }
     }
   }, [refreshing]);
 
@@ -269,8 +277,12 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
                 {children}
               </Animated.View>
             </AnimatedScrollView>
-            {refreshComponent}
-            {loadComponent}
+            <TopContainer>
+              {refreshComponent && refreshComponent()}
+            </TopContainer>
+            <BottomContainer>
+              {loadComponent && loadComponent()}
+            </BottomContainer>
           </>
         </GestureDetector>
       </GestureDetector>

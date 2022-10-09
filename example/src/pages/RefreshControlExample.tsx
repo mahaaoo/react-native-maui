@@ -21,8 +21,8 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
   return (
     <RefreshContainer
       refreshing={refresh}
-      refreshComponent={<NormalControl position="top" />}
-      loadComponent={<NormalControl position="bottom" />}
+      refreshComponent={() => <NormalControl position="top" />}
+      loadComponent={() => <NormalControl position="bottom" />}
       onRefresh={() => {
         setFresh(true);
         console.log('下拉刷新');

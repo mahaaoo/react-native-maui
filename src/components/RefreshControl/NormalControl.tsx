@@ -3,10 +3,9 @@
  * Every Control can get props from useRefresh()
  */
 import React, { useState } from 'react';
-import { Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
-  interpolate,
   useAnimatedReaction,
   runOnJS,
   withTiming,
@@ -15,8 +14,6 @@ import Animated, {
 import { RefreshStatus, useRefresh } from './type';
 import { Icon } from '../Icon';
 import { Loading } from '../Loading';
-
-const { width } = Dimensions.get('window');
 
 interface NormalControlProps {
   textConfig?: {
@@ -38,8 +35,7 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
     },
     position,
   } = props;
-  const { scrollBounse, transitionY, triggleHeight, refreshStatus, direction } =
-    useRefresh();
+  const { transitionY, triggleHeight, refreshStatus, direction } = useRefresh();
   const [refreshText, setRefreshText] = useState(textConfig.normal);
   const [loading, setLoading] = useState(false);
   const degree = useSharedValue(0);
@@ -71,38 +67,6 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
     }
   );
 
-  const refreshView = useAnimatedStyle(() => {
-    if (
-      scrollBounse.value ||
-      (position === 'top' && direction.value === -1) ||
-      (position === 'bottom' && direction.value === 1)
-    ) {
-      return {
-        height: 0,
-        opacity: 0,
-      };
-    }
-    let positionStyle = {};
-    if (position === 'top') {
-      positionStyle = {
-        top: 0,
-      };
-    } else {
-      positionStyle = {
-        bottom: 0,
-      };
-    }
-    return {
-      ...positionStyle,
-      height: transitionY.value * direction.value,
-      opacity: interpolate(
-        transitionY.value * direction.value,
-        [0, triggleHeight / 3, triggleHeight],
-        [0, 0, 1]
-      ),
-    };
-  });
-
   const arrowStyle = useAnimatedStyle(() => {
     degree.value = withTiming(
       transitionY.value >= triggleHeight * direction.value ? 180 : 0,
@@ -121,7 +85,7 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
   });
 
   return (
-    <Animated.View style={[styles.refresh, refreshView]}>
+    <View style={styles.container}>
       {loading ? (
         <Loading />
       ) : (
@@ -134,17 +98,13 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
         </Animated.View>
       )}
       <Text style={styles.textStyle}>{refreshText}</Text>
-    </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  refresh: {
-    width,
-    alignItems: 'center',
-    justifyContent: 'center',
+  container: {
     flexDirection: 'row',
-    position: 'absolute',
   },
   textStyle: {
     marginHorizontal: 10,
