@@ -54,8 +54,9 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     handleOnLoadMore,
   } = props;
 
-  const scrollRef = useRef();
+  const nativeRef = useRef();
   const panRef = useRef();
+  const scrollRef = useRef<any>(null);
 
   const scrollViewTransitionY = useSharedValue(0);
   const refreshTransitionY = useSharedValue(0);
@@ -90,9 +91,10 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     if (refreshing) {
       refreshStatus.value = RefreshStatus.Holding;
       refreshTransitionY.value = withTiming(triggleHeight * direction.value);
-    } else {
+    } else if (refreshStatus.value !== RefreshStatus.Idle) {
       refreshStatus.value = RefreshStatus.Done;
       if (direction.value === 1) {
+        // refresh animation
         refreshTransitionY.value = withDelay(
           500,
           withTiming(
@@ -106,12 +108,14 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
           )
         );
       } else {
-        withDelay(
-          500,
-          withTiming(0, {}, () => {
-            refreshStatus.value = RefreshStatus.Idle;
-          })
-        );
+        // load more animation
+        refreshTransitionY.value = 0;
+        scrollRef.current &&
+          scrollRef.current.scrollTo({
+            y: scrollViewTransitionY.value + triggleHeight,
+            animated: false,
+          });
+        refreshStatus.value = RefreshStatus.Idle;
       }
     }
   }, [refreshing]);
@@ -178,7 +182,7 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
   const panGesture = Gesture.Pan()
     .withRef(panRef)
     .activeOffsetY([-10, 10])
-    .simultaneousWithExternalGesture(scrollRef)
+    .simultaneousWithExternalGesture(nativeRef)
     .onBegin(() => {
       offset.value = refreshTransitionY.value;
     })
@@ -223,7 +227,7 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
       }
     });
 
-  const nativeGesture = Gesture.Native().withRef(scrollRef);
+  const nativeGesture = Gesture.Native().withRef(nativeRef);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -263,6 +267,7 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         <GestureDetector gesture={nativeGesture}>
           <>
             <AnimatedScrollView
+              ref={scrollRef}
               bounces={false}
               scrollEventThrottle={16}
               onScroll={onScroll}
