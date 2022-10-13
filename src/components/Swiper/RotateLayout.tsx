@@ -41,12 +41,39 @@ const RotateLayout: React.FC<RotateLayoutProps> = (props) => {
       true
     );
 
+    // let rotateY = 0;
+    // if (value < index - 1 || value > index + 1) {
+    //   rotateY = 0;
+    // } else {
+    //   rotateY = interpolate(
+    //     value,
+    //     [index - 1, index, index + 1],
+    //     [-45, 0, 45],
+    //     Extrapolate.CLAMP
+    //   );
+    // }
+    // 3 -> 4
+    // -1 -> 0
     const rotateY = interpolate(
       value,
       [index - 1, index, index + 1],
       [-45, 0, 45],
       Extrapolate.CLAMP
     );
+
+    if (index === 0) {
+      console.log({
+        // value,
+        // rotateY,
+        // x:
+        //   translate.value +
+        //   itemOffset * size * stepDistance +
+        //   (width - layoutOption?.options.mainAxisSize) / 2,
+        option2: itemOffset * size * stepDistance,
+        itemOffset,
+        // currentIndex: currentIndex.value,
+      });
+    }
 
     return {
       transform: [

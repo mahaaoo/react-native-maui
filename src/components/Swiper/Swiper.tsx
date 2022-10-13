@@ -109,14 +109,14 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   // next index must be in range
   const range = useRange(currentIndex);
 
-  // Reset value, Prevent integer overflow
+  // Reset value, Prevent integer overflow, ONLY autoplay mode effect
   useAnimatedReaction(
     () => translate.value,
     (value: number) => {
       const isReturn =
         Math.abs(value) % (dataSource.length * stepDistance) === 0;
 
-      if (isReturn) {
+      if (isReturn && auto) {
         currentIndex.value = 0;
         translate.value = 0;
       }

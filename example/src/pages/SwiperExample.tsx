@@ -106,7 +106,7 @@ export default function SwiperExample() {
         horizontal={true}
         style={styles.rotateSwiper}
       />
-      <Swiper
+      {/* <Swiper
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -139,7 +139,7 @@ export default function SwiperExample() {
         auto={false}
         horizontal={true}
         style={styles.scaleSwiper}
-      />
+      /> */}
     </ScrollView>
   );
 }

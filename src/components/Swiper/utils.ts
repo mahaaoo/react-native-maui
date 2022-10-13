@@ -160,6 +160,7 @@ const getItemOffset = (
   if (!isRange) return 0;
 
   const group = Math.floor(offset / renderSize);
+  // TODO: 计算偏移分组应增加余量、让View提前放在正确的位置
   let currentIndex;
   if (offset >= 0) {
     currentIndex = Math.abs(offset % size);
@@ -335,11 +336,14 @@ const getLayoutValue = (
    * when current index is last card, currentIndex.value === 1 and currentIndex.value === 1 - size are the same
    * control 0 card, make it value from -1 to 0
    */
-  if (
-    (currentIndex.value === 1 || currentIndex.value === 1 - size) &&
-    index === 0
-  ) {
-    value = translateIndex.value - size;
+  if (currentIndex.value === 1 || currentIndex.value === 1 - size) {
+    if (index === 0) {
+      value = translateIndex.value - size;
+    }
+    // -1 -> 0
+    if (index === 1) {
+      value = translateIndex.value - size;
+    }
   }
 
   return value;
