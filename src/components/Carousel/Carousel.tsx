@@ -255,6 +255,7 @@ const Carousel = forwardRef<CarouselRef, CarouselProps>((props, ref) => {
     <CarouselContext.Provider
       value={{
         size: dataSource.length,
+        indexAtData,
         currentIndex,
         translate,
         options,

@@ -20,6 +20,7 @@ const RotateLayout: React.FC<RotateLayoutProps> = (props) => {
     stepDistance,
     translateIndex,
     layoutOption,
+    indexAtData,
   } = useCarousel();
 
   const style = useAnimatedStyle(() => {
@@ -34,12 +35,20 @@ const RotateLayout: React.FC<RotateLayoutProps> = (props) => {
       index,
       translateIndex,
       currentIndex,
+      indexAtData,
       translate,
       stepDistance,
       size,
       true
     );
 
+    // if (index === 0) {
+    //   console.log({
+    //     value,
+    //   })
+    // }
+
+    // console.log(translateIndex.value);
     // 3 -> 4
     // -1 -> 0
     const rotateY = interpolate(

@@ -289,6 +289,40 @@ const useIndexAtData = (
   return index;
 };
 
+// 判断目标位置与当前位置的相对关系
+// 目前为止没有用到
+const judgeRelativePosition = (
+  direction: number,
+  index: number,
+  indexAtData: Animated.SharedValue<number>,
+  size: number
+) => {
+  'worklet';
+  let rightDistance = 0;
+  let leftDistance = 0;
+  if (indexAtData.value === index) {
+    return 0;
+  } else if (indexAtData.value > index) {
+    rightDistance = size - indexAtData.value + index;
+    leftDistance = indexAtData.value - index;
+  } else {
+    rightDistance = index - indexAtData.value;
+    leftDistance = size - index + indexAtData.value;
+  }
+
+  if (rightDistance > leftDistance) {
+    return leftDistance;
+  } else if (rightDistance < leftDistance) {
+    return -rightDistance;
+  } else {
+    if (direction < 0) {
+      return -rightDistance;
+    } else {
+      return rightDistance;
+    }
+  }
+};
+
 /**
  * animation layout interpolate value
  * @param index item index
@@ -306,6 +340,7 @@ const getLayoutValue = (
   index: number,
   translateIndex: Animated.SharedValue<number>,
   currentIndex: Animated.SharedValue<number>,
+  indexAtData: Animated.SharedValue<number>,
   translate: Animated.SharedValue<number>,
   stepDistance: number,
   size: number,
@@ -314,39 +349,34 @@ const getLayoutValue = (
   'worklet';
   let value = translateIndex.value;
   // current gesture dirction, left > 0 and right < 0, 0 is freeze
-  const direction = currentIndex.value - translate.value / stepDistance;
+  // -1是往左滑，内容向右移动
+  // +1是往右滑，内容向左移动
+  const direction = translate.value / stepDistance - currentIndex.value;
+  // const relative = judgeRelativePosition(direction, index, indexAtData, size);
+  // console.log(direction);
   /**
    * when current index is 0, control 0 card's left card and right card to converse dirction
    */
-  if (currentIndex.value === 0) {
-    // left card
+  if (indexAtData.value === 0) {
     if (index === size - 1 && converse) {
-      if (direction >= 0) {
+      if (direction <= 0) {
         value = size + translateIndex.value; // make value index + 1 to index + 2;
       }
     }
-    // right card
     if (index === 0 || index === 1) {
-      if (direction < 0) {
+      if (direction > 0) {
         value = translateIndex.value - size; // make value 0 to -1;
       }
     }
-  }
-
-  /**
-   * when current index is last card, currentIndex.value === 1 and currentIndex.value === 1 - size are the same
-   * control 0 card, make it value from -1 to 0
-   */
-  if (currentIndex.value === 1 || currentIndex.value === 1 - size) {
-    if (index === 0) {
+  } else if (indexAtData.value === size - 1 || indexAtData.value === size - 2) {
+    if (index === 0 || index === 1) {
       value = translateIndex.value - size;
     }
-    // -1 -> 0
-    if (index === 1) {
-      value = translateIndex.value - size;
+  } else if (indexAtData.value === 1) {
+    if (index === size - 1) {
+      value = size - translateIndex.value;
     }
   }
-
   return value;
 };
 
@@ -360,4 +390,5 @@ export {
   useTouching,
   useIndexAtData,
   getLayoutValue,
+  judgeRelativePosition,
 };

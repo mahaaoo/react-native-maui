@@ -30,6 +30,15 @@ const card = [
   {
     source: require('../../assets/d.jpg'),
   },
+  {
+    source: require('../../assets/b.jpg'),
+  },
+  {
+    source: require('../../assets/c.jpg'),
+  },
+  {
+    source: require('../../assets/d.jpg'),
+  },
 ];
 
 const card2: any[] = [];
