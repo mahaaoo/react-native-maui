@@ -2,14 +2,14 @@ import * as React from 'react';
 import { act, render } from '@testing-library/react-native';
 import { withReanimatedTimer } from 'react-native-reanimated/src/reanimated2/jestUtils';
 import { Dimensions, Image } from 'react-native';
-import { Swiper } from '../index';
+import { Carousel } from '../index';
 
 const { width } = Dimensions.get('window');
 
 /**
  * this case can't work, because react-native-gesture-handler refrences
  */
-describe('Testing:Swiper', () => {
+describe('Testing:Carousel', () => {
   it('base', () => {
     withReanimatedTimer(async () => {
       const card = [
@@ -45,7 +45,7 @@ describe('Testing:Swiper', () => {
       };
 
       const { getByTestId } = render(
-        <Swiper
+        <Carousel
           ref={useRef}
           interval={1000}
           dataSource={card}

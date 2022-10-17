@@ -1,22 +1,21 @@
 import React from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { getItemOffset } from './utils';
-import { BaseLayoutProps } from './type';
-
-const { width } = Dimensions.get('window');
+import { BaseLayoutProps, useCarousel } from './type';
 
 const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
+  const { index, children } = props;
+
   const {
     currentIndex,
-    index,
     translate,
-    children,
     size,
     options,
-    stepDistance,
     horizontal,
-  } = props;
+    stepDistance,
+    itemSize = 0,
+  } = useCarousel();
 
   const style = useAnimatedStyle(() => {
     const itemOffset = getItemOffset(
@@ -26,11 +25,15 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
       currentIndex.value,
       options
     );
+
     if (horizontal) {
       return {
         transform: [
           {
-            translateX: translate.value + itemOffset * size * stepDistance,
+            translateX:
+              translate.value +
+              itemOffset * size * stepDistance +
+              index * itemSize,
           },
           {
             translateY: 0,
@@ -58,8 +61,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: width,
-    height: '100%',
+    position: 'absolute',
   },
 });
 

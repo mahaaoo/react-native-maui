@@ -9,8 +9,8 @@ import {
   Text,
 } from 'react-native';
 import {
-  Swiper,
-  SwiperRef,
+  Carousel,
+  CarouselRef,
   RotateLayout,
   ScaleLayout,
 } from 'react-native-maui';
@@ -32,13 +32,13 @@ const card = [
   },
 ];
 
-let card2: any[] = [];
-for (let i = 0; i < 1; i++) {
-  card2 = card2.concat(card);
+const card2: any[] = [];
+for (let i = 0; i < 10; i++) {
+  card2.push(i);
 }
 
-export default function SwiperExample() {
-  const ref = useRef<SwiperRef>(null);
+export default function CarouselExample() {
+  const ref = useRef<CarouselRef>(null);
   const [autoplay, setAutoplay] = useState(false);
 
   const handeEnd = useCallback((index) => {
@@ -51,18 +51,33 @@ export default function SwiperExample() {
 
   return (
     <ScrollView style={styles.container}>
-      <Swiper
+      <Carousel
         ref={ref}
         interval={1000}
         dataSource={card2}
         renderItem={(item) => {
-          return <Image source={item.source} style={styles.image2} />;
+          // return <Image source={item.source} style={styles.image2} />;
+          return (
+            <View
+              style={{
+                width,
+                height: 200,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor: 'pink',
+              }}
+            >
+              <Text style={{ fontSize: 30 }}>{item}</Text>
+            </View>
+          );
         }}
         onScollStart={handeStart}
         onScollEnd={handeEnd}
         auto={autoplay}
         horizontal={true}
         style={styles.swiper}
+        itemSize={width}
       />
       <View style={styles.buttonContent}>
         <TouchableOpacity
@@ -90,11 +105,25 @@ export default function SwiperExample() {
           <Text>Next</Text>
         </TouchableOpacity>
       </View>
-      <Swiper
+      <Carousel
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
           return <Image source={item.source} style={styles.image1} />;
+          // return (
+          //   <View
+          //     style={{
+          //       width: 250,
+          //       height: 180,
+          //       justifyContent: 'center',
+          //       alignItems: 'center',
+          //       borderWidth: 1,
+          //       borderColor: 'pink',
+          //     }}
+          //   >
+          //     <Text style={{ fontSize: 30 }}>{item}</Text>
+          //   </View>
+          // );
         }}
         auto={false}
         layoutOption={{
@@ -103,10 +132,11 @@ export default function SwiperExample() {
             mainAxisSize: 250,
           },
         }}
+        snapToInterval={250}
         horizontal={true}
-        style={styles.rotateSwiper}
+        style={styles.rotateCarousel}
       />
-      {/* <Swiper
+      {/* <Carousel
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -121,9 +151,9 @@ export default function SwiperExample() {
         }}
         auto={true}
         horizontal={false}
-        style={styles.scaleSwiperV}
+        style={styles.scaleCarouselV}
       />
-      <Swiper
+      <Carousel
         interval={1000}
         dataSource={card}
         renderItem={(item) => {
@@ -138,7 +168,20 @@ export default function SwiperExample() {
         }}
         auto={false}
         horizontal={true}
-        style={styles.scaleSwiper}
+        style={styles.scaleCarousel}
+      /> */}
+      {/* <View
+        style={{
+          position: 'absolute',
+          top: 100,
+          left: 120,
+          width: 20,
+          height: 20,
+          backgroundColor: 'black',
+          transform: [{
+            translateX: 50,
+          }]
+        }}
       /> */}
     </ScrollView>
   );
@@ -170,15 +213,15 @@ const styles = StyleSheet.create({
     width,
     height: 200,
   },
-  rotateSwiper: {
+  rotateCarousel: {
     width,
     height: 300,
   },
-  scaleSwiperV: {
+  scaleCarouselV: {
     width,
     height: 260,
   },
-  scaleSwiper: {
+  scaleCarousel: {
     width,
     height: 200,
     marginTop: 40,

@@ -12,7 +12,7 @@ import DividerExample from './pages/DividerExample';
 import AvatarExample from './pages/AvatarExample';
 import CollapseExample from './pages/CollapseExample';
 import OverlayExample from './pages/OverlayExample';
-import SwiperExample from './pages/SwiperExample';
+import CarouselExample from './pages/CarouselExample';
 import PickerExample from './pages/PickerExample';
 import SkeletonExample from './pages/SkeletonExample';
 import RefreshExample from './pages/RefreshExample';
@@ -43,7 +43,7 @@ export type RootStackParamList = {
   AvatarExample: undefined;
   CollapseExample: undefined;
   OverlayExample: undefined;
-  SwiperExample: undefined;
+  CarouselExample: undefined;
   PickerExample: undefined;
   SkeletonExample: undefined;
   RefreshListExample: undefined;
@@ -140,9 +140,9 @@ const App: React.FC<{}> = () => {
         options={{ headerTitle: 'Overlay', ...headerOptions }}
       />
       <Stack.Screen
-        name="SwiperExample"
-        component={SwiperExample}
-        options={{ headerTitle: 'Swiper', ...headerOptions }}
+        name="CarouselExample"
+        component={CarouselExample}
+        options={{ headerTitle: 'Carousel', ...headerOptions }}
       />
       <Stack.Screen
         name="PickerExample"

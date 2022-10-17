@@ -22,7 +22,12 @@ import {
   useProps,
 } from './utils';
 import ItemWrapper from './ItemWrapper';
-import { SwiperRef, SwiperProps, SwiperCallBack } from './type';
+import {
+  CarouselRef,
+  CarouselProps,
+  CarouselCallBack,
+  CarouselContext,
+} from './type';
 
 import BaseLayout from './BaseLayout';
 import ScaleLayout from './ScaleLayout';
@@ -32,7 +37,7 @@ import RotateLayout from './RotateLayout';
 import { clamp } from '../../utils/redash';
 const { width } = Dimensions.get('window');
 
-const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
+const Carousel = forwardRef<CarouselRef, CarouselProps>((props, ref) => {
   const {
     dataSource,
     renderItem,
@@ -44,6 +49,8 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     options,
     style,
     layoutOption,
+    snapToInterval,
+    itemSize,
   } = useProps(props);
 
   // swiper translate: Vertical OR Horizontal, only one direction can work at one time
@@ -68,8 +75,9 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     };
   }, []);
 
-  // Every Swiper move distance
+  // Every Carousel move distance
   const stepDistance = useMemo<number>(() => {
+    if (snapToInterval) return snapToInterval;
     if (layoutOption?.layout === ScaleLayout) {
       return (
         layoutOption?.options.mainAxisSize + 2 * layoutOption?.options.margin
@@ -117,6 +125,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
         Math.abs(value) % (dataSource.length * stepDistance) === 0;
 
       if (isReturn && auto) {
+        console.log('carousel重置数据');
         currentIndex.value = 0;
         translate.value = 0;
       }
@@ -131,7 +140,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     onScollEnd && onScollEnd(indexAtData.value);
   }, []);
 
-  // Swiper Animation will be move actually in this function
+  // Carousel Animation will be move actually in this function
   const scrollTo = useCallback(
     (step, callback: () => void) => {
       'worklet';
@@ -152,7 +161,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
 
   // Pre Page
   const previous = useCallback(
-    (callback?: SwiperCallBack) => {
+    (callback?: CarouselCallBack) => {
       handleScollStart();
       scrollTo(currentIndex.value + 1, () => {
         handleScollEnd();
@@ -164,7 +173,7 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
 
   // Next Page
   const next = useCallback(
-    (callback?: SwiperCallBack) => {
+    (callback?: CarouselCallBack) => {
       handleScollStart();
       scrollTo(currentIndex.value - 1, () => {
         handleScollEnd();
@@ -185,10 +194,6 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
       offset.value = translate.value;
     })
     .onUpdate(({ translationX, translationY }) => {
-      /**
-       * !!!IMPORTANT!!!
-       * every gesture can only move one stepDistance
-       */
       if (horizontal) {
         translate.value = clamp(
           translationX + offset.value,
@@ -222,33 +227,13 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
     [currentIndex, scrollTo, dataSource]
   );
 
-  const renderSwiperItem = useCallback(
+  const renderCarouselItem = useCallback(
     (item: any, index: number) => {
       const Layout = layoutOption?.layout || BaseLayout;
 
       return (
-        <ItemWrapper
-          size={dataSource.length}
-          key={`LazyWrapper${index}`}
-          {...{ index, currentIndex, options }}
-        >
-          <Layout
-            size={dataSource.length}
-            {...{
-              index,
-              indexAtData,
-              currentIndex,
-              translate,
-              options,
-              stepDistance,
-              horizontal,
-              layoutOption,
-              container,
-              translateIndex,
-            }}
-          >
-            {renderItem && renderItem(item)}
-          </Layout>
+        <ItemWrapper index={index} key={`LazyWrapper${index}`}>
+          <Layout index={index}>{renderItem && renderItem(item)}</Layout>
         </ItemWrapper>
       );
     },
@@ -267,35 +252,47 @@ const Swiper = forwardRef<SwiperRef, SwiperProps>((props, ref) => {
   }, [horizontal]);
 
   return (
-    <View style={[styles.container, style]} testID={'MAUI-SWIPER-ID'}>
-      <GestureDetector gesture={panGesture}>
-        <Animated.View style={styles.swiperContainer}>
-          <View style={[styles.swiper, direction]}>
-            {dataSource.map(renderSwiperItem)}
-          </View>
-          <View style={styles.paginationContainer}>
-            <Pagination currentIndex={translateIndex} total={dataSource.length}>
-              <Dot activeColor="red" inActiveColor="pink" />
-            </Pagination>
-          </View>
-        </Animated.View>
-      </GestureDetector>
-    </View>
+    <CarouselContext.Provider
+      value={{
+        size: dataSource.length,
+        currentIndex,
+        translate,
+        options,
+        stepDistance,
+        horizontal,
+        layoutOption,
+        container,
+        translateIndex,
+        itemSize,
+      }}
+    >
+      <View style={[styles.container, style]} testID={'MAUI-SWIPER-ID'}>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View style={styles.swiperContainer}>
+            <View style={[direction]}>
+              {dataSource.map(renderCarouselItem)}
+            </View>
+            <View style={styles.paginationContainer}>
+              <Pagination
+                currentIndex={translateIndex}
+                total={dataSource.length}
+              >
+                <Dot activeColor="red" inActiveColor="pink" />
+              </Pagination>
+            </View>
+          </Animated.View>
+        </GestureDetector>
+      </View>
+    </CarouselContext.Provider>
   );
 });
 
 const styles = StyleSheet.create({
   container: {
-    width,
     backgroundColor: 'white',
   },
   swiperContainer: {
     flex: 1,
-  },
-  swiper: {
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden',
   },
   paginationContainer: {
     position: 'absolute',
@@ -306,4 +303,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Swiper;
+export default Carousel;

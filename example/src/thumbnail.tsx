@@ -526,7 +526,7 @@ const exampleList: Example[] = [
     ),
   },
   {
-    title: 'Swiper',
+    title: 'Carousel',
     content: (
       <View style={styles.swiper}>
         <View style={styles.swiperLeft} />

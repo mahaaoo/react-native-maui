@@ -5,14 +5,14 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import { getItemOffset, getLayoutValue } from './utils';
-import { ScaleLayoutProps } from './type';
+import { ScaleLayoutProps, useCarousel } from './type';
 
 const ScaleLayout: React.FC<ScaleLayoutProps> = (props) => {
+  const { children, index } = props;
+
   const {
     currentIndex,
-    index,
     translate,
-    children,
     size,
     options,
     stepDistance,
@@ -20,7 +20,7 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = (props) => {
     layoutOption,
     container,
     translateIndex,
-  } = props;
+  } = useCarousel();
 
   const style = useAnimatedStyle(() => {
     const itemOffset = getItemOffset(

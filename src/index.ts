@@ -57,12 +57,12 @@ export {
 export { Segmented } from './components/Segmented';
 
 export {
-  Swiper,
+  Carousel,
   BaseLayout,
   ScaleLayout,
   RotateLayout,
-  SwiperRef,
-} from './components/Swiper';
+  CarouselRef,
+} from './components/Carousel';
 
 export { Switch } from './components/Switch';
 

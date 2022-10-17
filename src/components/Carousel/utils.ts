@@ -8,12 +8,12 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated';
 import {
-  SwiperProps,
-  SwiperDefaultProps,
+  CarouselProps,
+  CarouselDefaultProps,
   UseAutoScrollReturn,
   TurnRange,
-  SwiperDefaultOptions,
-  SwiperCallBackFunction,
+  CarouselDefaultOptions,
+  CarouselCallBackFunction,
 } from './type';
 
 // min trggled swiper move distance, is percent width
@@ -25,10 +25,10 @@ const MIN_TRIGGER_DISTANCE = 0.5;
 
 /**
  * pre check props
- * @param props SwiperProps
- * @returns SwiperProps
+ * @param props CarouselProps
+ * @returns CarouselProps
  */
-const useProps = (props: SwiperProps): SwiperDefaultProps => {
+const useProps = (props: CarouselProps): CarouselDefaultProps => {
   const { dataSource, options } = props;
   const length = dataSource.length;
   if (length <= 0) {
@@ -99,7 +99,7 @@ const getStep = (distance: number, range: DerivedValue<TurnRange>): number => {
 };
 
 /**
- * judge the index whether should be rendered
+ * judge the index whether should be render
  * @param index item index
  * @param size datasource length
  * @param now current index
@@ -109,7 +109,7 @@ const judgeRange = (
   index: number,
   size: number,
   now: number,
-  options: SwiperDefaultOptions
+  options: CarouselDefaultOptions
 ): boolean => {
   'worklet';
   const indexAtData = -(now % size);
@@ -151,15 +151,14 @@ const getItemOffset = (
   index: number,
   size: number,
   now: number,
-  options: SwiperDefaultOptions
+  options: CarouselDefaultOptions
 ): number => {
   'worklet';
-
-  const renderSize = size;
-  const isRange = judgeRange(index, renderSize, now, options);
+  const isRange = judgeRange(index, size, now, options);
   if (!isRange) return 0;
 
-  const group = Math.floor(offset / renderSize);
+  // 正负代表方向
+  const group = Math.floor(offset / size);
   // TODO: 计算偏移分组应增加余量、让View提前放在正确的位置
   let currentIndex;
   if (offset >= 0) {
@@ -167,6 +166,8 @@ const getItemOffset = (
   } else {
     currentIndex = Math.abs((offset + Math.abs(group) * size) % size);
   }
+
+  const newCurrentIndex = Math.min(offset % size, size - (offset % size));
 
   if (currentIndex > index) {
     if (currentIndex - index <= options.maxRender) {
@@ -193,7 +194,7 @@ const getItemOffset = (
  * @returns useAutoScrollReturn
  */
 const useAutoScroll = (
-  next: SwiperCallBackFunction,
+  next: CarouselCallBackFunction,
   auto: boolean,
   interval: number
 ): UseAutoScrollReturn => {
