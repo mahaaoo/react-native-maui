@@ -12,14 +12,26 @@ interface BottomContainerProps {}
 
 const BottomContainer: React.FC<BottomContainerProps> = (props) => {
   const { children } = props;
-  const { scrollBounse, transitionY, triggleHeight, direction, refreshStatus } =
-    useRefresh();
+  const {
+    scrollBounse,
+    transitionY,
+    triggleHeight,
+    direction,
+    refreshStatus,
+    canRefresh,
+  } = useRefresh();
 
   const animatedStyle = useAnimatedStyle(() => {
+    console.log({
+      transitionY: transitionY.value,
+      refreshStatus: refreshStatus.value,
+    });
     if (
       scrollBounse.value ||
       direction.value === 1 ||
-      (direction.value === -1 && refreshStatus.value === RefreshStatus.Done)
+      refreshStatus.value === RefreshStatus.Idle ||
+      refreshStatus.value === RefreshStatus.Done ||
+      (!canRefresh.value && refreshStatus.value === RefreshStatus.AutoLoad)
     ) {
       return {
         height: 0,
@@ -50,6 +62,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
+    overflow: 'hidden',
   },
 });
 export default BottomContainer;

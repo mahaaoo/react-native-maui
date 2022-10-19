@@ -1,4 +1,4 @@
-import RefreshContainer from './RefreshContainer';
 import NormalControl from './NormalControl';
+import RefreshScrollView from './RefreshScrollView';
 
-export { RefreshContainer, NormalControl };
+export { RefreshScrollView, NormalControl };

@@ -6,8 +6,8 @@ const { width } = Dimensions.get('window');
 
 interface RefreshProps {}
 
-const mockArray = (): number[] => {
-  const data = new Array(20).fill(0);
+const mockArray = (count: number): number[] => {
+  const data = new Array(count).fill(0);
   const randomIndex = Math.floor(Math.random() * 100);
   for (let index = 0; index < data.length; index++) {
     data[index] = randomIndex + index;
@@ -20,7 +20,7 @@ const Refresh: React.FC<RefreshProps> = () => {
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
 
   useEffect(() => {
-    const list = mockArray();
+    const list = mockArray(20);
     setData(list);
   }, []);
 
@@ -32,7 +32,7 @@ const Refresh: React.FC<RefreshProps> = () => {
         onRefresh={() => {
           setStatus(RefreshState.HeaderRefreshing);
           setTimeout(() => {
-            const list = mockArray();
+            const list = mockArray(20);
             setData(list);
             setStatus(RefreshState.Idle);
           }, 2000);
@@ -40,7 +40,7 @@ const Refresh: React.FC<RefreshProps> = () => {
         onFooterRefresh={() => {
           setStatus(RefreshState.FooterRefreshing);
           setTimeout(() => {
-            const list = mockArray();
+            const list = mockArray(2);
             setData((data) => data.concat(list));
             setStatus(RefreshState.Idle);
           }, 2000);

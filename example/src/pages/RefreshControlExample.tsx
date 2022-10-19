@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, Text } from 'react-native';
-import { RefreshContainer, NormalControl } from 'react-native-maui';
+import { View, StyleSheet, Dimensions, Text, FlatList } from 'react-native';
+import { RefreshScrollView, NormalControl } from 'react-native-maui';
 // import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // import { useHeaderHeight } from '@react-navigation/elements';
 
@@ -19,7 +19,7 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
   // const headerHeight = useHeaderHeight();
 
   return (
-    <RefreshContainer
+    <RefreshScrollView
       refreshing={refresh}
       refreshComponent={() => <NormalControl position="top" />}
       loadComponent={() => <NormalControl position="bottom" />}
@@ -49,7 +49,7 @@ const RefreshControlExample: React.FC<RefreshControlExampleProps> = (props) => {
           </View>
         );
       })}
-    </RefreshContainer>
+    </RefreshScrollView>
   );
 };
 

@@ -30,6 +30,10 @@ interface SkeletonContextProps {
    * -1: up
    *  */
   direction: Animated.DerivedValue<1 | -1>;
+  /**
+   * inside scrollView wheather reach boundary
+   */
+  canRefresh: Animated.DerivedValue<boolean>;
 }
 
 export const RefreshContainerContext = createContext<SkeletonContextProps>(
@@ -63,4 +67,8 @@ export enum RefreshStatus {
    * Refresh is done
    */
   Done,
+  /**
+   * ScrollView Auto Load More
+   */
+  AutoLoad,
 }

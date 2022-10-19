@@ -80,7 +80,7 @@ export {
 } from './components/WaterfallList';
 export { Popover } from './components/Popover';
 
-export { RefreshContainer, NormalControl } from './components/RefreshControl';
+export { RefreshScrollView, NormalControl } from './components/RefreshControl';
 
 export { snapPoint, clamp } from './utils/redash';
 export { Freeze } from './utils/Freeze';

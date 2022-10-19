@@ -22,7 +22,7 @@ import BottomContainer from './BottomContainer';
 const { height } = Dimensions.get('window');
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
-interface RefreshContainerProps {
+interface RefreshScrollViewProps {
   refreshing: boolean;
   refreshComponent: () => React.ReactNode;
   loadComponent: () => React.ReactNode;
@@ -41,7 +41,7 @@ const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
 
 const HEADER_HEIGHT = 91;
 
-const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
+const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
   const {
     children,
     refreshing,
@@ -64,6 +64,8 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
   const scrollBounse = useSharedValue(false);
   const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
   const scrollViewTotalHeight = useSharedValue(0);
+
+  const canAutoLoad = useSharedValue(true); // 防止连续触发自动加载
 
   const direction = useDerivedValue(() => {
     return refreshTransitionY.value > 0 ? 1 : -1;
@@ -89,11 +91,13 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
 
   useEffect(() => {
     if (refreshing) {
-      refreshStatus.value = RefreshStatus.Holding;
-      refreshTransitionY.value = withTiming(triggleHeight * direction.value);
-    } else if (refreshStatus.value !== RefreshStatus.Idle) {
-      refreshStatus.value = RefreshStatus.Done;
       if (direction.value === 1) {
+        refreshStatus.value = RefreshStatus.Holding;
+        refreshTransitionY.value = withTiming(triggleHeight * direction.value);
+      }
+    } else if (refreshStatus.value !== RefreshStatus.Idle) {
+      if (direction.value === 1) {
+        refreshStatus.value = RefreshStatus.Done;
         // refresh animation
         refreshTransitionY.value = withDelay(
           500,
@@ -109,13 +113,18 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         );
       } else {
         // load more animation
-        refreshTransitionY.value = 0;
-        scrollRef.current &&
-          scrollRef.current.scrollTo({
-            y: scrollViewTransitionY.value + triggleHeight,
-            animated: false,
-          });
-        refreshStatus.value = RefreshStatus.Idle;
+        if (refreshTransitionY.value !== 0) {
+          refreshTransitionY.value = 0;
+          refreshStatus.value = RefreshStatus.Done;
+          scrollRef.current &&
+            scrollRef.current.scrollTo({
+              y: scrollViewTransitionY.value + triggleHeight,
+              animated: false,
+            });
+          refreshStatus.value = RefreshStatus.Idle;
+        } else {
+          refreshStatus.value = RefreshStatus.Idle;
+        }
       }
     }
   }, [refreshing]);
@@ -132,10 +141,23 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     onBeginDrag: (event, context) => {
       context.scrollBeginTime = new Date().valueOf();
       context.scrollBeginY = event.contentOffset.y;
+      canAutoLoad.value = true;
     },
     onScroll: (event, context) => {
       const { scrollBeginY, scrollBeginTime } = context;
       scrollViewTransitionY.value = event.contentOffset.y;
+
+      if (
+        scrollViewTransitionY.value >=
+          0.8 * scrollViewTotalHeight.value - height &&
+        refreshStatus.value !== RefreshStatus.AutoLoad &&
+        canAutoLoad.value
+      ) {
+        console.log('触发自动加载');
+        refreshStatus.value = RefreshStatus.AutoLoad;
+        canAutoLoad.value = false;
+        handleOnLoadMore && runOnJS(handleOnLoadMore)();
+      }
 
       const marginTop = scrollViewTransitionY.value;
       const marginBottom =
@@ -191,10 +213,11 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
         return;
       }
       refreshTransitionY.value = interpolate(
-        translationY + offset.value,
+        translationY,
         [-height, 0, height],
         [-height / 2, 0, height / 2]
       );
+
       if (!refreshing) {
         if (Math.abs(refreshTransitionY.value) >= triggleHeight) {
           refreshStatus.value = RefreshStatus.Reached;
@@ -256,11 +279,12 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
     <RefreshContainerContext.Provider
       value={{
         transitionY: refreshTransitionY,
-        scrollBounse: scrollBounse,
+        scrollBounse,
         triggleHeight,
         refreshing,
         refreshStatus,
         direction,
+        canRefresh,
       }}
     >
       <GestureDetector gesture={panGesture}>
@@ -295,4 +319,4 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
   );
 };
 
-export default RefreshContainer;
+export default RefreshScrollView;
