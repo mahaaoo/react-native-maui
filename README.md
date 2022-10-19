@@ -1,10 +1,20 @@
 # react-native-maui
 
-React Native UI Library.
-All Components are implemented by `react-native-reanimated` and `react-native-gesture-handler`
+[中文文档](https://github.com/mahaaoo/react-native-maui/blob/main/README.zh.md)
 
-> This library is personal and experimental, PLEASE DO NOT use it in your main projects.  
-> FOR Learning Only!
+This project contains the basic components commonly used in ReactNative, and the code is based on RN0.68 (try to synchronize with the latest version). All components are implemented by `funciton components` and `hooks`, coded in `typescript`. Animations and interactions are implemented by `react-native-reanimated`, `react-native-gesture-handler` and `react-native-svg`.
+
+> This project is developed by individuals, the stability and adaptability of the components cannot be guaranteed, please use with caution
+
+## For Leaning
+You can learn in this project
+- Basic usage of RN
+- Component packaging and calling
+- Organizational structure of open source projects
+- Usage of funciton components and various hooks
+- How to use react-native-reanimated2, react-native-gesture-handler2 and react-native-svg
+- Unit testing of components and hooks
+- Expo toolchain
 
 ## Preview
 
