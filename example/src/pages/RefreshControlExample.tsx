@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Text, FlatList } from 'react-native';
 import { RefreshScrollView, NormalControl } from 'react-native-maui';
 // import { useSafeAreaInsets } from 'react-native-safe-area-context';
