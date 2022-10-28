@@ -1,20 +1,10 @@
 # react-native-maui
 
-此项目包含了ReactNative中常用的基础组件，代码基于RN0.68（尽量与最新版同步）。所有的组件均由funciton components和hooks的实现，采用typescript编码。
+此项目包含了ReactNative中常用的基础组件，代码基于RN0.68。所有的组件均由funciton components和hooks的实现，采用typescript编码。
 动画及交互效果由`react-native-reanimated`、`react-native-gesture-handler` 和 `react-native-svg`实现。
 
 > 此项目由个人开发，不能保证组件的稳定性及适配度，请谨慎使用
 
-## For Learning
-
-你可以在本项目中学习到
-- RN的基础用法
-- 组件封装及调用
-- 开源项目的组织结构
-- funciton components和各种hooks的用法
-- `react-native-reanimated2`、`react-native-gesture-handler2` 和 `react-native-svg`使用方法
-- 组件及hook的单元测试
-- Expo工具链
 
 ## Preview
 
