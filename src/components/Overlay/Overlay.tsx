@@ -16,15 +16,19 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
-import { View, StyleSheet, StatusBar } from 'react-native';
+import { View, StyleSheet, StatusBar, Dimensions } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
 import { useForceUpdate } from '../../utils/hooks';
+
+const { height } = Dimensions.get('window');
 
 export interface OverlayRef {
   /**
@@ -51,8 +55,12 @@ export interface OverlayRef {
 }
 
 export interface OverlayContextProps extends OverlayRef {
-  underScale: Animated.SharedValue<number>;
-  underTranslateX: Animated.SharedValue<number>;
+  mainTransform: {
+    mainScale: Animated.SharedValue<number>;
+    mainTranslateX: Animated.SharedValue<number>;
+    mainTopRotateX: Animated.SharedValue<number>;
+    mainBottomRotateX: Animated.SharedValue<number>;
+  };
 }
 
 export const OverlayContext = createContext({} as OverlayContextProps);
@@ -77,6 +85,8 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
 
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
+  const topRotateX = useSharedValue(0);
+  const bottomRotateX = useSharedValue(0);
 
   /**
    * When call this function with key, the component will be unique
@@ -193,7 +203,22 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     return {
       transform: [
         {
-          scale: interpolate(scale.value, [0, 1], [0.94, 1], Extrapolate.CLAMP),
+          scale: scale.value,
+        },
+        {
+          perspective: 600,
+        },
+        {
+          rotateX: `${topRotateX.value}deg`,
+        },
+        {
+          translateY: -height / 2,
+        },
+        {
+          rotateX: `${bottomRotateX.value}deg`,
+        },
+        {
+          translateY: height / 2,
         },
         {
           translateX: translateX.value,
@@ -222,8 +247,12 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
           remove: deleteNodeFromOverlay,
           removeAll: deleteAllNodeFromOverlay,
           isExist,
-          underScale: scale,
-          underTranslateX: translateX,
+          mainTransform: {
+            mainScale: scale,
+            mainTranslateX: translateX,
+            mainBottomRotateX: bottomRotateX,
+            mainTopRotateX: topRotateX,
+          },
         }}
       >
         <Animated.View style={[styles.mainViewStyle, mainViewStyle]}>

@@ -35,7 +35,8 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
       children,
       onDisappear,
     } = props;
-    const { underTranslateX } = useOverlay();
+    const { mainTransform } = useOverlay();
+    const { mainTranslateX } = mainTransform;
 
     const toWidth = useRef(0);
 
@@ -64,13 +65,13 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
         }
       }
 
-      underTranslateX.value = withTiming(dest, { duration }, () => {
+      mainTranslateX.value = withTiming(dest, { duration }, () => {
         onAppear && runOnJS(onAppear)();
       });
     }, [onAppear]);
 
     const unMount = useCallback(() => {
-      underTranslateX.value = withTiming(0, { duration }, () => {
+      mainTranslateX.value = withTiming(0, { duration }, () => {
         onDisappear && runOnJS(onDisappear)();
       });
     }, [onDisappear, position]);

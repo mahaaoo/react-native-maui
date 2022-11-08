@@ -22,10 +22,10 @@ const BottomContainer: React.FC<BottomContainerProps> = (props) => {
   } = useRefresh();
 
   const animatedStyle = useAnimatedStyle(() => {
-    console.log({
-      transitionY: transitionY.value,
-      refreshStatus: refreshStatus.value,
-    });
+    // console.log({
+    //   transitionY: transitionY.value,
+    //   refreshStatus: refreshStatus.value,
+    // });
     if (
       scrollBounse.value ||
       direction.value === 1 ||

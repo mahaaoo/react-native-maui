@@ -14,6 +14,7 @@ import Animated, {
   withDelay,
   Easing,
   useAnimatedReaction,
+  withDecay,
 } from 'react-native-reanimated';
 import { RefreshContainerContext, RefreshStatus } from './type';
 import TopContainer from './TopContainer';
@@ -168,7 +169,6 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
 
       if ((marginTop === 0 || marginBottom === 0) && !scrollBounse.value) {
         const direction = marginTop === 0 ? 1 : -1;
-
         const endTime = new Date().valueOf();
         const velocityY = Math.min(
           Math.abs(

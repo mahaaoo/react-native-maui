@@ -428,6 +428,27 @@ export default function OverlayExample() {
             onPress={() => {
               OverlayUtil.add(
                 <TranslateContainer
+                  gesture={true}
+                  underView={{ isRotate: true }}
+                >
+                  <View style={styles.bottom}>
+                    <Text style={styles.childText}>
+                      Funtion子视图{elementIndex.current}
+                    </Text>
+                  </View>
+                </TranslateContainer>
+              );
+              elementIndex.current++;
+            }}
+          >
+            <Text>Bottom-RotateX</Text>
+          </Button>
+        </View>
+        <View style={styles.viewContainer}>
+          <Button
+            onPress={() => {
+              OverlayUtil.add(
+                <TranslateContainer
                   from="left"
                   gesture={true}
                   underView={{ isTranslate: true }}
