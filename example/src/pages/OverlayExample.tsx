@@ -385,10 +385,7 @@ export default function OverlayExample() {
           <Button
             onPress={() => {
               OverlayUtil.add(
-                <TranslateContainer
-                  gesture={true}
-                  underView={{ isScale: true }}
-                >
+                <TranslateContainer gesture={true} config={{ isScale: true }}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
@@ -408,7 +405,7 @@ export default function OverlayExample() {
                 <TranslateContainer
                   from="left"
                   gesture={true}
-                  underView={{ isScale: true }}
+                  config={{ isScale: true }}
                 >
                   <View style={styles.left2}>
                     <Text style={styles.childText}>
@@ -427,10 +424,7 @@ export default function OverlayExample() {
           <Button
             onPress={() => {
               OverlayUtil.add(
-                <TranslateContainer
-                  gesture={true}
-                  underView={{ isRotate: true }}
-                >
+                <TranslateContainer gesture={true} config={{ isRotate: true }}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
@@ -451,7 +445,7 @@ export default function OverlayExample() {
                 <TranslateContainer
                   from="left"
                   gesture={true}
-                  underView={{ isTranslate: true }}
+                  config={{ isTranslate: true }}
                 >
                   <View style={styles.left2}>
                     <Text style={styles.childText}>
@@ -473,7 +467,7 @@ export default function OverlayExample() {
                 <TranslateContainer
                   from="left"
                   gesture={true}
-                  underView={{ isTranslate: true, isScale: true }}
+                  config={{ isTranslate: true, isScale: true }}
                 >
                   <View style={styles.left2}>
                     <Text style={styles.childText}>

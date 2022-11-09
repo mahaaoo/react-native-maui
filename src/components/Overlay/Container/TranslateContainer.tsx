@@ -45,9 +45,9 @@ interface TranslateContainerProps extends AnimationContainerProps {
    */
   gesture?: boolean;
   /**
-   * is scale under View
+   * config Main View
    */
-  underView?: {
+  config?: {
     isScale?: boolean; // support all directions
     isTranslate?: boolean; // only supports left and right
     isRotate?: boolean; //
@@ -72,16 +72,17 @@ const TranslateContainer = forwardRef<
     onAppear,
     onDisappear,
     mask = true,
-    duration = 250,
+    duration = 300,
     modal = false,
     onClickMask,
     pointerEvents = 'auto',
     innerKey,
     containerStyle,
     gesture = false,
-    underView = {
+    config = {
       isScale: false,
       isTranslate: false,
+      isRotate: false,
     },
   } = props;
   const { remove, mainTransform } = useOverlay();
@@ -104,7 +105,7 @@ const TranslateContainer = forwardRef<
   useAnimatedReaction(
     () => translateY.value,
     (value) => {
-      if (underView.isScale) {
+      if (config.isScale) {
         mainScale.value = interpolate(
           value,
           [0, appearHeight.value],
@@ -112,7 +113,7 @@ const TranslateContainer = forwardRef<
           Extrapolate.CLAMP
         );
       }
-      if (underView.isRotate) {
+      if (config.isRotate) {
         mainTopRotateX.value = interpolate(
           value,
           [0, appearHeight.value / 2],
@@ -132,7 +133,7 @@ const TranslateContainer = forwardRef<
   useAnimatedReaction(
     () => translateX.value,
     (value) => {
-      if (underView.isScale) {
+      if (config.isScale) {
         mainScale.value = interpolate(
           value,
           [0, appearWidth.value],
@@ -140,7 +141,7 @@ const TranslateContainer = forwardRef<
           Extrapolate.CLAMP
         );
       }
-      if (underView.isTranslate) {
+      if (config.isTranslate) {
         if (from === 'left') {
           mainTranslateX.value = Math.max(0, value);
         }
