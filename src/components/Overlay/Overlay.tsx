@@ -18,12 +18,8 @@ import React, {
 } from 'react';
 import { View, StyleSheet, StatusBar, Dimensions } from 'react-native';
 import Animated, {
-  Extrapolate,
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
-  withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
 import { useForceUpdate } from '../../utils/hooks';
@@ -209,7 +205,13 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
           perspective: 600,
         },
         {
+          translateY: height / 2,
+        },
+        {
           rotateX: `${topRotateX.value}deg`,
+        },
+        {
+          translateY: -height / 2,
         },
         {
           translateY: -height / 2,

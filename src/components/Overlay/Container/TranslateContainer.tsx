@@ -8,6 +8,7 @@
 import React, {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -72,7 +73,7 @@ const TranslateContainer = forwardRef<
     onAppear,
     onDisappear,
     mask = true,
-    duration = 300,
+    duration = 400,
     modal = false,
     onClickMask,
     pointerEvents = 'auto',
@@ -117,13 +118,13 @@ const TranslateContainer = forwardRef<
         mainTopRotateX.value = interpolate(
           value,
           [0, appearHeight.value / 2],
-          [0, 6],
+          [0, 4],
           Extrapolate.CLAMP
         );
         mainBottomRotateX.value = interpolate(
           value,
           [appearHeight.value / 2, appearHeight.value],
-          [0, -6],
+          [0, -4],
           Extrapolate.CLAMP
         );
       }
@@ -420,6 +421,7 @@ const TranslateContainer = forwardRef<
 const styles = StyleSheet.create({
   overlay: {
     position: 'absolute',
+    zIndex: 99,
   },
   mask: {
     ...StyleSheet.absoluteFillObject,
