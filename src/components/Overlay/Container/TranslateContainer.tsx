@@ -8,10 +8,8 @@
 import React, {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react';
 import {
   StyleSheet,
@@ -24,6 +22,7 @@ import Animated, {
   Extrapolate,
   interpolate,
   runOnJS,
+  runOnUI,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -56,7 +55,7 @@ interface TranslateContainerProps extends AnimationContainerProps {
 }
 
 export interface TranslateContainerRef {
-  mount: (callback?: () => void) => void;
+  // mount: (callback?: () => void) => void;
   /**
    * will be invoked before be removed
    */
@@ -86,70 +85,24 @@ const TranslateContainer = forwardRef<
       isRotate: false,
     },
   } = props;
-  const { remove, mainTransform } = useOverlay();
-  const { mainScale, mainTranslateX, mainTopRotateX, mainBottomRotateX } =
-    mainTransform;
+  const { remove, progress, targetValue } = useOverlay();
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0);
   const offset = useSharedValue(0);
 
-  const toHeight = useRef(0);
-  const toWidth = useRef(0);
   const snapPoints1 = useSharedValue<number>(0);
   const snapPoints2 = useSharedValue<number>(0);
 
-  // panGesture can't get useRef value, those just copy toHeight and toWidth
-  const appearHeight = useSharedValue(0);
-  const appearWidth = useSharedValue(0);
-
   useAnimatedReaction(
-    () => translateY.value,
+    () => translateY.value || translateX.value,
     (value) => {
-      if (config.isScale) {
-        mainScale.value = interpolate(
-          value,
-          [0, appearHeight.value],
-          [1, 0.94],
-          Extrapolate.CLAMP
-        );
-      }
-      if (config.isRotate) {
-        mainTopRotateX.value = interpolate(
-          value,
-          [0, appearHeight.value / 2],
-          [0, 4],
-          Extrapolate.CLAMP
-        );
-        mainBottomRotateX.value = interpolate(
-          value,
-          [appearHeight.value / 2, appearHeight.value],
-          [0, -4],
-          Extrapolate.CLAMP
-        );
-      }
-    }
-  );
-
-  useAnimatedReaction(
-    () => translateX.value,
-    (value) => {
-      if (config.isScale) {
-        mainScale.value = interpolate(
-          value,
-          [0, appearWidth.value],
-          [1, 0.94],
-          Extrapolate.CLAMP
-        );
-      }
-      if (config.isTranslate) {
-        if (from === 'left') {
-          mainTranslateX.value = Math.max(0, value);
-        }
-        if (from === 'right') {
-          mainTranslateX.value = Math.min(0, value);
-        }
-      }
+      progress.value = interpolate(
+        value,
+        [0, targetValue.value],
+        [0, 1],
+        Extrapolate.CLAMP
+      );
     }
   );
 
@@ -159,8 +112,6 @@ const TranslateContainer = forwardRef<
         layout: { height: h, width: w },
       },
     }) => {
-      toHeight.current = h;
-      toWidth.current = w;
       switch (true) {
         case from === 'bottom': {
           snapPoints1.value = -h;
@@ -183,7 +134,7 @@ const TranslateContainer = forwardRef<
           break;
         }
       }
-      mount();
+      runOnUI(mount)(w, h);
     },
     []
   );
@@ -192,85 +143,54 @@ const TranslateContainer = forwardRef<
    * After Component has created by Overlay, this funtion will move the component to destination
    * Just a animation not created
    */
-  const mount = useCallback(() => {
-    let direction;
-    let dest = 0;
-    switch (true) {
-      case from === 'bottom': {
-        direction = true;
-        dest = -toHeight.current;
-        appearHeight.value = -toHeight.current;
-        break;
+  const mount = useCallback(
+    (width: number, height: number) => {
+      'worklet';
+      switch (true) {
+        case from === 'bottom': {
+          targetValue.value = -height;
+          break;
+        }
+        case from === 'top': {
+          targetValue.value = height;
+          break;
+        }
+        case from === 'left': {
+          targetValue.value = width;
+          break;
+        }
+        case from === 'right': {
+          targetValue.value = -width;
+          break;
+        }
       }
-      case from === 'top': {
-        direction = true;
-        dest = toHeight.current;
-        appearHeight.value = toHeight.current;
-        break;
-      }
-      case from === 'left': {
-        direction = false;
-        dest = toWidth.current;
-        appearWidth.value = toWidth.current;
-        break;
-      }
-      case from === 'right': {
-        direction = false;
-        dest = -toWidth.current;
-        appearWidth.value = -toWidth.current;
-        break;
-      }
-    }
 
-    opacity.value = withTiming(mask ? 0.3 : 0, { duration });
-    if (direction) {
-      translateY.value = withTiming(dest, { duration }, () => {
-        onAppear && runOnJS(onAppear)();
-      });
-    } else {
-      translateX.value = withTiming(dest, { duration }, () => {
-        onAppear && runOnJS(onAppear)();
-      });
-    }
-  }, [onAppear]);
+      opacity.value = withTiming(mask ? 0.3 : 0, { duration });
+      if (from === 'bottom' || from === 'top') {
+        translateY.value = withTiming(targetValue.value, { duration }, () => {
+          onAppear && runOnJS(onAppear)();
+        });
+      } else {
+        translateX.value = withTiming(targetValue.value, { duration }, () => {
+          onAppear && runOnJS(onAppear)();
+        });
+      }
+    },
+    [onAppear]
+  );
 
   /**
    * Before the Component be removed, the function move the component out of the window
    * Just a animation not remove actually
    */
   const unMount = useCallback(() => {
-    let direction;
-    let dest = 0;
-    switch (true) {
-      case from === 'bottom': {
-        direction = true;
-        dest = 0;
-        break;
-      }
-      case from === 'top': {
-        direction = true;
-        dest = 0;
-        break;
-      }
-      case from === 'left': {
-        direction = false;
-        dest = 0;
-        break;
-      }
-      case from === 'right': {
-        direction = false;
-        dest = 0;
-        break;
-      }
-    }
-
     opacity.value = withTiming(0, { duration });
-    if (direction) {
-      translateY.value = withTiming(dest, { duration }, () => {
+    if (from === 'bottom' || from === 'top') {
+      translateY.value = withTiming(0, { duration }, () => {
         onDisappear && runOnJS(onDisappear)();
       });
     } else {
-      translateX.value = withTiming(dest, { duration }, () => {
+      translateX.value = withTiming(0, { duration }, () => {
         onDisappear && runOnJS(onDisappear)();
       });
     }
@@ -388,7 +308,6 @@ const TranslateContainer = forwardRef<
   useImperativeHandle(
     ref,
     () => ({
-      mount,
       unMount,
     }),
     []

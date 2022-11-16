@@ -15,16 +15,20 @@ import React, {
   useRef,
   useImperativeHandle,
   forwardRef,
+  useState,
 } from 'react';
-import { View, StyleSheet, StatusBar, Dimensions } from 'react-native';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
 import { useForceUpdate } from '../../utils/hooks';
-
-const { height } = Dimensions.get('window');
+import {
+  rotateXAnimation,
+  scaleAnimation,
+  translateXAnimation,
+} from './RootViewAnimations';
 
 export interface OverlayRef {
   /**
@@ -51,12 +55,9 @@ export interface OverlayRef {
 }
 
 export interface OverlayContextProps extends OverlayRef {
-  mainTransform: {
-    mainScale: Animated.SharedValue<number>;
-    mainTranslateX: Animated.SharedValue<number>;
-    mainTopRotateX: Animated.SharedValue<number>;
-    mainBottomRotateX: Animated.SharedValue<number>;
-  };
+  initialValue: Animated.SharedValue<number>;
+  progress: Animated.SharedValue<number>;
+  targetValue: Animated.SharedValue<number>;
 }
 
 export const OverlayContext = createContext({} as OverlayContextProps);
@@ -72,6 +73,11 @@ interface ElementType {
   ref: any;
 }
 
+interface MainViewAnimationParams {
+  type: any;
+  params?: any;
+}
+
 const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const { children } = props;
   const elements = useRef<Array<ElementType>>([]); // all componets saved here
@@ -79,10 +85,12 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const elementsIndex = useRef<number>(0);
   const { theme } = useTheme();
 
-  const scale = useSharedValue(1);
-  const translateX = useSharedValue(0);
-  const topRotateX = useSharedValue(0);
-  const bottomRotateX = useSharedValue(0);
+  const initialValue = useSharedValue(0);
+  const progress = useSharedValue(0);
+  const targetValue = useSharedValue(0);
+
+  const [mainViewAnimation, setMainViewAnimation] =
+    useState<MainViewAnimationParams>({} as MainViewAnimationParams);
 
   /**
    * When call this function with key, the component will be unique
@@ -90,6 +98,22 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
    */
   const addNodeToOverlay = useCallback(
     (node: any, key?: string) => {
+      if (node.props.config?.isScale) {
+        setMainViewAnimation({
+          type: 1,
+        });
+      }
+      if (node.props.config?.isTranslate) {
+        setMainViewAnimation({
+          type: 2,
+        });
+      }
+      if (node.props.config?.isRotate) {
+        setMainViewAnimation({
+          type: 3,
+        });
+      }
+
       // If add the same key will be return
       if (typeof key === 'string') {
         let addElement;
@@ -196,38 +220,23 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
    * if set new value, animation will react
    */
   const mainViewStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: scale.value,
-        },
-        {
-          perspective: 600,
-        },
-        {
-          translateY: height / 2,
-        },
-        {
-          rotateX: `${topRotateX.value}deg`,
-        },
-        {
-          translateY: -height / 2,
-        },
-        {
-          translateY: -height / 2,
-        },
-        {
-          rotateX: `${bottomRotateX.value}deg`,
-        },
-        {
-          translateY: height / 2,
-        },
-        {
-          translateX: translateX.value,
-        },
-      ],
-    };
-  }, []);
+    if (mainViewAnimation.type === 1) {
+      return {
+        transform: scaleAnimation(progress),
+      };
+    }
+    if (mainViewAnimation.type === 2) {
+      return {
+        transform: translateXAnimation(progress, targetValue),
+      };
+    }
+    if (mainViewAnimation.type === 3) {
+      return {
+        transform: rotateXAnimation(progress),
+      };
+    }
+    return {};
+  }, [mainViewAnimation]);
 
   useImperativeHandle(
     ref,
@@ -249,12 +258,9 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
           remove: deleteNodeFromOverlay,
           removeAll: deleteAllNodeFromOverlay,
           isExist,
-          mainTransform: {
-            mainScale: scale,
-            mainTranslateX: translateX,
-            mainBottomRotateX: bottomRotateX,
-            mainTopRotateX: topRotateX,
-          },
+          initialValue,
+          progress,
+          targetValue,
         }}
       >
         <Animated.View style={[styles.mainViewStyle, mainViewStyle]}>

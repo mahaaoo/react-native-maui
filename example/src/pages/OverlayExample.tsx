@@ -15,7 +15,8 @@ import Section from '../components/Section';
 const { width, height } = Dimensions.get('window');
 
 export default function OverlayExample() {
-  const { add, remove, removeAll } = useOverlay();
+  const { add, remove, removeAll, mainViewAnimation, setMainViewAnimation } =
+    useOverlay();
   const elementIndex = React.useRef(0);
 
   return (
@@ -458,6 +459,27 @@ export default function OverlayExample() {
             }}
           >
             <Text>Left-Translate</Text>
+          </Button>
+          <Button
+            style={styles.marginLeft}
+            onPress={() => {
+              OverlayUtil.add(
+                <TranslateContainer
+                  from="right"
+                  gesture={true}
+                  config={{ isTranslate: true }}
+                >
+                  <View style={styles.left2}>
+                    <Text style={styles.childText}>
+                      Funtion子视图{elementIndex.current}
+                    </Text>
+                  </View>
+                </TranslateContainer>
+              );
+              elementIndex.current++;
+            }}
+          >
+            <Text>Right-Translate</Text>
           </Button>
         </View>
         <View style={styles.viewContainer}>
