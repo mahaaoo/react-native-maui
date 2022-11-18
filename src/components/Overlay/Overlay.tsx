@@ -24,11 +24,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
 import { useForceUpdate } from '../../utils/hooks';
-import {
-  rotateXAnimation,
-  scaleAnimation,
-  translateXAnimation,
-} from './RootViewAnimations';
+import { RootAnimationType, configAnimation } from './RootViewAnimations';
 
 export interface OverlayRef {
   /**
@@ -73,11 +69,6 @@ interface ElementType {
   ref: any;
 }
 
-interface MainViewAnimationParams {
-  type: any;
-  params?: any;
-}
-
 const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const { children } = props;
   const elements = useRef<Array<ElementType>>([]); // all componets saved here
@@ -90,7 +81,10 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const targetValue = useSharedValue(0);
 
   const [mainViewAnimation, setMainViewAnimation] =
-    useState<MainViewAnimationParams>({} as MainViewAnimationParams);
+    useState<RootAnimationType>('null');
+  const [rootPointerEvents, setRootPointerEvents] = useState<'auto' | 'none'>(
+    'auto'
+  );
 
   /**
    * When call this function with key, the component will be unique
@@ -98,22 +92,11 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
    */
   const addNodeToOverlay = useCallback(
     (node: any, key?: string) => {
-      if (node.props.config?.isScale) {
-        setMainViewAnimation({
-          type: 1,
-        });
-      }
-      if (node.props.config?.isTranslate) {
-        setMainViewAnimation({
-          type: 2,
-        });
-      }
-      if (node.props.config?.isRotate) {
-        setMainViewAnimation({
-          type: 3,
-        });
+      if (node.props?.rootAnimation) {
+        setMainViewAnimation(node.props?.rootAnimation);
       }
 
+      setRootPointerEvents(node.props?.rootPointerEvents || 'auto');
       // If add the same key will be return
       if (typeof key === 'string') {
         let addElement;
@@ -150,6 +133,8 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
             console.log(`删除组件${inner_key}`);
             forceUpdate();
             onDisappear && onDisappear();
+            setMainViewAnimation('null');
+            setRootPointerEvents('auto');
           },
           innerKey: inner_key,
         }),
@@ -220,22 +205,7 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
    * if set new value, animation will react
    */
   const mainViewStyle = useAnimatedStyle(() => {
-    if (mainViewAnimation.type === 1) {
-      return {
-        transform: scaleAnimation(progress),
-      };
-    }
-    if (mainViewAnimation.type === 2) {
-      return {
-        transform: translateXAnimation(progress, targetValue),
-      };
-    }
-    if (mainViewAnimation.type === 3) {
-      return {
-        transform: rotateXAnimation(progress),
-      };
-    }
-    return {};
+    return configAnimation(mainViewAnimation, progress, targetValue);
   }, [mainViewAnimation]);
 
   useImperativeHandle(
@@ -263,7 +233,10 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
           targetValue,
         }}
       >
-        <Animated.View style={[styles.mainViewStyle, mainViewStyle]}>
+        <Animated.View
+          pointerEvents={rootPointerEvents}
+          style={[styles.mainViewStyle, mainViewStyle]}
+        >
           {children}
         </Animated.View>
         {elements.current.map((node: any) => {

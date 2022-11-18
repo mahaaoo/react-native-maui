@@ -44,14 +44,6 @@ interface TranslateContainerProps extends AnimationContainerProps {
    * gesture to close
    */
   gesture?: boolean;
-  /**
-   * config Main View
-   */
-  config?: {
-    isScale?: boolean; // support all directions
-    isTranslate?: boolean; // only supports left and right
-    isRotate?: boolean; //
-  };
 }
 
 export interface TranslateContainerRef {
@@ -79,11 +71,6 @@ const TranslateContainer = forwardRef<
     innerKey,
     containerStyle,
     gesture = false,
-    config = {
-      isScale: false,
-      isTranslate: false,
-      isRotate: false,
-    },
   } = props;
   const { remove, progress, targetValue } = useOverlay();
   const translateY = useSharedValue(0);

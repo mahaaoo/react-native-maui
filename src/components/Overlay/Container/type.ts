@@ -1,4 +1,5 @@
 import { ViewStyle } from 'react-native';
+import { RootAnimationType } from '../RootViewAnimations';
 
 /**
  * All Overlay Container Must exntent this interface
@@ -30,6 +31,16 @@ export interface BaseContainerProps {
    * 'auto': overlay response evet
    */
   pointerEvents?: 'none' | 'auto';
+  /**
+   * config root view pointerEvents
+   * 'none': overlay can't response event, can click view under overlay
+   * 'auto': overlay response evet
+   */
+  rootPointerEvents?: 'none' | 'auto';
+  /**
+   * config root view animation
+   */
+  rootAnimation?: RootAnimationType;
 }
 
 /**

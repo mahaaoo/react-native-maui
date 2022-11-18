@@ -8,7 +8,6 @@ import React, {
   useCallback,
   useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { runOnJS, withTiming } from 'react-native-reanimated';
@@ -16,7 +15,6 @@ import { useOverlay } from '../Overlay';
 import { BaseContainerProps } from './type';
 
 export interface DrawerContainerRef {
-  mount: (callback?: () => void) => void;
   unMount: (callback?: () => void) => void;
 }
 
@@ -35,10 +33,8 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
       children,
       onDisappear,
     } = props;
-    const { mainTransform } = useOverlay();
-    const { mainTranslateX } = mainTransform;
 
-    const toWidth = useRef(0);
+    const { targetValue, progress } = useOverlay();
 
     const onLayout = useCallback(
       ({
@@ -46,32 +42,28 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
           layout: { width: w },
         },
       }) => {
-        toWidth.current = w;
-        mount();
+        mount(w);
       },
       []
     );
 
-    const mount = useCallback(() => {
-      let dest = 0;
-      switch (true) {
-        case position === 'left': {
-          dest = toWidth.current;
-          break;
+    const mount = useCallback(
+      (w: number) => {
+        if (position === 'left') {
+          targetValue.value = w;
+        } else {
+          targetValue.value = -w;
         }
-        case position === 'right': {
-          dest = -toWidth.current;
-          break;
-        }
-      }
 
-      mainTranslateX.value = withTiming(dest, { duration }, () => {
-        onAppear && runOnJS(onAppear)();
-      });
-    }, [onAppear]);
+        progress.value = withTiming(1, { duration }, () => {
+          onAppear && runOnJS(onAppear)();
+        });
+      },
+      [onAppear]
+    );
 
     const unMount = useCallback(() => {
-      mainTranslateX.value = withTiming(0, { duration }, () => {
+      progress.value = withTiming(0, { duration }, () => {
         onDisappear && runOnJS(onDisappear)();
       });
     }, [onDisappear, position]);
@@ -96,7 +88,6 @@ const DrawerContainer = forwardRef<DrawerContainerRef, DrawerContainerProps>(
     useImperativeHandle(
       ref,
       () => ({
-        mount,
         unMount,
       }),
       []

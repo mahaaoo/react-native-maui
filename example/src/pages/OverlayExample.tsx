@@ -15,8 +15,7 @@ import Section from '../components/Section';
 const { width, height } = Dimensions.get('window');
 
 export default function OverlayExample() {
-  const { add, remove, removeAll, mainViewAnimation, setMainViewAnimation } =
-    useOverlay();
+  const { add, remove, removeAll } = useOverlay();
   const elementIndex = React.useRef(0);
 
   return (
@@ -386,7 +385,7 @@ export default function OverlayExample() {
           <Button
             onPress={() => {
               OverlayUtil.add(
-                <TranslateContainer gesture={true} config={{ isScale: true }}>
+                <TranslateContainer rootAnimation={'scale'} gesture={true}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
@@ -406,7 +405,7 @@ export default function OverlayExample() {
                 <TranslateContainer
                   from="left"
                   gesture={true}
-                  config={{ isScale: true }}
+                  rootAnimation={'scale'}
                 >
                   <View style={styles.left2}>
                     <Text style={styles.childText}>
@@ -425,7 +424,7 @@ export default function OverlayExample() {
           <Button
             onPress={() => {
               OverlayUtil.add(
-                <TranslateContainer gesture={true} config={{ isRotate: true }}>
+                <TranslateContainer rootAnimation={'rotateX'} gesture={true}>
                   <View style={styles.bottom}>
                     <Text style={styles.childText}>
                       Funtion子视图{elementIndex.current}
@@ -446,7 +445,7 @@ export default function OverlayExample() {
                 <TranslateContainer
                   from="left"
                   gesture={true}
-                  config={{ isTranslate: true }}
+                  rootAnimation={'translateX'}
                 >
                   <View style={styles.left2}>
                     <Text style={styles.childText}>
@@ -467,7 +466,7 @@ export default function OverlayExample() {
                 <TranslateContainer
                   from="right"
                   gesture={true}
-                  config={{ isTranslate: true }}
+                  rootAnimation={'translateX'}
                 >
                   <View style={styles.left2}>
                     <Text style={styles.childText}>
@@ -489,7 +488,7 @@ export default function OverlayExample() {
                 <TranslateContainer
                   from="left"
                   gesture={true}
-                  config={{ isTranslate: true, isScale: true }}
+                  rootAnimation={'scaleAndtranslateX'}
                 >
                   <View style={styles.left2}>
                     <Text style={styles.childText}>
@@ -510,7 +509,10 @@ export default function OverlayExample() {
         <Button
           onPress={() => {
             const index = OverlayUtil.add(
-              <DrawerContainer position="left">
+              <DrawerContainer
+                rootAnimation={'scaleAndtranslateX'}
+                position="left"
+              >
                 <View style={styles.left2}>
                   <Text style={styles.childText}>
                     Funtion子视图{elementIndex.current}
@@ -536,7 +538,7 @@ export default function OverlayExample() {
           style={styles.marginLeft}
           onPress={() => {
             const index = OverlayUtil.add(
-              <DrawerContainer position="right">
+              <DrawerContainer rootAnimation={'translateX'} position="right">
                 <View style={styles.right}>
                   <Text style={styles.childText}>
                     Funtion子视图{elementIndex.current}
@@ -557,6 +559,36 @@ export default function OverlayExample() {
           }}
         >
           <Text>Right</Text>
+        </Button>
+        <Button
+          style={styles.marginLeft}
+          onPress={() => {
+            const index = OverlayUtil.add(
+              <DrawerContainer
+                rootPointerEvents="none"
+                rootAnimation={'scaleAndtranslateX'}
+                position="left"
+              >
+                <View style={styles.left2}>
+                  <Text style={styles.childText}>
+                    Funtion子视图{elementIndex.current}
+                  </Text>
+                  <Text
+                    onPress={() => {
+                      remove(index);
+                    }}
+                    style={styles.close}
+                  >
+                    关闭
+                  </Text>
+                </View>
+              </DrawerContainer>,
+              'draw-view-left'
+            );
+            elementIndex.current++;
+          }}
+        >
+          <Text>Left-Root-None</Text>
         </Button>
       </Section>
       <Section title="ScaleContainer">
