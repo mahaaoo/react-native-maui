@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   useSharedValue,
   interpolate,
+  useAnimatedReaction,
 } from 'react-native-reanimated';
 
 import TabViewContainer from './TabViewContainer';
@@ -46,6 +47,13 @@ const TabView: React.FC<TabViewProps> = (props) => {
     defaultTabOffset = width / 2;
   }
   const tabOffset = useSharedValue(defaultTabOffset);
+
+  useAnimatedReaction(
+    () => currentIndex.value,
+    (value) => {
+      console.log('当前位置', value);
+    }
+  );
 
   // Every gesture move end and press tabbar will be invoked
   const handleMove = useCallback((nextIndex: number) => {

@@ -28,22 +28,22 @@ const TabViewContainer: React.FC<TabViewContainerProps> = (props) => {
   useAnimatedReaction(
     () => currentIndex.value,
     (value) => {
-      if (Math.abs(index - value) <= 1) {
+      // if (Math.abs(index - value) <= 1) {
+      //   runOnJS(setFreeze)(FreezeType.SHOWING);
+      // } else {
+      //   runOnJS(setFreeze)(FreezeType.DIDSHOW);
+      // }
+      if (index === value) {
         runOnJS(setFreeze)(FreezeType.SHOWING);
-      } else {
-        runOnJS(setFreeze)(FreezeType.DIDSHOW);
       }
     }
   );
 
-  return (
-    <Freeze
-      freeze={freeze !== FreezeType.SHOWING}
-      placeholder={<View style={{ width }} />}
-    >
-      {children}
-    </Freeze>
-  );
+  if (freeze === FreezeType.UNSHOW) {
+    return <View style={{ width }} />;
+  }
+
+  return <View style={{ width }}>{children}</View>;
 };
 
 export default TabViewContainer;

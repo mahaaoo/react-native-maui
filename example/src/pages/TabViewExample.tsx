@@ -22,7 +22,7 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <TabView tabBar={TabList} initialPage={1}>
+      <TabView tabBar={TabList} initialPage={0}>
         {TabList.map((item, index) => {
           return (
             <ScrollView key={item}>
@@ -34,9 +34,9 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
                   },
                 ]}
               >
-                {new Array(10).fill(0).map((_, index) => {
-                  return <Text key={index}>{`Tab${index}`}</Text>;
-                })}
+                <Text style={{ fontSize: 30 }} key={index}>{`Tab${
+                  index + 1
+                }`}</Text>
               </View>
             </ScrollView>
           );
