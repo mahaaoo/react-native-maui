@@ -181,7 +181,7 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
 
         const ratio = (Math.PI / 2 / MAX_SCROLL_VELOCITY_Y) * velocityY;
         const bounceDistance = (height / 4) * Math.sin(ratio);
-        const duration = 150 + 100 * Math.sin(ratio * 2);
+        const duration = 100 + 100 * Math.sin(ratio * 2);
 
         scrollBounse.value = true;
         refreshTransitionY.value = withSequence(
