@@ -42,7 +42,7 @@ const card = [
 ];
 
 const card2: any[] = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 5; i++) {
   card2.push(i);
 }
 
