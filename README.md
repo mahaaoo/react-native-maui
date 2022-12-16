@@ -18,9 +18,9 @@ This project contains the basic components commonly used in ReactNative, and the
 | <img src="./screenshoot/number.gif" width="250" />  | <img src="./screenshoot/overlay.gif" width="250" />  |  <img src="./screenshoot/refresh.gif" width="250" /> |
 
 
-| Carousel | WaterfallList |
-| ------------- | ------------- |
-| <img src="./screenshoot/carousel.gif" width="250" />  | <img src="./screenshoot/waterFall.gif" width="250" />  |
+| Carousel | WaterfallList | More Demos |
+| ------------- | ------------- | ------------- |
+| <img src="./screenshoot/carousel.gif" width="250" />  | <img src="./screenshoot/waterFall.gif" width="250" />  | <img src="./screenshoot/qrcode.png" width="200" /> |
 
 
 ## Installation
