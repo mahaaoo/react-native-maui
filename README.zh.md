@@ -8,15 +8,19 @@
 
 ## Preview
 
-| <img src="./screenshoot/Icon.png" width="250" /> | <img src="./screenshoot/Button.png" width="250" />  | <img src="./screenshoot/Badge.png" width="250" />  |
+| Loading | Progress | Button | 
 | ------------- | ------------- | ------------- | 
-| <img src="./screenshoot/Divider.png" width="250" />  | <img src="./screenshoot/ListRow.png" width="250" />  |  <img src="./screenshoot/Switch.png" width="250" /> |
-| <img src="./screenshoot/Avatar.png" width="250" />  | <img src="./screenshoot/Shadow.png" width="250" />  |  <img src="./screenshoot/Loading.gif" width="250" /> |
-| <img src="./screenshoot/Toast.png" width="250" />  | <img src="./screenshoot/Pagination.png" width="250" />  |  <img src="./screenshoot/Segmented.png" width="250" /> |
-| <img src="./screenshoot/Theme.png" width="250" />  | <img src="./screenshoot/Collapse.png" width="250" />   |  <img src="./screenshoot/Overlay.png" width="250" /> |
-| <img src="./screenshoot/ActionSheet.png" width="250" />  | <img src="./screenshoot/RefreshList.png" width="250" />  |  <img src="./screenshoot/Picker.png" width="250" /> |
-| <img src="./screenshoot/Progress.gif" width="250" />  |  <img src="./screenshoot/AnimatedNumber.gif" width="250" />  |   <img src="./screenshoot/ImageViewer.png" width="250" /> |
-| <img src="./screenshoot/Skeleton.gif" width="250" /> | <img src="./screenshoot/Swiper.png" width="250" />  | <img src="./screenshoot/WaterFallList.png" width="250" />
+| <img src="./screenshoot/Loading.gif" width="250" /> | <img src="./screenshoot/Progress.gif" width="250" />  | <img src="./screenshoot/button.gif" width="250" />  |
+
+
+| AnimatedNumber | Overlay | RefreshScrollView |
+| ------------- | ------------- | ------------- | 
+| <img src="./screenshoot/number.gif" width="250" />  | <img src="./screenshoot/overlay.gif" width="250" />  |  <img src="./screenshoot/refresh.gif" width="250" /> |
+
+
+| Carousel | WaterfallList |
+| ------------- | ------------- |
+| <img src="./screenshoot/carousel.gif" width="250" />  | <img src="./screenshoot/waterFall.gif" width="250" />  |
 
 
 ## Installation
