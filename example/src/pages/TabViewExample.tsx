@@ -11,7 +11,7 @@ const TabListColor = [
   'orange',
   '#666',
   'cyan',
-  '#e82c1c',
+  'pink',
   'purple',
   'orange',
   '#666',
@@ -22,13 +22,25 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <TabView tabBar={TabList} initialPage={0}>
+      <TabView
+        tabBar={TabList}
+        initialPage={0}
+        tabBarInactiveTextColor={'pink'}
+        tabBarActiveTextColor={'red'}
+        tabBarUnderlineStyle={{
+          height: 4,
+          backgroundColor: 'red',
+        }}
+      >
         {TabList.map((item, index) => {
           return (
             <ScrollView key={item}>
               <View
                 style={[
                   styles.itemContainer,
+                  {
+                    height: (index * height) / 2,
+                  },
                   {
                     backgroundColor: TabListColor[index],
                   },

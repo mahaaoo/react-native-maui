@@ -1,21 +1,37 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  TextStyle,
+} from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
-const TABBAR_WIDTH = 120;
-
 interface TabViewBarProps {
   index: number;
   translateX: Animated.SharedValue<number>;
   onPress: (index: number) => void;
+  tabBarActiveTextColor?: string;
+  tabBarInactiveTextColor?: string;
+  tabBarTextStyle?: TextStyle;
+  tabWidth: number;
 }
 
 const TabViewBar: React.FC<TabViewBarProps> = (props) => {
-  const { index, translateX, onPress, children } = props;
+  const {
+    index,
+    translateX,
+    onPress,
+    children,
+    tabBarActiveTextColor = '#1e90ff',
+    tabBarInactiveTextColor = 'black',
+    tabBarTextStyle,
+    tabWidth,
+  } = props;
 
   const tabbarTitleColor = useAnimatedStyle(() => {
     const active = -translateX.value / width;
@@ -23,7 +39,11 @@ const TabViewBar: React.FC<TabViewBarProps> = (props) => {
       color: interpolateColor(
         active,
         [index - 1, index, index + 1],
-        ['black', '#1e90ff', 'black']
+        [
+          tabBarInactiveTextColor,
+          tabBarActiveTextColor,
+          tabBarInactiveTextColor,
+        ]
       ),
     };
   });
@@ -31,18 +51,19 @@ const TabViewBar: React.FC<TabViewBarProps> = (props) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        onPress(index);
+        onPress && onPress(index);
       }}
-      style={styles.tabbarItem}
+      style={[styles.tabbarItem, { width: tabWidth }]}
     >
-      <Animated.Text style={tabbarTitleColor}>{children}</Animated.Text>
+      <Animated.Text style={[tabBarTextStyle, tabbarTitleColor]}>
+        {children}
+      </Animated.Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   tabbarItem: {
-    width: TABBAR_WIDTH,
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
