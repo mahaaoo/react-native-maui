@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, TextStyle, ViewStyle, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolate,
@@ -11,22 +11,11 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated';
 
+import { TabViewContext, TabViewProps } from './type';
 import TabViewContainer from './TabViewContainer';
 import TabViewBar from './TabViewBar';
 
 const TABBAR_WIDTH = 100;
-
-interface TabViewProps {
-  tabBar: Array<string>;
-  children: Array<React.ReactNode>;
-
-  onChangeTab?: (index: number) => void;
-  initialPage?: number;
-  tabBarUnderlineStyle?: ViewStyle;
-  tabBarActiveTextColor?: string;
-  tabBarInactiveTextColor?: string;
-  tabBarTextStyle?: TextStyle;
-}
 
 const TabView: React.FC<TabViewProps> = (props) => {
   const {
@@ -183,64 +172,71 @@ const TabView: React.FC<TabViewProps> = (props) => {
   );
 
   return (
-    <View onLayout={onLayout} style={[styles.main]}>
-      <View style={{ backgroundColor: 'white' }}>
-        <Animated.View
-          style={[
-            styles.tarbarContainer,
-            {
-              width: TABBAR_WIDTH * tabBar.length,
-            },
-            tabContainerStyle,
-          ]}
-        >
-          {tabBar.map((item, index) => {
-            return (
-              <TabViewBar
-                key={`tab_index_${index}`}
-                index={index}
-                translateX={translateX}
-                tabWidth={TABBAR_WIDTH}
-                onPress={(index: number) => handleMove(index)}
-                {...{
-                  tabBarActiveTextColor,
-                  tabBarInactiveTextColor,
-                  tabBarTextStyle,
-                }}
-              >
-                {item}
-              </TabViewBar>
-            );
-          })}
-        </Animated.View>
-        <Animated.View
-          style={[styles.slider, tabBarUnderlineStyle, animatedTarbarStyle]}
-        />
-      </View>
-      <GestureDetector gesture={panGesture}>
-        <Animated.View
-          style={[
-            styles.contentContainer,
-            { width: totalWidth.value },
-            animatedStyle,
-          ]}
-        >
-          {children &&
-            children.map((component, index) => {
+    <TabViewContext.Provider
+      value={{
+        contentWidth,
+        translateX,
+      }}
+    >
+      <View onLayout={onLayout} style={[styles.main]}>
+        <View style={{ backgroundColor: 'white' }}>
+          <Animated.View
+            style={[
+              styles.tarbarContainer,
+              {
+                width: TABBAR_WIDTH * tabBar.length,
+              },
+              tabContainerStyle,
+            ]}
+          >
+            {tabBar.map((item, index) => {
               return (
-                <TabViewContainer
-                  key={`TabViewItem_${index}`}
-                  contentWidth={contentWidth}
-                  currentIndex={currentIndex}
+                <TabViewBar
+                  key={`tab_index_${index}`}
                   index={index}
+                  translateX={translateX}
+                  tabWidth={TABBAR_WIDTH}
+                  onPress={(index: number) => handleMove(index)}
+                  {...{
+                    tabBarActiveTextColor,
+                    tabBarInactiveTextColor,
+                    tabBarTextStyle,
+                  }}
                 >
-                  {component}
-                </TabViewContainer>
+                  {item}
+                </TabViewBar>
               );
             })}
-        </Animated.View>
-      </GestureDetector>
-    </View>
+          </Animated.View>
+          <Animated.View
+            style={[styles.slider, tabBarUnderlineStyle, animatedTarbarStyle]}
+          />
+        </View>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            style={[
+              styles.contentContainer,
+              { width: totalWidth.value },
+              animatedStyle,
+            ]}
+          >
+            {children &&
+              children.map((component, index) => {
+                return (
+                  <TabViewContainer
+                    key={`TabViewItem_${index}`}
+                    contentWidth={contentWidth}
+                    currentIndex={currentIndex}
+                    index={index}
+                  >
+                    {component}
+                  </TabViewContainer>
+                );
+              })}
+          </Animated.View>
+        </GestureDetector>
+      </View>
+    </TabViewContext.Provider>
   );
 };
 
