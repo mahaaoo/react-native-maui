@@ -11,11 +11,9 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated';
 
-import { TabViewContext, TabViewProps } from './type';
+import { TabViewContext, TabViewProps, TabStatus } from './type';
 import TabViewContainer from './TabViewContainer';
-import TabViewBar from './TabViewBar';
-
-const TABBAR_WIDTH = 100;
+import DefaultTabBar from './DefaultTabBar';
 
 const TabView: React.FC<TabViewProps> = (props) => {
   const {
@@ -36,24 +34,10 @@ const TabView: React.FC<TabViewProps> = (props) => {
   // TabView Content translateX
   const translateX = useSharedValue(-initialPage * contentWidth.value);
   const offsetX = useSharedValue(0);
-
   // Current TabView Index
   const currentIndex = useSharedValue(initialPage);
-
-  // Tabbar Container translateX, Make sure tabbar's and slider's position around middle of container
-  let defaultContainerOffset = 0;
-  if (initialPage * TABBAR_WIDTH >= contentWidth.value / 2) {
-    defaultContainerOffset =
-      -initialPage * TABBAR_WIDTH + contentWidth.value / 2;
-  }
-  const containerOffset = useSharedValue(defaultContainerOffset);
-
-  // Slider translateX
-  let defaultTabOffset = initialPage * TABBAR_WIDTH;
-  if (initialPage * TABBAR_WIDTH >= contentWidth.value / 2) {
-    defaultTabOffset = contentWidth.value / 2;
-  }
-  const tabOffset = useSharedValue(defaultTabOffset);
+  const tabStatus = useSharedValue(TabStatus.Normal);
+  const next = useSharedValue(initialPage);
 
   useAnimatedReaction(
     () => currentIndex.value,
@@ -65,32 +49,6 @@ const TabView: React.FC<TabViewProps> = (props) => {
   // Every gesture move end and press tabbar will be invoked
   const handleMove = useCallback((nextIndex: number) => {
     'worklet';
-    let dest = interpolate(
-      -Math.round(nextIndex) * contentWidth.value,
-      [0, -totalWidth.value],
-      [0, TABBAR_WIDTH * tabBar.length]
-    );
-
-    /**
-     * Control slider stay in the middle
-     * if over middle of screen width, move tabbar
-     */
-    if (dest > contentWidth.value / 2) {
-      const adjust = Math.min(
-        contentWidth.value - TABBAR_WIDTH * (nextIndex + 1 + 1),
-        0
-      );
-      dest += adjust;
-      if (nextIndex + 1 + 1 <= tabBar.length) {
-        containerOffset.value = withTiming(adjust);
-      } else {
-        dest += TABBAR_WIDTH;
-      }
-    } else {
-      containerOffset.value = withTiming(0);
-    }
-
-    tabOffset.value = withTiming(dest);
     translateX.value = withTiming(-nextIndex * contentWidth.value, {}, () => {
       currentIndex.value = nextIndex;
     });
@@ -99,6 +57,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       offsetX.value = translateX.value;
+      tabStatus.value = TabStatus.Scrolling;
     })
     .onUpdate(({ translationX }) => {
       translateX.value = translationX + offsetX.value;
@@ -127,6 +86,8 @@ const TabView: React.FC<TabViewProps> = (props) => {
       if (nextIndex > tabBar.length - 1) nextIndex = tabBar.length - 1;
 
       nextIndex = Math.round(nextIndex);
+      next.value = nextIndex;
+      tabStatus.value = TabStatus.Normal;
       handleMove(nextIndex);
     });
 
@@ -135,26 +96,6 @@ const TabView: React.FC<TabViewProps> = (props) => {
       transform: [
         {
           translateX: translateX.value,
-        },
-      ],
-    };
-  });
-
-  const tabContainerStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: containerOffset.value,
-        },
-      ],
-    };
-  });
-
-  const animatedTarbarStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: tabOffset.value,
         },
       ],
     };
@@ -174,44 +115,22 @@ const TabView: React.FC<TabViewProps> = (props) => {
   return (
     <TabViewContext.Provider
       value={{
+        tabBar,
+        handleMove,
         contentWidth,
+        currentIndex,
+        next,
         translateX,
+        initialPage,
+        tabBarUnderlineStyle,
+        tabBarActiveTextColor,
+        tabBarInactiveTextColor,
+        tabBarTextStyle,
+        tabStatus,
       }}
     >
+      <DefaultTabBar />
       <View onLayout={onLayout} style={[styles.main]}>
-        <View style={{ backgroundColor: 'white' }}>
-          <Animated.View
-            style={[
-              styles.tarbarContainer,
-              {
-                width: TABBAR_WIDTH * tabBar.length,
-              },
-              tabContainerStyle,
-            ]}
-          >
-            {tabBar.map((item, index) => {
-              return (
-                <TabViewBar
-                  key={`tab_index_${index}`}
-                  index={index}
-                  translateX={translateX}
-                  tabWidth={TABBAR_WIDTH}
-                  onPress={(index: number) => handleMove(index)}
-                  {...{
-                    tabBarActiveTextColor,
-                    tabBarInactiveTextColor,
-                    tabBarTextStyle,
-                  }}
-                >
-                  {item}
-                </TabViewBar>
-              );
-            })}
-          </Animated.View>
-          <Animated.View
-            style={[styles.slider, tabBarUnderlineStyle, animatedTarbarStyle]}
-          />
-        </View>
         <GestureDetector gesture={panGesture}>
           <Animated.View
             style={[
@@ -223,12 +142,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
             {children &&
               children.map((component, index) => {
                 return (
-                  <TabViewContainer
-                    key={`TabViewItem_${index}`}
-                    contentWidth={contentWidth}
-                    currentIndex={currentIndex}
-                    index={index}
-                  >
+                  <TabViewContainer key={`TabViewItem_${index}`} index={index}>
                     {component}
                   </TabViewContainer>
                 );
@@ -244,17 +158,6 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     overflow: 'hidden',
-  },
-  tarbarContainer: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
-  slider: {
-    height: 2,
-    width: TABBAR_WIDTH - 40,
-    marginLeft: 20,
-    backgroundColor: '#1e90ff',
   },
   contentContainer: {
     flex: 1,
