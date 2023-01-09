@@ -32,8 +32,8 @@ const TabView: React.FC<TabViewProps> = (props) => {
   const offsetX = useSharedValue(0);
   // Current TabView Index
   const currentIndex = useSharedValue(initialPage);
-  const tabStatus = useSharedValue(TabStatus.Normal);
-  const next = useSharedValue(initialPage);
+  const tabStatus = useSharedValue(TabStatus.NoMove);
+  const nextIndex = useSharedValue(initialPage);
 
   useAnimatedReaction(
     () => currentIndex.value,
@@ -47,13 +47,14 @@ const TabView: React.FC<TabViewProps> = (props) => {
     'worklet';
     translateX.value = withTiming(-nextIndex * contentWidth.value, {}, () => {
       currentIndex.value = nextIndex;
+      tabStatus.value = TabStatus.NoMove;
     });
   }, []);
 
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       offsetX.value = translateX.value;
-      tabStatus.value = TabStatus.Scrolling;
+      tabStatus.value = TabStatus.Moving;
     })
     .onUpdate(({ translationX }) => {
       translateX.value = translationX + offsetX.value;
@@ -67,7 +68,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
     })
     .onEnd(({ velocityX }) => {
       const page = -(translateX.value + 0.2 * velocityX) / contentWidth.value;
-      let nextIndex = interpolate(
+      let temp = interpolate(
         page,
         [
           currentIndex.value - 0.5,
@@ -78,13 +79,23 @@ const TabView: React.FC<TabViewProps> = (props) => {
         Extrapolate.CLAMP
       );
 
-      if (nextIndex < 0) nextIndex = 0;
-      if (nextIndex > tabBar.length - 1) nextIndex = tabBar.length - 1;
+      if (temp < 0) temp = 0;
+      if (temp > tabBar.length - 1) temp = tabBar.length - 1;
 
-      nextIndex = Math.round(nextIndex);
-      next.value = nextIndex;
-      tabStatus.value = TabStatus.Normal;
-      handleMove(nextIndex);
+      if (temp === currentIndex.value) {
+        // 本次移动和上次保持一致
+        tabStatus.value = TabStatus.StayCurrent;
+      } else if (temp > currentIndex.value) {
+        // tab向右移动
+        tabStatus.value = TabStatus.MoveRight;
+      } else {
+        // tab向左移动
+        tabStatus.value = TabStatus.MoveLeft;
+      }
+
+      temp = Math.round(temp);
+      nextIndex.value = temp;
+      handleMove(temp);
     });
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -115,7 +126,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
         handleMove,
         contentWidth,
         currentIndex,
-        next,
+        nextIndex,
         translateX,
         initialPage,
         tabStatus,

@@ -10,7 +10,7 @@ export interface TabViewContextProps {
   translateX: Animated.SharedValue<number>;
   contentWidth: Animated.SharedValue<number>;
   currentIndex: Animated.SharedValue<number>;
-  next: Animated.SharedValue<number>;
+  nextIndex: Animated.SharedValue<number>;
   initialPage: number;
   handleMove: (nextIndex: number) => void;
   tabBar: Array<string>;
@@ -27,6 +27,9 @@ export interface TabViewProps {
 }
 
 export enum TabStatus {
-  Normal,
-  Scrolling,
+  NoMove,
+  Moving,
+  MoveRight,
+  StayCurrent,
+  MoveLeft,
 }

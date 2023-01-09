@@ -167,8 +167,6 @@ const getItemOffset = (
     currentIndex = Math.abs((offset + Math.abs(group) * size) % size);
   }
 
-  const newCurrentIndex = Math.min(offset % size, size - (offset % size));
-
   if (currentIndex > index) {
     if (currentIndex - index <= options.maxRender) {
       return group;

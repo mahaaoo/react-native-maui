@@ -92,7 +92,7 @@ const DefaultTabBar: React.FC<DefaultTabBarProps> = (props) => {
     contentWidth,
     translateX,
     initialPage,
-    next,
+    nextIndex,
     // currentIndex,
     // tabStatus,
   } = useTabView();
@@ -143,7 +143,7 @@ const DefaultTabBar: React.FC<DefaultTabBarProps> = (props) => {
   }, []);
 
   useAnimatedReaction(
-    () => next.value,
+    () => nextIndex.value,
     (value) => {
       handleTabMove(value);
     }
