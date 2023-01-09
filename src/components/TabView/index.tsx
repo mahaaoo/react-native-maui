@@ -1,3 +1,4 @@
 import TabView from './TabView';
+import DefaultTabBar from './DefaultTabBar';
 
-export { TabView };
+export { TabView, DefaultTabBar };

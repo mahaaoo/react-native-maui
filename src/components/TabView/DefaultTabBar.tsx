@@ -2,9 +2,9 @@ import React, { useCallback } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
   TextStyle,
   View,
+  ViewStyle,
 } from 'react-native';
 import Animated, {
   interpolate,
@@ -15,9 +15,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useTabView } from './type';
-
-const { width } = Dimensions.get('window');
-const TABBAR_WIDTH = 100;
 
 interface TabViewBarProps {
   index: number;
@@ -41,8 +38,10 @@ const TabViewBar: React.FC<TabViewBarProps> = (props) => {
     tabWidth,
   } = props;
 
+  const { contentWidth } = useTabView();
+
   const tabbarTitleColor = useAnimatedStyle(() => {
-    const active = -translateX.value / width;
+    const active = -translateX.value / contentWidth.value;
     return {
       color: interpolateColor(
         active,
@@ -70,17 +69,29 @@ const TabViewBar: React.FC<TabViewBarProps> = (props) => {
   );
 };
 
-const DefaultTabBar = () => {
+interface DefaultTabBarProps {
+  tabBarUnderlineStyle?: ViewStyle;
+  tabBarActiveTextColor?: string;
+  tabBarInactiveTextColor?: string;
+  tabBarTextStyle?: TextStyle;
+  tabBarWidth?: number;
+}
+
+const DefaultTabBar: React.FC<DefaultTabBarProps> = (props) => {
+  const {
+    tabBarUnderlineStyle,
+    tabBarActiveTextColor,
+    tabBarInactiveTextColor,
+    tabBarTextStyle,
+    tabBarWidth = 100,
+  } = props;
+
   const {
     tabBar,
     handleMove,
     contentWidth,
     translateX,
     initialPage,
-    tabBarUnderlineStyle,
-    tabBarActiveTextColor,
-    tabBarInactiveTextColor,
-    tabBarTextStyle,
     next,
     // currentIndex,
     // tabStatus,
@@ -88,15 +99,15 @@ const DefaultTabBar = () => {
 
   // Tabbar Container translateX, Make sure tabbar's and slider's position around middle of container
   let defaultContainerOffset = 0;
-  if (initialPage * TABBAR_WIDTH >= contentWidth.value / 2) {
+  if (initialPage * tabBarWidth >= contentWidth.value / 2) {
     defaultContainerOffset =
-      -initialPage * TABBAR_WIDTH + contentWidth.value / 2;
+      -initialPage * tabBarWidth + contentWidth.value / 2;
   }
   const containerOffset = useSharedValue(defaultContainerOffset);
 
   // Slider translateX
-  let defaultTabOffset = initialPage * TABBAR_WIDTH;
-  if (initialPage * TABBAR_WIDTH >= contentWidth.value / 2) {
+  let defaultTabOffset = initialPage * tabBarWidth;
+  if (initialPage * tabBarWidth >= contentWidth.value / 2) {
     defaultTabOffset = contentWidth.value / 2;
   }
   const tabOffset = useSharedValue(defaultTabOffset);
@@ -106,7 +117,7 @@ const DefaultTabBar = () => {
     let dest = interpolate(
       -Math.round(nextIndex) * contentWidth.value,
       [0, -contentWidth.value * tabBar.length],
-      [0, TABBAR_WIDTH * tabBar.length]
+      [0, tabBarWidth * tabBar.length]
     );
 
     /**
@@ -115,14 +126,14 @@ const DefaultTabBar = () => {
      */
     if (dest > contentWidth.value / 2) {
       const adjust = Math.min(
-        contentWidth.value - TABBAR_WIDTH * (nextIndex + 1 + 1),
+        contentWidth.value - tabBarWidth * (nextIndex + 1 + 1),
         0
       );
       dest += adjust;
       if (nextIndex + 1 + 1 <= tabBar.length) {
         containerOffset.value = withTiming(adjust);
       } else {
-        dest += TABBAR_WIDTH;
+        dest += tabBarWidth;
       }
     } else {
       containerOffset.value = withTiming(0);
@@ -164,7 +175,7 @@ const DefaultTabBar = () => {
         style={[
           styles.tarbarContainer,
           {
-            width: TABBAR_WIDTH * tabBar.length,
+            width: tabBarWidth * tabBar.length,
           },
           tabContainerStyle,
         ]}
@@ -175,7 +186,7 @@ const DefaultTabBar = () => {
               key={`tab_index_${index}`}
               index={index}
               translateX={translateX}
-              tabWidth={TABBAR_WIDTH}
+              tabWidth={tabBarWidth}
               onPress={(index: number) => {
                 handleTabMove(index);
                 handleMove && handleMove(index);
@@ -192,7 +203,12 @@ const DefaultTabBar = () => {
         })}
       </Animated.View>
       <Animated.View
-        style={[styles.slider, tabBarUnderlineStyle, animatedTarbarStyle]}
+        style={[
+          styles.slider,
+          { width: tabBarWidth - 40 },
+          tabBarUnderlineStyle,
+          animatedTarbarStyle,
+        ]}
       />
     </View>
   );
@@ -211,7 +227,6 @@ const styles = StyleSheet.create({
   },
   slider: {
     height: 2,
-    width: TABBAR_WIDTH - 40,
     marginLeft: 20,
     backgroundColor: '#1e90ff',
   },

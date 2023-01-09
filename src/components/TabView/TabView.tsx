@@ -13,17 +13,13 @@ import Animated, {
 
 import { TabViewContext, TabViewProps, TabStatus } from './type';
 import TabViewContainer from './TabViewContainer';
-import DefaultTabBar from './DefaultTabBar';
 
 const TabView: React.FC<TabViewProps> = (props) => {
   const {
     tabBar,
     children,
+    renderTabBar,
     initialPage = 0,
-    tabBarUnderlineStyle,
-    tabBarActiveTextColor,
-    tabBarInactiveTextColor,
-    tabBarTextStyle,
     onChangeTab,
   } = props;
   const contentWidth = useSharedValue(0);
@@ -122,14 +118,10 @@ const TabView: React.FC<TabViewProps> = (props) => {
         next,
         translateX,
         initialPage,
-        tabBarUnderlineStyle,
-        tabBarActiveTextColor,
-        tabBarInactiveTextColor,
-        tabBarTextStyle,
         tabStatus,
       }}
     >
-      <DefaultTabBar />
+      {renderTabBar && renderTabBar()}
       <View onLayout={onLayout} style={[styles.main]}>
         <GestureDetector gesture={panGesture}>
           <Animated.View

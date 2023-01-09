@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Text, Dimensions } from 'react-native';
-import { TabView } from 'react-native-maui';
+import { TabView, DefaultTabBar } from 'react-native-maui';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,12 +25,16 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
       <TabView
         tabBar={TabList}
         initialPage={0}
-        tabBarInactiveTextColor={'pink'}
-        tabBarActiveTextColor={'red'}
-        tabBarUnderlineStyle={{
-          height: 4,
-          backgroundColor: 'red',
-        }}
+        renderTabBar={() => (
+          <DefaultTabBar
+            tabBarInactiveTextColor={'pink'}
+            tabBarActiveTextColor={'red'}
+            tabBarUnderlineStyle={{
+              height: 4,
+              backgroundColor: 'red',
+            }}
+          />
+        )}
       >
         {TabList.map((item, index) => {
           return (
