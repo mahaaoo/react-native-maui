@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, forwardRef, useImperativeHandle } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -8,24 +8,21 @@ import Animated, {
   useSharedValue,
   interpolate,
   useAnimatedReaction,
-  useDerivedValue,
 } from 'react-native-reanimated';
 
-import { TabViewContext, TabViewProps, TabStatus } from './type';
+import { TabViewContext, TabViewProps, TabStatus, TabViewRef } from './type';
 import TabViewContainer from './TabViewContainer';
+import DefaultTabBar from './DefaultTabBar';
 
-const TabView: React.FC<TabViewProps> = (props) => {
+const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
   const {
     tabBar,
     children,
-    renderTabBar,
+    renderTabBar = () => <DefaultTabBar />,
     initialPage = 0,
     onChangeTab,
   } = props;
   const contentWidth = useSharedValue(0);
-  const totalWidth = useDerivedValue(() => {
-    return contentWidth.value * tabBar.length;
-  });
 
   // TabView Content translateX
   const translateX = useSharedValue(-initialPage * contentWidth.value);
@@ -43,10 +40,22 @@ const TabView: React.FC<TabViewProps> = (props) => {
   );
 
   // Every gesture move end and press tabbar will be invoked
-  const handleMove = useCallback((nextIndex: number) => {
+  const handleMove = useCallback((index: number) => {
     'worklet';
-    translateX.value = withTiming(-nextIndex * contentWidth.value, {}, () => {
-      currentIndex.value = nextIndex;
+    if (index < 0) index = 0;
+    if (index > tabBar.length - 1) index = tabBar.length - 1;
+
+    if (index === currentIndex.value) {
+      tabStatus.value = TabStatus.StayCurrent;
+    } else if (index > currentIndex.value) {
+      tabStatus.value = TabStatus.MoveRight;
+    } else {
+      tabStatus.value = TabStatus.MoveLeft;
+    }
+    index = Math.round(index);
+    nextIndex.value = index;
+    translateX.value = withTiming(-index * contentWidth.value, {}, () => {
+      currentIndex.value = index;
       tabStatus.value = TabStatus.NoMove;
     });
   }, []);
@@ -68,7 +77,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
     })
     .onEnd(({ velocityX }) => {
       const page = -(translateX.value + 0.2 * velocityX) / contentWidth.value;
-      let temp = interpolate(
+      const temp = interpolate(
         page,
         [
           currentIndex.value - 0.5,
@@ -78,23 +87,6 @@ const TabView: React.FC<TabViewProps> = (props) => {
         [currentIndex.value - 1, currentIndex.value, currentIndex.value + 1],
         Extrapolate.CLAMP
       );
-
-      if (temp < 0) temp = 0;
-      if (temp > tabBar.length - 1) temp = tabBar.length - 1;
-
-      if (temp === currentIndex.value) {
-        // 本次移动和上次保持一致
-        tabStatus.value = TabStatus.StayCurrent;
-      } else if (temp > currentIndex.value) {
-        // tab向右移动
-        tabStatus.value = TabStatus.MoveRight;
-      } else {
-        // tab向左移动
-        tabStatus.value = TabStatus.MoveLeft;
-      }
-
-      temp = Math.round(temp);
-      nextIndex.value = temp;
       handleMove(temp);
     });
 
@@ -119,6 +111,16 @@ const TabView: React.FC<TabViewProps> = (props) => {
     []
   );
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollTo: handleMove,
+      previous: () => handleMove(currentIndex.value - 1),
+      next: () => handleMove(currentIndex.value + 1),
+    }),
+    [handleMove]
+  );
+
   return (
     <TabViewContext.Provider
       value={{
@@ -138,7 +140,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
           <Animated.View
             style={[
               styles.contentContainer,
-              { width: totalWidth.value },
+              { width: contentWidth.value * tabBar.length },
               animatedStyle,
             ]}
           >
@@ -155,7 +157,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
       </View>
     </TabViewContext.Provider>
   );
-};
+});
 
 const styles = StyleSheet.create({
   main: {

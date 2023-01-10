@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { useAnimatedReaction, runOnJS } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedReaction,
+  runOnJS,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 import { useTabView } from './type';
 
 interface TabViewContainerProps {
@@ -29,11 +32,17 @@ const TabViewContainer: React.FC<TabViewContainerProps> = (props) => {
     }
   );
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      width: contentWidth.value,
+    };
+  });
+
   if (freeze === FreezeType.UNSHOW) {
-    return <View style={{ width: contentWidth.value }} />;
+    return <Animated.View style={animatedStyle} />;
   }
 
-  return <View style={{ width: contentWidth.value }}>{children}</View>;
+  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
 };
 
 export default TabViewContainer;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, ScrollView, Text, Dimensions } from 'react-native';
 import { TabView, DefaultTabBar } from 'react-native-maui';
 
@@ -19,10 +19,18 @@ const TabListColor = [
 
 const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
+  const tabRef = useRef(null);
+
+  useEffect(() => {
+    // setTimeout(() => {
+    //   tabRef.current && tabRef.current?.previous();
+    // }, 3000);
+  }, []);
 
   return (
     <View style={styles.container}>
       <TabView
+        ref={tabRef}
         tabBar={TabList}
         initialPage={0}
         renderTabBar={() => (
@@ -43,7 +51,7 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
                 style={[
                   styles.itemContainer,
                   {
-                    height: (index * height) / 2,
+                    height: (index * height) / 2 + 30,
                   },
                   {
                     backgroundColor: TabListColor[index],
