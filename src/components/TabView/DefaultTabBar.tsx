@@ -33,7 +33,7 @@ const TabViewBar: React.FC<TabViewBarProps> = (props) => {
     onPress,
     children,
     tabBarActiveTextColor = '#1e90ff',
-    tabBarInactiveTextColor = 'black',
+    tabBarInactiveTextColor = '#333',
     tabBarTextStyle,
     tabWidth,
   } = props;
@@ -170,7 +170,7 @@ const DefaultTabBar: React.FC<DefaultTabBarProps> = (props) => {
   });
 
   return (
-    <View style={{ backgroundColor: 'white' }}>
+    <View style={{ backgroundColor: '#fff' }}>
       <Animated.View
         style={[
           styles.tarbarContainer,
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   tarbarContainer: {
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     alignItems: 'center',
   },
   slider: {

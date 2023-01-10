@@ -21,6 +21,7 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
     renderTabBar = () => <DefaultTabBar />,
     initialPage = 0,
     onChangeTab,
+    style,
   } = props;
   const contentWidth = useSharedValue(0);
 
@@ -134,26 +135,31 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
         tabStatus,
       }}
     >
-      {renderTabBar && renderTabBar()}
-      <View onLayout={onLayout} style={[styles.main]}>
-        <GestureDetector gesture={panGesture}>
-          <Animated.View
-            style={[
-              styles.contentContainer,
-              { width: contentWidth.value * tabBar.length },
-              animatedStyle,
-            ]}
-          >
-            {children &&
-              children.map((component, index) => {
-                return (
-                  <TabViewContainer key={`TabViewItem_${index}`} index={index}>
-                    {component}
-                  </TabViewContainer>
-                );
-              })}
-          </Animated.View>
-        </GestureDetector>
+      <View style={style}>
+        {renderTabBar && renderTabBar()}
+        <View onLayout={onLayout} style={[styles.main]}>
+          <GestureDetector gesture={panGesture}>
+            <Animated.View
+              style={[
+                styles.contentContainer,
+                { width: contentWidth.value * tabBar.length },
+                animatedStyle,
+              ]}
+            >
+              {children &&
+                children.map((component, index) => {
+                  return (
+                    <TabViewContainer
+                      key={`TabViewItem_${index}`}
+                      index={index}
+                    >
+                      {component}
+                    </TabViewContainer>
+                  );
+                })}
+            </Animated.View>
+          </GestureDetector>
+        </View>
       </View>
     </TabViewContext.Provider>
   );
@@ -161,11 +167,9 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
 
 const styles = StyleSheet.create({
   main: {
-    flex: 1,
     overflow: 'hidden',
   },
   contentContainer: {
-    flex: 1,
     flexDirection: 'row',
   },
 });

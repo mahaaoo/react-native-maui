@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { ScrollView, Dimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -14,14 +14,12 @@ import Animated, {
   withDelay,
   Easing,
   useAnimatedReaction,
-  withDecay,
 } from 'react-native-reanimated';
 import { RefreshContainerContext, RefreshStatus } from './type';
 import TopContainer from './TopContainer';
 import BottomContainer from './BottomContainer';
 
 const { height } = Dimensions.get('window');
-const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
 interface RefreshScrollViewProps {
   refreshing: boolean;
@@ -290,7 +288,7 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
       <GestureDetector gesture={panGesture}>
         <GestureDetector gesture={nativeGesture}>
           <>
-            <AnimatedScrollView
+            <Animated.ScrollView
               ref={scrollRef}
               bounces={false}
               scrollEventThrottle={16}
@@ -305,7 +303,7 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
               >
                 {children}
               </Animated.View>
-            </AnimatedScrollView>
+            </Animated.ScrollView>
             <TopContainer>
               {refreshComponent && refreshComponent()}
             </TopContainer>

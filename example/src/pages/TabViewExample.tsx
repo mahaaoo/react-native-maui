@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, ScrollView, Text, Dimensions } from 'react-native';
 import { TabView, DefaultTabBar } from 'react-native-maui';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 interface TabViewExampleProps {}
 
@@ -44,14 +44,14 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
           />
         )}
       >
-        {TabList.map((item, index) => {
+        {TabList.map((_, index) => {
           return (
-            <ScrollView key={item}>
+            <ScrollView key={index}>
               <View
                 style={[
                   styles.itemContainer,
                   {
-                    height: (index * height) / 2 + 30,
+                    height: (index * height) / 3 + 50,
                   },
                   {
                     backgroundColor: TabListColor[index],
@@ -73,11 +73,8 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    overflow: 'hidden',
   },
   itemContainer: {
-    width: width,
-    height: height,
     justifyContent: 'center',
     alignItems: 'center',
   },

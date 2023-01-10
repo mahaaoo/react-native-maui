@@ -373,14 +373,7 @@ const exampleList: Example[] = [
   },
   {
     title: 'AnimatedNumber',
-    content: (
-      <AnimatedNumber
-        style={styles.animatedNumber}
-        delay={2000}
-        value={0}
-        toValue={100}
-      />
-    ),
+    content: <AnimatedNumber style={styles.animatedNumber} value={0} />,
   },
   {
     title: 'Progress',
@@ -467,7 +460,7 @@ const exampleList: Example[] = [
     ),
   },
   {
-    title: 'RefreshList',
+    title: 'Refresh',
     content: (
       <View style={styles.refreshList}>
         <View style={styles.refreshListContent} />
@@ -568,6 +561,10 @@ const exampleList: Example[] = [
         <View style={styles.tabViewLine} />
       </View>
     ),
+  },
+  {
+    title: 'HeadTabView',
+    content: null,
   },
 ];
 

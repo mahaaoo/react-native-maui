@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 export const TabViewContext = React.createContext<TabViewContextProps>(
@@ -46,6 +47,7 @@ export interface TabViewProps {
   tabBar: Array<string>;
   children: Array<React.ReactNode>;
 
+  style?: ViewStyle;
   initialPage?: number;
   renderTabBar?: () => React.ReactNode;
   onChangeTab?: (index: number) => void;
