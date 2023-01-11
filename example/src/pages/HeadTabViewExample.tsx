@@ -7,9 +7,13 @@ import {
 } from 'react-native-gesture-handler';
 import { TabView } from 'react-native-maui';
 import Animated, {
+  Extrapolate,
+  interpolate,
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
+import { useAnimatedReaction } from 'react-native-reanimated';
+import { useAnimatedStyle } from 'react-native-reanimated';
 
 const { height } = Dimensions.get('window');
 
@@ -26,6 +30,8 @@ const TabListColor = [
   '#666',
 ];
 
+const HEADER_HEIGHT = 100;
+
 const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
   const tabRef = useRef(null);
@@ -37,6 +43,7 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
 
   const refreshTransitionY = useSharedValue(0);
   const offset = useSharedValue(0);
+  const canPan = useSharedValue(true);
 
   const panGesture = Gesture.Pan()
     .withRef(panRef)
@@ -46,59 +53,104 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
       offset.value = refreshTransitionY.value;
     })
     .onUpdate(({ translationY }) => {
-      console.log('pan', translationY);
+      if (!canPan.value) return;
+
+      console.log('pan', translationY + offset.value);
+
+      refreshTransitionY.value = interpolate(
+        translationY + offset.value,
+        [-100, 0],
+        [-100, 0],
+        Extrapolate.CLAMP
+      );
     })
     .onEnd(() => {});
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: refreshTransitionY.value,
+        },
+      ],
+    };
+  });
+
   return (
     <GestureDetector gesture={panGesture}>
-      <TabView ref={tabRef} tabBar={TabList}>
-        {TabList.map((_, index) => {
-          return (
-            <MScrollView
-              setRef={(
-                ref: React.MutableRefObject<GestureType | undefined>
-              ) => {
-                if (!ref) return;
-                const findItem = nativeRefs.find(
-                  (item) => item.current === ref.current
-                );
-                if (findItem) return;
-                setNativeRefs((prechildRefs) => {
-                  return [...prechildRefs, ref];
-                });
-              }}
-              key={index}
-              nativeRefs={nativeRefs}
-              index={index}
-            >
-              <View
-                style={[
-                  styles.itemContainer,
-                  {
-                    height: height * 2,
-                  },
-                  {
-                    backgroundColor: TabListColor[index],
-                  },
-                ]}
+      <Animated.View style={animatedStyle}>
+        <Animated.View style={{ height: HEADER_HEIGHT }} />
+        <TabView ref={tabRef} tabBar={TabList}>
+          {TabList.map((_, index) => {
+            return (
+              <MScrollView
+                canPan={canPan}
+                panRef={panRef}
+                refreshTransitionY={refreshTransitionY}
+                setRef={(
+                  ref: React.MutableRefObject<GestureType | undefined>
+                ) => {
+                  if (!ref) return;
+                  const findItem = nativeRefs.find(
+                    (item) => item.current === ref.current
+                  );
+                  if (findItem) return;
+                  setNativeRefs((prechildRefs) => {
+                    return [...prechildRefs, ref];
+                  });
+                }}
+                key={index}
+                nativeRefs={nativeRefs}
+                index={index}
               >
-                <Text style={{ fontSize: 30 }} key={index}>{`Tab${
-                  index + 1
-                }`}</Text>
-              </View>
-            </MScrollView>
-          );
-        })}
-      </TabView>
+                <View
+                  style={[
+                    styles.itemContainer,
+                    {
+                      height: height * 2,
+                    },
+                    {
+                      backgroundColor: TabListColor[index],
+                    },
+                  ]}
+                >
+                  <Text style={{ fontSize: 30 }} key={index}>{`Tab${
+                    index + 1
+                  }`}</Text>
+                </View>
+              </MScrollView>
+            );
+          })}
+        </TabView>
+      </Animated.View>
     </GestureDetector>
   );
 };
 
 const MScrollView = (props) => {
-  const { children, nativeRefs, index, setRef } = props;
+  const {
+    children,
+    nativeRefs,
+    index,
+    setRef,
+    canPan,
+    refreshTransitionY,
+    panRef,
+  } = props;
+
   const nativeRef = useRef();
   const nativeGesture = Gesture.Native().withRef(nativeRef);
+
+  const scrollY = useSharedValue(0);
+
+  useAnimatedReaction(
+    () => refreshTransitionY.value,
+    (value) => {
+      if (value === -HEADER_HEIGHT) {
+        canPan.value = false;
+      }
+    }
+  );
 
   useEffect(() => {
     // nativeRefs.value.push(nativeRef);
@@ -108,9 +160,16 @@ const MScrollView = (props) => {
   }, []);
 
   const onScroll = useAnimatedScrollHandler({
+    onBeginDrag(event, context) {
+      if (canPan.value) return;
+    },
     onScroll(event) {
       // scrollViewTransitionY.value = event.contentOffset.y;
       console.log('onscroll', event.contentOffset.y);
+      scrollY.value = event.contentOffset.y;
+      if (event.contentOffset.y === 0) {
+        canPan.value = true;
+      }
     },
   });
 
