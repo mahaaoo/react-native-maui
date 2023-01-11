@@ -18,8 +18,13 @@ enum FreezeType {
 
 const TabViewContainer: React.FC<TabViewContainerProps> = (props) => {
   const { index, children } = props;
-  const { currentIndex, contentWidth } = useTabView();
-  const [freeze, setFreeze] = useState<FreezeType>(FreezeType.UNSHOW);
+  const { currentIndex, contentWidth, initialPage } = useTabView();
+  const [freeze, setFreeze] = useState<FreezeType>(() => {
+    if (index === initialPage) {
+      return FreezeType.SHOWING;
+    }
+    return FreezeType.UNSHOW;
+  });
 
   // TODO: 对于首次加载的TabView，只需要加载默认的intialPage页面即可，其余页面用空View填充，提升首次加载速度
   // 对于已经加载过的页面而言，使用freeze做keepalive

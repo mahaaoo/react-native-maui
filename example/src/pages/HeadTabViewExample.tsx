@@ -1,6 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  Gesture,
+  GestureDetector,
+  GestureType,
+} from 'react-native-gesture-handler';
 import { TabView } from 'react-native-maui';
 import Animated, {
   useAnimatedScrollHandler,
@@ -25,9 +29,11 @@ const TabListColor = [
 const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
   const tabRef = useRef(null);
-  const nativeRef = useRef();
   const panRef = useRef();
-  const scrollRefs = useRef<any>([]);
+
+  const [nativeRefs, setNativeRefs] = useState<
+    Array<React.MutableRefObject<GestureType | undefined>>
+  >([]);
 
   const refreshTransitionY = useSharedValue(0);
   const offset = useSharedValue(0);
@@ -35,7 +41,7 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const panGesture = Gesture.Pan()
     .withRef(panRef)
     .activeOffsetY([-10, 10])
-    .simultaneousWithExternalGesture(nativeRef)
+    .simultaneousWithExternalGesture(...nativeRefs)
     .onBegin(() => {
       offset.value = refreshTransitionY.value;
     })
@@ -44,48 +50,79 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
     })
     .onEnd(() => {});
 
+  return (
+    <GestureDetector gesture={panGesture}>
+      <TabView ref={tabRef} tabBar={TabList}>
+        {TabList.map((_, index) => {
+          return (
+            <MScrollView
+              setRef={(
+                ref: React.MutableRefObject<GestureType | undefined>
+              ) => {
+                if (!ref) return;
+                const findItem = nativeRefs.find(
+                  (item) => item.current === ref.current
+                );
+                if (findItem) return;
+                setNativeRefs((prechildRefs) => {
+                  return [...prechildRefs, ref];
+                });
+              }}
+              key={index}
+              nativeRefs={nativeRefs}
+              index={index}
+            >
+              <View
+                style={[
+                  styles.itemContainer,
+                  {
+                    height: height * 2,
+                  },
+                  {
+                    backgroundColor: TabListColor[index],
+                  },
+                ]}
+              >
+                <Text style={{ fontSize: 30 }} key={index}>{`Tab${
+                  index + 1
+                }`}</Text>
+              </View>
+            </MScrollView>
+          );
+        })}
+      </TabView>
+    </GestureDetector>
+  );
+};
+
+const MScrollView = (props) => {
+  const { children, nativeRefs, index, setRef } = props;
+  const nativeRef = useRef();
   const nativeGesture = Gesture.Native().withRef(nativeRef);
 
+  useEffect(() => {
+    // nativeRefs.value.push(nativeRef);
+    // nativeRefs.value[index] = nativeRef;
+    setRef && setRef(nativeRef);
+    console.log(nativeRefs.value);
+  }, []);
+
   const onScroll = useAnimatedScrollHandler({
-    onScroll(event, context) {
+    onScroll(event) {
       // scrollViewTransitionY.value = event.contentOffset.y;
       console.log('onscroll', event.contentOffset.y);
     },
   });
 
   return (
-    <GestureDetector gesture={panGesture}>
-      <TabView ref={tabRef} tabBar={TabList}>
-        {TabList.map((_, index) => {
-          return (
-            <GestureDetector gesture={nativeGesture}>
-              <Animated.ScrollView
-                ref={(r: any) => (scrollRefs.current[index] = r)}
-                key={index}
-                bounces={false}
-                scrollEventThrottle={16}
-                onScroll={onScroll}
-              >
-                <View
-                  style={[
-                    styles.itemContainer,
-                    {
-                      height: height * 2,
-                    },
-                    {
-                      backgroundColor: TabListColor[index],
-                    },
-                  ]}
-                >
-                  <Text style={{ fontSize: 30 }} key={index}>{`Tab${
-                    index + 1
-                  }`}</Text>
-                </View>
-              </Animated.ScrollView>
-            </GestureDetector>
-          );
-        })}
-      </TabView>
+    <GestureDetector gesture={nativeGesture}>
+      <Animated.ScrollView
+        bounces={false}
+        scrollEventThrottle={1}
+        onScroll={onScroll}
+      >
+        {children}
+      </Animated.ScrollView>
     </GestureDetector>
   );
 };
