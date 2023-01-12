@@ -5,7 +5,7 @@ import {
   GestureDetector,
   GestureType,
 } from 'react-native-gesture-handler';
-import { TabView } from 'react-native-maui';
+import { TabView, clamp } from 'react-native-maui';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -47,30 +47,34 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
 
   const panGesture = Gesture.Pan()
     .withRef(panRef)
-    .activeOffsetY([-10, 10])
     .simultaneousWithExternalGesture(...nativeRefs)
     .onBegin(() => {
       offset.value = refreshTransitionY.value;
     })
     .onUpdate(({ translationY }) => {
       if (!canPan.value) return;
-
-      console.log('pan', translationY + offset.value);
-
-      refreshTransitionY.value = interpolate(
-        translationY + offset.value,
-        [-100, 0],
-        [-100, 0],
-        Extrapolate.CLAMP
-      );
+      refreshTransitionY.value = translationY + offset.value;
+      console.log('pan', refreshTransitionY.value);
     })
-    .onEnd(() => {});
+    .onEnd(({}) => {
+      // console.log(refreshTransitionY.value);
+      refreshTransitionY.value = clamp(
+        refreshTransitionY.value,
+        -HEADER_HEIGHT,
+        0
+      );
+    });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: refreshTransitionY.value,
+          translateY: interpolate(
+            refreshTransitionY.value,
+            [-HEADER_HEIGHT, 0],
+            [-HEADER_HEIGHT, 0],
+            Extrapolate.CLAMP
+          ),
         },
       ],
     };
@@ -107,7 +111,7 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
                   style={[
                     styles.itemContainer,
                     {
-                      height: height * 2,
+                      height: height * 1.5,
                     },
                     {
                       backgroundColor: TabListColor[index],
@@ -139,9 +143,12 @@ const MScrollView = (props) => {
   } = props;
 
   const nativeRef = useRef();
-  const nativeGesture = Gesture.Native().withRef(nativeRef);
+  const nativeGesture = Gesture.Native()
+    .withRef(nativeRef)
+    .simultaneousWithExternalGesture(panRef);
 
   const scrollY = useSharedValue(0);
+  const scrollRef = useRef();
 
   useAnimatedReaction(
     () => refreshTransitionY.value,
@@ -160,9 +167,6 @@ const MScrollView = (props) => {
   }, []);
 
   const onScroll = useAnimatedScrollHandler({
-    onBeginDrag(event, context) {
-      if (canPan.value) return;
-    },
     onScroll(event) {
       // scrollViewTransitionY.value = event.contentOffset.y;
       console.log('onscroll', event.contentOffset.y);
@@ -176,8 +180,9 @@ const MScrollView = (props) => {
   return (
     <GestureDetector gesture={nativeGesture}>
       <Animated.ScrollView
+        ref={scrollRef}
         bounces={false}
-        scrollEventThrottle={1}
+        scrollEventThrottle={16}
         onScroll={onScroll}
       >
         {children}
