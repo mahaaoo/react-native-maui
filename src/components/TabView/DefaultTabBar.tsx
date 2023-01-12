@@ -33,8 +33,8 @@ const TabViewBar: React.FC<TabViewBarProps> = (props) => {
     onPress,
     children,
     tabBarActiveTextColor = '#1e90ff',
-    tabBarInactiveTextColor = '#333',
-    tabBarTextStyle,
+    tabBarInactiveTextColor = '#333333',
+    tabBarTextStyle = {},
     tabWidth,
   } = props;
 
@@ -42,16 +42,14 @@ const TabViewBar: React.FC<TabViewBarProps> = (props) => {
 
   const tabbarTitleColor = useAnimatedStyle(() => {
     const active = -translateX.value / contentWidth.value;
+    let textColor = interpolateColor(
+      active,
+      [index - 1, index, index + 1],
+      [tabBarInactiveTextColor, tabBarActiveTextColor, tabBarInactiveTextColor]
+    );
+    if (!textColor) textColor = tabBarInactiveTextColor;
     return {
-      color: interpolateColor(
-        active,
-        [index - 1, index, index + 1],
-        [
-          tabBarInactiveTextColor,
-          tabBarActiveTextColor,
-          tabBarInactiveTextColor,
-        ]
-      ),
+      color: textColor,
     };
   });
 
@@ -79,7 +77,7 @@ interface DefaultTabBarProps {
 
 const DefaultTabBar: React.FC<DefaultTabBarProps> = (props) => {
   const {
-    tabBarUnderlineStyle,
+    tabBarUnderlineStyle = {},
     tabBarActiveTextColor,
     tabBarInactiveTextColor,
     tabBarTextStyle,
