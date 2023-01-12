@@ -5,15 +5,15 @@ import {
   GestureDetector,
   GestureType,
 } from 'react-native-gesture-handler';
-import { TabView, clamp } from 'react-native-maui';
+import { TabView } from 'react-native-maui';
 import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedScrollHandler,
   useSharedValue,
+  useAnimatedReaction,
+  useAnimatedStyle,
 } from 'react-native-reanimated';
-import { useAnimatedReaction } from 'react-native-reanimated';
-import { useAnimatedStyle } from 'react-native-reanimated';
 
 const { height } = Dimensions.get('window');
 
@@ -45,24 +45,65 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const offset = useSharedValue(0);
   const canPan = useSharedValue(true);
 
+  const panStatus = useSharedValue(0);
+
+  useAnimatedReaction(
+    () => refreshTransitionY.value,
+    (value) => {
+      if (panStatus.value === 0 && value <= -100) {
+        canPan.value = false;
+        panStatus.value = 1;
+      }
+    }
+  );
+
+  // const panEnabled = useDerivedValue(() => refreshTransitionY.value > -100);
+
   const panGesture = Gesture.Pan()
     .withRef(panRef)
+    .enabled(canPan.value)
+    .shouldCancelWhenOutside(true)
     .simultaneousWithExternalGesture(...nativeRefs)
     .onBegin(() => {
+      'worklet';
+      console.log('onBegin');
       offset.value = refreshTransitionY.value;
     })
+    .onTouchesMove((event, stateManager) => {
+      'worklet';
+      console.log('onTouchesMove');
+      if (!canPan.value) {
+        stateManager.fail();
+      } else {
+        panStatus.value = 0;
+      }
+    })
     .onUpdate(({ translationY }) => {
-      if (!canPan.value) return;
-      refreshTransitionY.value = translationY + offset.value;
+      'worklet';
       console.log('pan', refreshTransitionY.value);
+      if (!canPan.value) {
+        // GestureStateManager.fail();
+        console.log('当前panGesture是否', {
+          refreshTransitionY: refreshTransitionY.value,
+        });
+        return;
+      }
+      refreshTransitionY.value = translationY + offset.value;
+      // console.log('pan', refreshTransitionY.value);
     })
     .onEnd(({}) => {
+      'worklet';
       // console.log(refreshTransitionY.value);
-      refreshTransitionY.value = clamp(
-        refreshTransitionY.value,
-        -HEADER_HEIGHT,
-        0
-      );
+      let temp = refreshTransitionY.value;
+      if (temp <= -HEADER_HEIGHT) {
+        temp = -HEADER_HEIGHT;
+      }
+      if (temp >= 0) temp = 0;
+      refreshTransitionY.value = temp;
+    })
+    .onFinalize((event, success) => {
+      'worklet';
+      console.log('onFinalize', success);
     });
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -90,6 +131,7 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
               <MScrollView
                 canPan={canPan}
                 panRef={panRef}
+                panGesture={panGesture}
                 refreshTransitionY={refreshTransitionY}
                 setRef={(
                   ref: React.MutableRefObject<GestureType | undefined>
@@ -140,24 +182,17 @@ const MScrollView = (props) => {
     canPan,
     refreshTransitionY,
     panRef,
+    panGesture,
+    setPanEnabled,
   } = props;
 
   const nativeRef = useRef();
   const nativeGesture = Gesture.Native()
     .withRef(nativeRef)
-    .simultaneousWithExternalGesture(panRef);
+    .requireExternalGestureToFail(panGesture);
 
   const scrollY = useSharedValue(0);
   const scrollRef = useRef();
-
-  useAnimatedReaction(
-    () => refreshTransitionY.value,
-    (value) => {
-      if (value === -HEADER_HEIGHT) {
-        canPan.value = false;
-      }
-    }
-  );
 
   useEffect(() => {
     // nativeRefs.value.push(nativeRef);
@@ -167,12 +202,17 @@ const MScrollView = (props) => {
   }, []);
 
   const onScroll = useAnimatedScrollHandler({
+    onBeginDrag(event, context) {
+      // scrollRef.current?.scrollTo({ y: 0 });
+    },
     onScroll(event) {
       // scrollViewTransitionY.value = event.contentOffset.y;
       console.log('onscroll', event.contentOffset.y);
       scrollY.value = event.contentOffset.y;
       if (event.contentOffset.y === 0) {
+        console.log('允许pan滚动');
         canPan.value = true;
+        // runOnJS(setPanEnabled)(true);
       }
     },
   });

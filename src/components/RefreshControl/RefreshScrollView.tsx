@@ -146,6 +146,8 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
       const { scrollBeginY, scrollBeginTime } = context;
       scrollViewTransitionY.value = event.contentOffset.y;
 
+      console.log('scroll', scrollViewTransitionY.value);
+
       if (
         scrollViewTransitionY.value >=
           0.8 * scrollViewTotalHeight.value - height &&
@@ -210,6 +212,7 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
       if (!canRefresh.value) {
         return;
       }
+      console.log('pan', translationY);
       refreshTransitionY.value = interpolate(
         translationY,
         [-height, 0, height],
