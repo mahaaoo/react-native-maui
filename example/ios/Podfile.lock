@@ -4,24 +4,24 @@ PODS:
   - DoubleConversion (1.1.6)
   - EASClient (0.2.1):
     - ExpoModulesCore
-  - EXApplication (4.1.0):
+  - EXApplication (4.2.2):
     - ExpoModulesCore
-  - EXConstants (13.1.1):
+  - EXConstants (13.2.4):
     - ExpoModulesCore
-  - EXErrorRecovery (3.1.0):
+  - EXErrorRecovery (3.2.0):
     - ExpoModulesCore
-  - EXFileSystem (14.0.0):
+  - EXFileSystem (14.1.0):
     - ExpoModulesCore
-  - EXFont (10.1.0):
+  - EXFont (10.2.1):
     - ExpoModulesCore
   - EXJSONUtils (0.3.0)
   - EXManifests (0.3.1):
     - EXJSONUtils
-  - Expo (45.0.8):
+  - Expo (46.0.20):
     - ExpoModulesCore
-  - ExpoKeepAwake (10.1.1):
+  - ExpoKeepAwake (10.2.1):
     - ExpoModulesCore
-  - ExpoModulesCore (0.9.2):
+  - ExpoModulesCore (0.11.10):
     - React-Core
     - ReactCommon/turbomodule/core
   - EXSplashScreen (0.15.1):
@@ -372,7 +372,7 @@ DEPENDENCIES:
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
-  - Expo (from `../node_modules/expo/ios`)
+  - Expo (from `../node_modules/expo`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
@@ -443,7 +443,7 @@ EXTERNAL SOURCES:
   EXManifests:
     :path: "../node_modules/expo-manifests/ios"
   Expo:
-    :path: "../node_modules/expo/ios"
+    :path: "../node_modules/expo"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
@@ -530,16 +530,16 @@ SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   EASClient: a02a97cb1327649ee695fc141b5775d845a9aec5
-  EXApplication: c8af8709080700315d37bd8491ddb3506ebbc2a9
-  EXConstants: 71ee1eb1bd838503012a0221c6c1b11f8df2cd91
-  EXErrorRecovery: b312d727ce45c6dab52b2f9cd38929aae25a3f5f
-  EXFileSystem: ef8323d420947acec2198265b0a7bbb6b587a766
-  EXFont: bd8fe6c4434063e6de7262abcf9a34e9cf7590b0
+  EXApplication: 64a38a15788ec0a9d01eb69683288f30c0726a64
+  EXConstants: e15cbb0181ab1411ef2b5d4b5e8ecdc9b30aeed5
+  EXErrorRecovery: 550d48c3575dcd83538abd7f13f52d30c4fecdb0
+  EXFileSystem: 3b71e2d1d4a3cd7cc4e2875913b9a96b34d323e3
+  EXFont: 0be44924d5000938c74715b2056fd7972ba65a05
   EXJSONUtils: d06f256b963e1e6f9b0010352e648e2c212f945c
   EXManifests: f13192a6cce80bb14a6959103efe48dd7f3bc8dc
-  Expo: f2c3064078aef3d19784cb4a2dd65005514318a7
-  ExpoKeepAwake: a8c7aa8eda9f55be45b011d7ee3b4f4582384e1b
-  ExpoModulesCore: ade9084acb9928a97231cc611310cfb08811f298
+  Expo: 215e8f42aab957a85ef331f85bb8ca3af9c8c0d1
+  ExpoKeepAwake: e44bcfa0e42b417b38d65ecbf145c754c7ae5109
+  ExpoModulesCore: a3b2ac6dfc2c897267e7ab7fc2f4760181225799
   EXSplashScreen: b9e4267071f02505425b68d6719ed303d09e0f83
   EXStructuredHeaders: 71479c116081efdab342762b592c6d0954f5735a
   EXUpdates: e8a5bc718414221508b6da18c8363005e3060221
