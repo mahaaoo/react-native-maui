@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { ViewStyle } from 'react-native';
+import { GestureType } from 'react-native-gesture-handler/lib/typescript/handlers/gestures/gesture';
 import Animated from 'react-native-reanimated';
 
 export const TabViewContext = React.createContext<TabViewContextProps>(
@@ -51,6 +52,8 @@ export interface TabViewProps {
   initialPage?: number;
   renderTabBar?: () => React.ReactNode;
   onChangeTab?: (index: number) => void;
+
+  simRefs?: Array<React.MutableRefObject<GestureType | undefined>>;
 }
 
 export interface TabViewRef {

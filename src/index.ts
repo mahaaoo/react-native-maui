@@ -86,3 +86,4 @@ export { snapPoint, clamp } from './utils/redash';
 export { Freeze } from './utils/Freeze';
 
 export { TabView, DefaultTabBar } from './components/TabView';
+export { HeadTabView, HeadTabView2 } from './components/HeadTabView';
