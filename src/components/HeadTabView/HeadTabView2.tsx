@@ -31,13 +31,16 @@ const TabListColor = [
   '#666',
 ];
 
+export const HeadTabViewContext = React.createContext<{}>({});
+export const useHeadTab = () => React.useContext(HeadTabViewContext);
+
 const HEADER_HEIGHT = 100;
 
 const HeadTabView2: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
   const tabRef = useRef(null);
   const scrollY = useSharedValue(0);
-  const nativeRef = useRef();
+  // const nativeRef = useRef();
   const panRef = useRef();
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -56,9 +59,16 @@ const HeadTabView2: React.FC<TabViewExampleProps> = (props) => {
     };
   });
 
+  useAnimatedReaction(
+    () => stickyTranslateY.value,
+    (value) => {
+      console.log('current', value);
+    },
+    []
+  );
+
   const onScrollCallback = (index, y) => {
     'worklet';
-    console.log(y);
     if (y < 0) return;
     if (y <= HEADER_HEIGHT) {
       stickyTranslateY.value = -y;
@@ -68,57 +78,62 @@ const HeadTabView2: React.FC<TabViewExampleProps> = (props) => {
   };
 
   return (
-    <Animated.View style={scrprops}>
-      <View
-        style={[
-          {
-            height: HEADER_HEIGHT,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'orange',
-          },
-        ]}
-      >
-        <Text>HEAD</Text>
-      </View>
-      <TabView
-        canSwipe={scrolling}
-        simRefs={panRef}
-        ref={tabRef}
-        tabBar={TabList}
-        scrollY={scrollY}
-        onChangeTab={setCurrentIndex}
-      >
-        {TabList.map((_, index) => {
-          return (
-            <CCView
-              key={index}
-              stickyTranslateY={stickyTranslateY}
-              index={index}
-              currentIndex={currentIndex}
-              onScrollCallback={onScrollCallback}
-            />
-          );
-        })}
-      </TabView>
-    </Animated.View>
+    <HeadTabViewContext.Provider
+      value={{
+        stickyTranslateY,
+      }}
+    >
+      <Animated.View style={scrprops}>
+        <View
+          style={[
+            {
+              height: HEADER_HEIGHT,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'orange',
+            },
+          ]}
+        >
+          <Text>HEAD</Text>
+        </View>
+        <TabView
+          canSwipe={scrolling}
+          simRefs={panRef}
+          ref={tabRef}
+          tabBar={TabList}
+          scrollY={scrollY}
+          onChangeTab={setCurrentIndex}
+        >
+          {TabList.map((_, index) => {
+            return (
+              <CCView
+                key={index}
+                index={index}
+                currentIndex={currentIndex}
+                onScrollCallback={onScrollCallback}
+              />
+            );
+          })}
+        </TabView>
+      </Animated.View>
+    </HeadTabViewContext.Provider>
   );
 };
 
 const CCView = (props) => {
-  const { index, scrollY, currentIndex, onScrollCallback, stickyTranslateY } =
-    props;
+  const { index, currentIndex, onScrollCallback } = props;
 
   const selfscrollY = useSharedValue(0);
   const aref = useAnimatedRef();
+  const { stickyTranslateY } = useHeadTab();
   // const firstMount = useSharedValue(true);
-  const ransY = useSharedValue(0);
+  // const ransY = useSharedValue(0);
 
   // 当某一个tab滑到顶，所有重置所有tab
   useAnimatedReaction(
     () => stickyTranslateY.value,
     (value) => {
-      if (index !== currentIndex && value > -HEADER_HEIGHT) {
+      if (index !== currentIndex) {
         scrollTo(aref, 0, -value, false);
       }
     },
@@ -126,23 +141,24 @@ const CCView = (props) => {
   );
 
   useEffect(() => {
-    // console.log('触发？？');
-    // scrollTo(aref, 0, -stickyTranslateY.value, false);
-    // console.log('DidMount', -stickyTranslateY.value);
+    console.log('useEffect', {
+      index,
+      self: selfscrollY.value,
+    });
     if (aref) {
-      console.log('执行', -stickyTranslateY.value);
-      scrollTo(aref, 0, -stickyTranslateY.value, false);
+      // if (stickyTranslateY.value > -HEADER_HEIGHT) {
+      // scrollTo(aref, 0, -stickyTranslateY.value, false);
+      // }
     }
-    // firstMount.value = false;
-  }, [aref]);
+  }, [aref, currentIndex]);
 
   const onScroll = useAnimatedScrollHandler({
     onScroll(event) {
       selfscrollY.value = event.contentOffset.y;
-      console.log({
-        value: selfscrollY.value,
-        index,
-      });
+      // console.log({
+      //   value: selfscrollY.value,
+      //   index,
+      // });
       onScrollCallback && onScrollCallback(index, event.contentOffset.y);
     },
   });
