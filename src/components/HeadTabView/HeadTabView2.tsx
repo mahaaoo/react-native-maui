@@ -16,7 +16,7 @@ import Animated, {
 
 const AnimationScrollView = Animated.createAnimatedComponent(ScrollView);
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 interface TabViewExampleProps {}
 
@@ -134,7 +134,12 @@ const CCView = (props) => {
     () => stickyTranslateY.value,
     (value) => {
       if (index !== currentIndex) {
-        scrollTo(aref, 0, -value, false);
+        console.log('useAnimatedReaction');
+        if (value === -HEADER_HEIGHT) {
+          scrollTo(aref, 0, Math.max(-value, selfscrollY.value), false);
+        } else {
+          scrollTo(aref, 0, -value, false);
+        }
       }
     },
     [index, currentIndex]
@@ -146,19 +151,17 @@ const CCView = (props) => {
       self: selfscrollY.value,
     });
     if (aref) {
-      // if (stickyTranslateY.value > -HEADER_HEIGHT) {
-      // scrollTo(aref, 0, -stickyTranslateY.value, false);
-      // }
+      scrollTo(aref, 0, -stickyTranslateY.value, false);
     }
-  }, [aref, currentIndex]);
+  }, [aref]);
 
   const onScroll = useAnimatedScrollHandler({
     onScroll(event) {
       selfscrollY.value = event.contentOffset.y;
-      // console.log({
-      //   value: selfscrollY.value,
-      //   index,
-      // });
+      console.log('onScroll', {
+        value: selfscrollY.value,
+        index,
+      });
       onScrollCallback && onScrollCallback(index, event.contentOffset.y);
     },
   });
@@ -166,7 +169,7 @@ const CCView = (props) => {
     return {
       transform: [
         {
-          translateY: -stickyTranslateY.value,
+          translateY: selfscrollY.value === 0 ? 0 : -stickyTranslateY.value,
         },
       ],
     };
@@ -178,13 +181,17 @@ const CCView = (props) => {
       bounces={false}
       scrollEventThrottle={16}
       onScroll={onScroll}
+      contentContainerStyle={{
+        height: height * 3,
+        width,
+      }}
     >
       <Animated.View
         style={[
           ansyt,
           styles.itemContainer,
           {
-            height: height * 3,
+            flex: 1,
           },
           {
             backgroundColor: TabListColor[index],
