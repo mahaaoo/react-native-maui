@@ -1,5 +1,5 @@
 import React, { useCallback, forwardRef, useImperativeHandle } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolate,
@@ -28,7 +28,6 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
     initialPage = 0,
     onChangeTab,
     style,
-    simRefs,
     canSwipe,
     scrollY,
   } = props;
@@ -72,7 +71,6 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
   }, []);
 
   const panGesture = Gesture.Pan()
-    .withRef(simRefs)
     .activeOffsetX([-15, 15])
     .onBegin(() => {
       // console.log('接受');
@@ -147,6 +145,7 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
 
   const sticyStyle = useAnimatedStyle(() => {
     return {
+      height: 44,
       zIndex: 99,
       transform: [
         {
@@ -174,7 +173,7 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
         tabStatus,
       }}
     >
-      <View style={style}>
+      <View style={[style]}>
         <Animated.View style={sticyStyle}>
           {renderTabBar && renderTabBar()}
         </Animated.View>

@@ -290,32 +290,26 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
     >
       <GestureDetector gesture={panGesture}>
         <GestureDetector gesture={nativeGesture}>
-          <>
-            <Animated.ScrollView
-              ref={scrollRef}
-              bounces={false}
-              scrollEventThrottle={16}
-              onScroll={onScroll}
-              animatedProps={animatedProps}
+          <Animated.ScrollView
+            ref={scrollRef}
+            bounces={false}
+            scrollEventThrottle={16}
+            onScroll={onScroll}
+            animatedProps={animatedProps}
+          >
+            <Animated.View
+              onLayout={(e) => {
+                scrollViewTotalHeight.value = e.nativeEvent.layout.height;
+              }}
+              style={animatedStyle}
             >
-              <Animated.View
-                onLayout={(e) => {
-                  scrollViewTotalHeight.value = e.nativeEvent.layout.height;
-                }}
-                style={animatedStyle}
-              >
-                {children}
-              </Animated.View>
-            </Animated.ScrollView>
-            <TopContainer>
-              {refreshComponent && refreshComponent()}
-            </TopContainer>
-            <BottomContainer>
-              {loadComponent && loadComponent()}
-            </BottomContainer>
-          </>
+              {children}
+            </Animated.View>
+          </Animated.ScrollView>
         </GestureDetector>
       </GestureDetector>
+      <TopContainer>{refreshComponent && refreshComponent()}</TopContainer>
+      <BottomContainer>{loadComponent && loadComponent()}</BottomContainer>
     </RefreshContainerContext.Provider>
   );
 };

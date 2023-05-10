@@ -8,10 +8,10 @@ import { useState } from 'react';
  * forceUpdate();
  */
 const useForceUpdate = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, update] = useState(0);
+  const [force, update] = useState(0);
 
   return {
+    force,
     forceUpdate: () => {
       update((up) => up + 1);
     },
