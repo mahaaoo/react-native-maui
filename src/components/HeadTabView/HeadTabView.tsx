@@ -1,10 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
-import {
-  Gesture,
-  GestureDetector,
-  ScrollView,
-} from 'react-native-gesture-handler';
+import { StyleSheet, Text, Dimensions } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import TabView from './TabView';
 import Animated, {
   useAnimatedScrollHandler,
@@ -16,14 +12,16 @@ import Animated, {
   scrollTo,
   useAnimatedReaction,
   Extrapolate,
+  withTiming,
+  Easing,
 } from 'react-native-reanimated';
-import { useForceUpdate } from '../../utils/hooks';
 
 const { height, width } = Dimensions.get('window');
+const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
 
 interface TabViewExampleProps {}
 
-const TabList = ['Tab1', 'Tab2'];
+const TabList = ['Tab1', 'Tab2', 'Tab3', 'Tab4', 'Tab5', 'Tab6'];
 const TabListColor = [
   'pink',
   'orange',
@@ -48,11 +46,6 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrolling = useSharedValue(0);
   const stickyTranslateY = useSharedValue(0);
-  const offset = useSharedValue(0);
-
-  // const testRef = React.createRef();
-
-  const compRef = useRef([]);
 
   const scrprops = useAnimatedProps(() => {
     return {
@@ -64,14 +57,6 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
     };
   });
 
-  // useAnimatedReaction(
-  //   () => stickyTranslateY.value,
-  //   (value) => {
-  //     console.log('current', value);
-  //   },
-  //   []
-  // );
-
   const onScrollCallback = (index, y) => {
     'worklet';
     if (y < 0) return;
@@ -82,33 +67,79 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
     }
   };
 
+  // useMemo是必须的，在切换到新tab之后，需要重新获取Gesture属性
   const panGesture = useMemo(() => {
-    console.log('panGesture', nativeRefs);
-
     return Gesture.Pan()
       .withRef(panRef)
       .activeOffsetY([-10, 10])
       .simultaneousWithExternalGesture(...nativeRefs)
+      .enabled(stickyTranslateY.value >= 0)
       .onBegin(() => {
-        offset.value = stickyTranslateY.value;
+        // offset.value = stickyTranslateY.value;
       })
-      .onUpdate(({ translationY, translationX }) => {
-        // stickyTranslateY.value = translationY;
-        console.log(translationY);
+      .onUpdate(({ translationY }) => {
+        if (stickyTranslateY.value < 0) {
+        } else {
+          stickyTranslateY.value = interpolate(
+            translationY,
+            [0, height],
+            [0, height / 2],
+            Extrapolate.CLAMP
+          );
+        }
       })
-      .onEnd(() => {});
+      .onEnd(() => {
+        if (stickyTranslateY.value > 0) {
+          stickyTranslateY.value = withTiming(0, {
+            easing: RESET_TIMING_EASING,
+          });
+        } else {
+          console.log('onEnd', stickyTranslateY.value);
+        }
+      });
   }, [nativeRefs]);
 
   const handleChildRef = (ref, index) => {
-    // nativeRefs.current[index] = ref;
-    // console.log(nativeRefs.current);
-    // forceUpdate();
     if (!ref) return;
     const findItem = nativeRefs.find((item) => item.current === ref.current);
     if (findItem) return;
-
     setNativeRefs((p) => [...p, ref]);
   };
+
+  const animatedHead = useAnimatedStyle(() => {
+    if (stickyTranslateY.value < 0) {
+      return {};
+    }
+    console.log({
+      move: stickyTranslateY.value,
+      height: HEADER_HEIGHT + stickyTranslateY.value * 2,
+    });
+    return {
+      height:
+        HEADER_HEIGHT +
+        interpolate(
+          stickyTranslateY.value,
+          [0, height / 2],
+          [0, height],
+          Extrapolate.CLAMP
+        ),
+      transform: [
+        {
+          translateY: -stickyTranslateY.value,
+        },
+        {
+          scale: interpolate(
+            stickyTranslateY.value,
+            [0, height / 2],
+            [1, 5],
+            Extrapolate.CLAMP
+          ),
+        },
+      ],
+      justifyContent: 'center',
+      alignItems: 'center',
+    };
+  });
 
   return (
     <HeadTabViewContext.Provider
@@ -119,7 +150,7 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
     >
       <GestureDetector gesture={panGesture}>
         <Animated.View style={scrprops}>
-          <View
+          <Animated.View
             style={[
               {
                 height: HEADER_HEIGHT,
@@ -127,10 +158,11 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
                 alignItems: 'center',
                 backgroundColor: 'orange',
               },
+              animatedHead,
             ]}
           >
             <Text>HEAD</Text>
-          </View>
+          </Animated.View>
           <TabView
             canSwipe={scrolling}
             ref={tabRef}
@@ -161,8 +193,6 @@ const CCView = (props) => {
   const selfscrollY = useSharedValue(0);
   const aref = useAnimatedRef();
   const { stickyTranslateY, setNativeRefs } = useHeadTab();
-  // const firstMount = useSharedValue(true);
-  // const ransY = useSharedValue(0);
   const panRef = useRef();
 
   // 当某一个tab滑到顶，所有重置所有tab
@@ -170,7 +200,6 @@ const CCView = (props) => {
     () => stickyTranslateY.value,
     (value) => {
       if (index !== currentIndex) {
-        // console.log('useAnimatedReaction');
         if (value === -HEADER_HEIGHT) {
           scrollTo(aref, 0, Math.max(-value, selfscrollY.value), false);
         } else {
@@ -189,8 +218,6 @@ const CCView = (props) => {
 
   useEffect(() => {
     if (panRef.current) {
-      // scrollTo(aref, 0, -stickyTranslateY.value, false);
-      // onReady && onReady(panRef);
       setNativeRefs(panRef, index);
     }
   }, [panRef.current]);
@@ -198,10 +225,6 @@ const CCView = (props) => {
   const onScroll = useAnimatedScrollHandler({
     onScroll(event) {
       selfscrollY.value = event.contentOffset.y;
-      // console.log('onScroll', {
-      //   value: selfscrollY.value,
-      //   index,
-      // });
       onScrollCallback && onScrollCallback(index, event.contentOffset.y);
     },
   });
@@ -227,6 +250,7 @@ const CCView = (props) => {
         onScroll={onScroll}
         contentContainerStyle={{
           height: height * 3,
+          width,
         }}
         style={{
           backgroundColor: TabListColor[index],
