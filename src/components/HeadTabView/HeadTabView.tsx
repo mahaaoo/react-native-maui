@@ -1,7 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, Dimensions } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import TabView from './TabView';
+import {
+  Gesture,
+  GestureDetector,
+  GestureType,
+} from 'react-native-gesture-handler';
+import { TabView } from '../TabView';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -32,105 +36,103 @@ const TabListColor = [
   '#666',
 ];
 
-export const HeadTabViewContext = React.createContext<{}>({});
+type GestureTypeRef = React.MutableRefObject<GestureType | undefined>;
+
+export interface HeadTabViewContextProps {
+  mainTranslate: Animated.SharedValue<number>;
+  handleChildRef: (ref: GestureTypeRef) => void;
+}
+
+export const HeadTabViewContext = React.createContext<HeadTabViewContextProps>(
+  {} as HeadTabViewContextProps
+);
 export const useHeadTab = () => React.useContext(HeadTabViewContext);
 
 const HEADER_HEIGHT = 100;
 
 const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
-  const tabRef = useRef(null);
-  const scrollY = useSharedValue(0);
-  const [nativeRefs, setNativeRefs] = useState([]);
-  const panRef = useRef();
+  const mainTranslate = useSharedValue(0); // 最外层View的Y方向偏移量
+  const [nativeRefs, setNativeRefs] = useState<Array<GestureTypeRef>>([]); // 子view里的scroll ref
   const [currentIndex, setCurrentIndex] = useState(0);
-  const scrolling = useSharedValue(0);
-  const stickyTranslateY = useSharedValue(0);
 
-  const scrprops = useAnimatedProps(() => {
+  const main = useAnimatedProps(() => {
     return {
       transform: [
         {
-          translateY: stickyTranslateY.value,
+          translateY: mainTranslate.value,
         },
       ],
     };
   });
 
-  const onScrollCallback = (index, y) => {
+  const onScrollCallback = (y: number) => {
     'worklet';
     if (y < 0) return;
     if (y <= HEADER_HEIGHT) {
-      stickyTranslateY.value = -y;
+      mainTranslate.value = -y;
     } else {
-      stickyTranslateY.value = -HEADER_HEIGHT;
+      mainTranslate.value = -HEADER_HEIGHT;
     }
   };
 
   // useMemo是必须的，在切换到新tab之后，需要重新获取Gesture属性
   const panGesture = useMemo(() => {
     return Gesture.Pan()
-      .withRef(panRef)
       .activeOffsetY([-10, 10])
       .simultaneousWithExternalGesture(...nativeRefs)
-      .enabled(stickyTranslateY.value >= 0)
       .onBegin(() => {
-        // offset.value = stickyTranslateY.value;
+        // offset.value = mainTranslate.value;
       })
       .onUpdate(({ translationY }) => {
-        if (stickyTranslateY.value < 0) {
+        if (mainTranslate.value < 0) {
         } else {
-          stickyTranslateY.value = interpolate(
+          mainTranslate.value = interpolate(
             translationY,
             [0, height],
-            [0, height / 2],
-            Extrapolate.CLAMP
+            [0, height / 4]
           );
         }
       })
       .onEnd(() => {
-        if (stickyTranslateY.value > 0) {
-          stickyTranslateY.value = withTiming(0, {
-            easing: RESET_TIMING_EASING,
-          });
-        } else {
-          console.log('onEnd', stickyTranslateY.value);
+        if (mainTranslate.value > 0) {
+          console.log('onEndonEnd', mainTranslate.value);
+          mainTranslate.value = withTiming(
+            0,
+            {
+              easing: RESET_TIMING_EASING,
+            },
+            () => {
+              console.log('onEndonEnd', mainTranslate.value);
+              // 确保mainTranslate回到顶端
+              mainTranslate.value = 0;
+            }
+          );
         }
       });
   }, [nativeRefs]);
 
-  const handleChildRef = (ref, index) => {
+  const handleChildRef = (ref: GestureTypeRef) => {
     if (!ref) return;
-    const findItem = nativeRefs.find((item) => item.current === ref.current);
-    if (findItem) return;
+    const isExist = nativeRefs.find((item) => item.current === ref.current);
+    if (isExist) return;
     setNativeRefs((p) => [...p, ref]);
   };
 
-  const animatedHead = useAnimatedStyle(() => {
-    if (stickyTranslateY.value < 0) {
+  const header = useAnimatedStyle(() => {
+    if (mainTranslate.value < 0) {
       return {};
     }
-    console.log({
-      move: stickyTranslateY.value,
-      height: HEADER_HEIGHT + stickyTranslateY.value * 2,
-    });
     return {
-      height:
-        HEADER_HEIGHT +
-        interpolate(
-          stickyTranslateY.value,
-          [0, height / 2],
-          [0, height],
-          Extrapolate.CLAMP
-        ),
+      height: HEADER_HEIGHT + mainTranslate.value,
       transform: [
         {
-          translateY: -stickyTranslateY.value,
+          translateY: -mainTranslate.value,
         },
         {
           scale: interpolate(
-            stickyTranslateY.value,
-            [0, height / 2],
+            mainTranslate.value,
+            [0, height / 4],
             [1, 5],
             Extrapolate.CLAMP
           ),
@@ -144,12 +146,12 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
   return (
     <HeadTabViewContext.Provider
       value={{
-        stickyTranslateY,
-        setNativeRefs: handleChildRef,
+        mainTranslate,
+        handleChildRef,
       }}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View style={scrprops}>
+        <Animated.View style={main}>
           <Animated.View
             style={[
               {
@@ -158,21 +160,15 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
                 alignItems: 'center',
                 backgroundColor: 'orange',
               },
-              animatedHead,
+              header,
             ]}
           >
             <Text>HEAD</Text>
           </Animated.View>
-          <TabView
-            canSwipe={scrolling}
-            ref={tabRef}
-            tabBar={TabList}
-            scrollY={scrollY}
-            onChangeTab={setCurrentIndex}
-          >
+          <TabView tabBar={TabList} onChangeTab={setCurrentIndex}>
             {TabList.map((_, index) => {
               return (
-                <CCView
+                <HeadTabViewItem
                   key={index}
                   index={index}
                   currentIndex={currentIndex}
@@ -187,21 +183,27 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
   );
 };
 
-const CCView = (props) => {
+interface HeadTabViewItemProps {
+  index: number;
+  currentIndex: number;
+  onScrollCallback: (y: number) => void;
+}
+
+const HeadTabViewItem: React.FC<HeadTabViewItemProps> = (props) => {
   const { index, currentIndex, onScrollCallback } = props;
 
-  const selfscrollY = useSharedValue(0);
+  const scroll = useSharedValue(0);
   const aref = useAnimatedRef();
-  const { stickyTranslateY, setNativeRefs } = useHeadTab();
-  const panRef = useRef();
+  const { mainTranslate, handleChildRef } = useHeadTab();
+  const nativeRef = useRef();
 
   // 当某一个tab滑到顶，所有重置所有tab
   useAnimatedReaction(
-    () => stickyTranslateY.value,
+    () => mainTranslate.value,
     (value) => {
       if (index !== currentIndex) {
         if (value === -HEADER_HEIGHT) {
-          scrollTo(aref, 0, Math.max(-value, selfscrollY.value), false);
+          scrollTo(aref, 0, Math.max(-value, scroll.value), false);
         } else {
           scrollTo(aref, 0, -value, false);
         }
@@ -212,20 +214,20 @@ const CCView = (props) => {
 
   useEffect(() => {
     if (aref) {
-      scrollTo(aref, 0, -stickyTranslateY.value, false);
+      scrollTo(aref, 0, -mainTranslate.value, false);
     }
   }, [aref]);
 
   useEffect(() => {
-    if (panRef.current) {
-      setNativeRefs(panRef, index);
+    if (nativeRef.current) {
+      handleChildRef && handleChildRef(nativeRef);
     }
-  }, [panRef.current]);
+  }, [nativeRef.current]);
 
   const onScroll = useAnimatedScrollHandler({
     onScroll(event) {
-      selfscrollY.value = event.contentOffset.y;
-      onScrollCallback && onScrollCallback(index, event.contentOffset.y);
+      scroll.value = event.contentOffset.y;
+      onScrollCallback && onScrollCallback(event.contentOffset.y);
     },
   });
 
@@ -233,13 +235,13 @@ const CCView = (props) => {
     return {
       transform: [
         {
-          translateY: selfscrollY.value === 0 ? 0 : -stickyTranslateY.value,
+          translateY: scroll.value === 0 ? 0 : -mainTranslate.value,
         },
       ],
     };
   });
 
-  const nativeGesture = Gesture.Native().withRef(panRef);
+  const nativeGesture = Gesture.Native().withRef(nativeRef);
 
   return (
     <GestureDetector gesture={nativeGesture}>

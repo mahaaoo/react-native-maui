@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   interpolate,
   useAnimatedReaction,
+  runOnJS,
 } from 'react-native-reanimated';
 
 import { TabViewContext, TabViewProps, TabStatus, TabViewRef } from './type';
@@ -36,7 +37,7 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
   useAnimatedReaction(
     () => currentIndex.value,
     (value) => {
-      onChangeTab && onChangeTab(value);
+      onChangeTab && runOnJS(onChangeTab)(value);
     }
   );
 

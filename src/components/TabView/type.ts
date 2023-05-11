@@ -54,6 +54,10 @@ export interface TabViewProps {
   onChangeTab?: (index: number) => void;
 
   simRefs?: Array<React.MutableRefObject<GestureType | undefined>>;
+  stickyOptions?: {
+    value: Animated.SharedValue<number>;
+    distance: number; // 在value移动多少距离后吸顶
+  } | null;
 }
 
 export interface TabViewRef {
