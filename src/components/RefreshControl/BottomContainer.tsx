@@ -4,7 +4,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import { RefreshStatus, useRefresh } from './type';
+import { RefreshStatus, useRefreshScroll } from './type';
 
 const { width } = Dimensions.get('window');
 
@@ -19,7 +19,7 @@ const BottomContainer: React.FC<BottomContainerProps> = (props) => {
     direction,
     refreshStatus,
     canRefresh,
-  } = useRefresh();
+  } = useRefreshScroll();
 
   const animatedStyle = useAnimatedStyle(() => {
     // console.log({

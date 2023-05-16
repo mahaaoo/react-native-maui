@@ -39,7 +39,7 @@ interface SkeletonContextProps {
 export const RefreshContainerContext = createContext<SkeletonContextProps>(
   {} as SkeletonContextProps
 );
-export const useRefresh = () => useContext(RefreshContainerContext);
+export const useRefreshScroll = () => useContext(RefreshContainerContext);
 
 /**
  * Once Refresh LifeCycle:

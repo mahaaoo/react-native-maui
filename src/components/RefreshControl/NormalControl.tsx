@@ -11,9 +11,10 @@ import Animated, {
   withTiming,
   useSharedValue,
 } from 'react-native-reanimated';
-import { RefreshStatus, useRefresh } from './type';
+import { RefreshStatus, useRefreshScroll } from './type';
 import { Icon } from '../Icon';
 import { Loading } from '../Loading';
+import { useRefresh } from './RefreshContainer';
 
 interface NormalControlProps {
   textConfig?: {
@@ -35,7 +36,7 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
     },
     position,
   } = props;
-  const { transitionY, triggleHeight, refreshStatus, direction } = useRefresh();
+  const { transitionY, triggleHeight, refreshStatus } = useRefreshScroll();
   const [refreshText, setRefreshText] = useState(textConfig.normal);
   const [loading, setLoading] = useState(false);
   const degree = useSharedValue(0);
@@ -68,12 +69,9 @@ const NormalControl: React.FC<NormalControlProps> = (props) => {
   );
 
   const arrowStyle = useAnimatedStyle(() => {
-    degree.value = withTiming(
-      transitionY.value >= triggleHeight * direction.value ? 180 : 0,
-      {
-        duration: 200,
-      }
-    );
+    degree.value = withTiming(transitionY.value >= triggleHeight ? 180 : 0, {
+      duration: 200,
+    });
 
     return {
       transform: [

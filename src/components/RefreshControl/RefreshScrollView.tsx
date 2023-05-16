@@ -16,7 +16,7 @@ import Animated, {
   useAnimatedReaction,
 } from 'react-native-reanimated';
 import { RefreshContainerContext, RefreshStatus } from './type';
-import TopContainer from './TopContainer';
+import RefreshContainer from './RefreshContainer';
 import BottomContainer from './BottomContainer';
 
 const { height } = Dimensions.get('window');
@@ -35,7 +35,7 @@ interface RefreshScrollViewProps {
 
 const MAX_SCROLL_VELOCITY_Y = 20;
 const MIN_SCROLL_VELOCITY_Y = 0.5;
-const DEFAULT_TRIGGLE_HEIGHT = 80;
+const DEFAULT_TRIGGLE_HEIGHT = 100;
 const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
 
 const HEADER_HEIGHT = 91;
@@ -146,8 +146,6 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
       const { scrollBeginY, scrollBeginTime } = context;
       scrollViewTransitionY.value = event.contentOffset.y;
 
-      console.log('scroll', scrollViewTransitionY.value);
-
       if (
         scrollViewTransitionY.value >=
           0.8 * scrollViewTotalHeight.value - height &&
@@ -209,15 +207,17 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
       offset.value = refreshTransitionY.value;
     })
     .onUpdate(({ translationY }) => {
+      // 当内部scroll没有滚动到顶部，则不会触发下拉刷新
       if (!canRefresh.value) {
         return;
       }
-      console.log('pan', translationY);
-      refreshTransitionY.value = interpolate(
-        translationY,
-        [-height, 0, height],
-        [-height / 2, 0, height / 2]
-      );
+      refreshTransitionY.value =
+        offset.value +
+        interpolate(
+          translationY,
+          [-height, 0, height],
+          [-height / 2, 0, height / 2]
+        );
 
       if (!refreshing) {
         if (Math.abs(refreshTransitionY.value) >= triggleHeight) {
@@ -229,7 +229,15 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
     })
     .onEnd(() => {
       if (refreshing) {
-        refreshTransitionY.value = withTiming(triggleHeight * direction.value);
+        // 在已经是下拉刷新的状态下，如果继续向下拉，则会回到默认的最大triggleHeight位置处
+        // 如果有向上收起的意图，则将下拉区全部收起
+        if (refreshTransitionY.value >= triggleHeight * direction.value) {
+          refreshTransitionY.value = withTiming(
+            triggleHeight * direction.value
+          );
+        } else {
+          refreshTransitionY.value = withTiming(0);
+        }
         return;
       }
       if (Math.abs(refreshTransitionY.value) >= triggleHeight) {
@@ -308,7 +316,13 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
           </Animated.ScrollView>
         </GestureDetector>
       </GestureDetector>
-      <TopContainer>{refreshComponent && refreshComponent()}</TopContainer>
+      <RefreshContainer
+        refreshStatus={refreshStatus}
+        transitionY={refreshTransitionY}
+        triggleHeight={triggleHeight}
+      >
+        {refreshComponent && refreshComponent()}
+      </RefreshContainer>
       <BottomContainer>{loadComponent && loadComponent()}</BottomContainer>
     </RefreshContainerContext.Provider>
   );
