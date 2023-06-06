@@ -5,6 +5,9 @@
 
 > 此项目由个人开发，不能保证组件的稳定性及适配度，请谨慎使用
 
+## Update
+* 迁移`Overlay`到[react-native-ma-modal](https://github.com/mahaaoo/react-native-ma-modal)
+
 
 ## Preview
 
