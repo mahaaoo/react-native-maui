@@ -6,6 +6,9 @@ This project contains the basic components commonly used in ReactNative, and the
 
 > This project is developed by individuals, the stability and adaptability of the components cannot be guaranteed, please use with caution
 
+## Update
+* Move `Overlay` to [react-native-ma-modal](https://github.com/mahaaoo/react-native-ma-modal)
+
 ## Preview
 
 | Loading | Progress | Button | 
