@@ -14,7 +14,6 @@ import Animated, {
 import { RefreshStatus, useRefreshScroll } from './type';
 import { Icon } from '../Icon';
 import { Loading } from '../Loading';
-import { useRefresh } from './RefreshContainer';
 
 interface NormalControlProps {
   textConfig?: {
