@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import Svg, {
   Defs,
   LinearGradient,
   Path,
   RadialGradient,
+  Rect,
   Stop,
 } from 'react-native-svg';
 
@@ -96,8 +97,74 @@ const Shadow: React.FC<ShadowProps> = (props) => {
       x42,
       y42,
       circleR,
+      xAxisLength,
+      yAxisLength,
     };
   }, [viewport, shadowWidth, borderRadius]);
+
+  const renderBorder = () => {
+    const ios = Platform.OS === 'ios';
+    if (ios) {
+      return (
+        <>
+          <Path
+            d={`M ${options.x11},${options.y11} L ${options.x12},${options.y12}`}
+            stroke="url(#top)"
+            strokeWidth={shadowWidth}
+          />
+          <Path
+            d={`M ${options.x21},${options.y21} L ${options.x22},${options.y22}`}
+            stroke="url(#right)"
+            strokeWidth={shadowWidth}
+          />
+          <Path
+            d={`M ${options.x31},${options.y31} L ${options.x32},${options.y32}`}
+            stroke="url(#bottom)"
+            strokeWidth={shadowWidth}
+          />
+          <Path
+            d={`M ${options.x41},${options.y41} L ${options.x42},${options.y42}`}
+            stroke="url(#left)"
+            // stroke="red"
+            strokeWidth={shadowWidth}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Rect
+            x={options.x11}
+            y={options.y11}
+            width={options.xAxisLength}
+            height={shadowWidth}
+            fill={'url(#top)'}
+          />
+          <Rect
+            x={options.x21 - shadowWidth}
+            y={options.y21}
+            width={shadowWidth}
+            height={options.yAxisLength}
+            fill={'url(#right)'}
+          />
+          <Rect
+            x={options.x31}
+            y={options.y31 - shadowWidth}
+            width={options.xAxisLength}
+            height={shadowWidth}
+            fill={'url(#bottom)'}
+          />
+          <Rect
+            x={options.x41}
+            y={options.y41}
+            width={shadowWidth}
+            height={options.yAxisLength}
+            fill={'url(#left)'}
+          />
+        </>
+      );
+    }
+  };
 
   return (
     <Svg
@@ -113,7 +180,7 @@ const Shadow: React.FC<ShadowProps> = (props) => {
           <Stop offset="0" stopColor={color} stopOpacity="0" />
           <Stop offset="1" stopColor={color} stopOpacity={stopOpacity} />
         </LinearGradient>
-        <LinearGradient id="bottom" x1="1" y1="1" x2="1" y2="0">
+        <LinearGradient id="bottom" x1="0" y1="1" x2="0" y2="0">
           <Stop offset="0" stopColor={color} stopOpacity="0" />
           <Stop offset="1" stopColor={color} stopOpacity={stopOpacity} />
         </LinearGradient>
@@ -180,27 +247,7 @@ const Shadow: React.FC<ShadowProps> = (props) => {
           <Stop offset="1" stopColor={color} stopOpacity="0" />
         </RadialGradient>
       </Defs>
-      <Path
-        d={`M ${options.x11},${options.y11} L ${options.x12},${options.y12}`}
-        stroke="url(#top)"
-        strokeWidth={shadowWidth}
-      />
-      <Path
-        d={`M ${options.x21},${options.y21} L ${options.x22},${options.y22}`}
-        stroke="url(#right)"
-        strokeWidth={shadowWidth}
-      />
-      <Path
-        d={`M ${options.x31},${options.y31} L ${options.x32},${options.y32}`}
-        stroke="url(#bottom)"
-        strokeWidth={shadowWidth}
-      />
-      <Path
-        d={`M ${options.x41},${options.y41} L ${options.x42},${options.y42}`}
-        stroke="url(#left)"
-        strokeWidth={shadowWidth}
-      />
-
+      {renderBorder()}
       <Path
         d={`M ${options.x41},${options.y41} A ${options.circleR} ${options.circleR} 0 0 1 ${options.x11},${options.y11}`}
         stroke="url(#top-left)"
