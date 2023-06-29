@@ -63,6 +63,7 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
   }, []);
 
   const panGesture = Gesture.Pan()
+    .activeOffsetX([-5, 5])
     .onBegin(() => {
       offsetX.value = translateX.value;
       tabStatus.value = TabStatus.Moving;

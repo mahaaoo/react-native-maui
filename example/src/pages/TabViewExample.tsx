@@ -51,7 +51,7 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
                 style={[
                   styles.itemContainer,
                   {
-                    height: height / 3 + 50,
+                    height: height * 2,
                   },
                   {
                     backgroundColor: TabListColor[index],
