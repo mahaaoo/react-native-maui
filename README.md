@@ -2,7 +2,7 @@
 
 [中文文档](https://github.com/mahaaoo/react-native-maui/blob/main/README.zh.md)
 
-This project contains the basic components commonly used in ReactNative, and the code is based on RN0.68. All components are implemented by `funciton components` and `hooks`, coded in `typescript`. Animations and interactions are implemented by `react-native-reanimated`, `react-native-gesture-handler` and `react-native-svg`.
+This project contains the basic components commonly used in ReactNative. All components are implemented by `funciton components` and `hooks`, coded in `typescript`. Animations and interactions are implemented by `react-native-reanimated`, `react-native-gesture-handler` and `react-native-svg`.
 
 > This project is developed by individuals, the stability and adaptability of the components cannot be guaranteed, please use with caution
 
