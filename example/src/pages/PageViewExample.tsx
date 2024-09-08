@@ -14,16 +14,16 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
       style={styles.pagerView}
       initialPage={1}
       onPageSelected={(currentPage) => {
-        console.log('currentPage:', currentPage);
+        // console.log('currentPage:', currentPage);
       }}
       onPageScrollStateChanged={(state) => {
-        console.log('state:', state);
+        // console.log('state:', state);
       }}
       onPageScroll={(translate) => {
-        console.log('translate', translate);
+        // console.log('translate', translate);
       }}
       scrollEnabled={true}
-      bounces={false}
+      bounces={true}
     >
       <View key="1" style={{ flex: 1, backgroundColor: 'orange' }}>
         <Text>first page</Text>
@@ -79,7 +79,6 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
 const styles = StyleSheet.create({
   pagerView: {
     flex: 1,
-    width: 200,
   },
 });
 

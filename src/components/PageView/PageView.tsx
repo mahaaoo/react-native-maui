@@ -17,6 +17,7 @@ interface PageViewProps {
   initialPage?: number;
   scrollEnabled?: boolean;
   bounces?: boolean;
+  gestureBack?: boolean;
 
   onPageScroll?: (translate: number) => void;
   onPageSelected?: (currentPage: number) => void;
@@ -74,12 +75,13 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     contentSize,
     pageSize,
     snapPoints,
-    onPageSelected,
     initialPage = 0,
-    onPageScrollStateChanged,
-    onPageScroll,
     scrollEnabled = true,
     bounces = true,
+    gestureBack = true,
+    onPageScroll,
+    onPageSelected,
+    onPageScrollStateChanged,
   } = verifyProps(props);
 
   const pageMove = useSharedValue(-initialPage * contentSize);
@@ -155,6 +157,12 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   const panGesture = Gesture.Pan()
     .activeOffsetX([-10, 10])
     .onTouchesDown((event, stateManager) => {
+      if (currentPage.value === 0 && gestureBack) {
+        const allTouches = event.allTouches[0];
+        if (allTouches.x <= 35) {
+          stateManager.fail();
+        }
+      }
       if (scrollEnabled === false) {
         stateManager.fail();
       }
