@@ -566,6 +566,10 @@ const exampleList: Example[] = [
     title: 'HeadTabView',
     content: null,
   },
+  {
+    title: 'PageView',
+    content: null,
+  },
 ];
 
 export { exampleList };

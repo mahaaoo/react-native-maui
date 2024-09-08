@@ -27,6 +27,7 @@ import SwipeActionExample from './SwipeActionExample';
 import RefreshControlExample from './RefreshControlExample';
 import TabViewExample from './TabViewExample';
 import HeadTabViewExample from './HeadTabViewExample';
+import PageViewExample from './PageViewExample';
 
 export default {
   ButtonExample,
@@ -58,4 +59,5 @@ export default {
   RefreshControlExample,
   TabViewExample,
   HeadTabViewExample,
+  PageViewExample,
 };
