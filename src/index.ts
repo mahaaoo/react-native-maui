@@ -88,3 +88,4 @@ export { Freeze } from './utils/Freeze';
 export { TabView, DefaultTabBar } from './components/TabView';
 export { HeadTabView } from './components/HeadTabView';
 export { PageView } from './components/PageView';
+export { TabBar } from './components/TabBar';

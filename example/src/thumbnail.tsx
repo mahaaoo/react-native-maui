@@ -570,6 +570,10 @@ const exampleList: Example[] = [
     title: 'PageView',
     content: null,
   },
+  {
+    title: 'TabBar',
+    content: null,
+  },
 ];
 
 export { exampleList };

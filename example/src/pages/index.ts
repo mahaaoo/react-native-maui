@@ -28,6 +28,7 @@ import RefreshControlExample from './RefreshControlExample';
 import TabViewExample from './TabViewExample';
 import HeadTabViewExample from './HeadTabViewExample';
 import PageViewExample from './PageViewExample';
+import TabBarExample from './TabBarExample';
 
 export default {
   ButtonExample,
@@ -60,4 +61,5 @@ export default {
   TabViewExample,
   HeadTabViewExample,
   PageViewExample,
+  TabBarExample,
 };

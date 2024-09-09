@@ -36,6 +36,8 @@ export type RootStackParamList = {
   RefreshControlExample: undefined;
   TabViewExample: undefined;
   HeadTabViewExample: undefined;
+  PageViewExample: undefined;
+  TabBarExample: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
