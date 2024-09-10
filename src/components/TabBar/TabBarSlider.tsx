@@ -1,12 +1,16 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 
-interface TabBarSliderProps {}
+interface TabBarSliderProps {
+  style?: ViewStyle;
+}
 
 const TabBarSlider: React.FC<TabBarSliderProps> = (props) => {
-  const {} = props;
+  const { style } = props;
 
-  return <View style={{ width: 25, height: 5, backgroundColor: 'red' }} />;
+  return (
+    <View style={[{ width: 20, height: 5, backgroundColor: 'red' }, style]} />
+  );
 };
 
 export default TabBarSlider;
