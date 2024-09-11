@@ -17,7 +17,7 @@ export const useVerifyProps = (props: TabBarProps): TabBarVerifyProps => {
     if (typeof style.width === 'number') {
       contentSize = style.width;
     } else {
-      throw new Error('PageView width only support number');
+      throw new Error('TabBar width only support number');
     }
   }
 

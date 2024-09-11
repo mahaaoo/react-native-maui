@@ -21,33 +21,33 @@
     "src"
   ],
   "devDependencies": {
-    "@babel/core": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/preset-typescript": "^7.17.12",
-    "@react-native-community/eslint-config": "^3.0.3",
-    "@testing-library/jest-native": "^4.0.4",
-    "@testing-library/react-hooks": "^8.0.0",
-    "@testing-library/react-native": "^9.1.0",
-    "@types/jest": "^27.5.1",
-    "@types/react": "~17.0.21",
-    "@types/react-native": "~0.66.13",
-    "babel-jest": "^28.1.1",
-    "eslint": "^8.19.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "husky": "^4.2.5",
-    "jest": "^26.6.3",
-    "jest-config": "^26.6.3",
-    "jest-expo": "^45.0.1",
-    "lint-staged": "^11.1.1",
-    "prettier": "^2.0.5",
-    "react": "18.2.0",
-    "react-dom": "17.0.2",
-    "react-native": "0.73.6",
-    "react-native-gesture-handler": "~2.14.0",
-    "react-native-reanimated": "~3.6.2",
-    "react-native-svg": "14.1.0",
-    "typescript": "~4.3.5"
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-typescript": "^7.24.7",
+    "@react-native-community/eslint-config": "^3.2.0",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/react-native": "^12.6.1",
+    "@types/jest": "^29.5.12",
+    "@types/react": "~18.3.5",
+    "@types/react-native": "~0.73.0",
+    "babel-jest": "^29.7.0",
+    "eslint": "^9.10.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.5",
+    "jest": "^29.7.0",
+    "jest-config": "^29.7.0",
+    "jest-expo": "^51.0.4",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "^0.75.2",
+    "react-native-gesture-handler": "~2.19.0",
+    "react-native-reanimated": "~3.15.1",
+    "react-native-svg": "15.6.0",
+    "typescript": "~5.6.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
@@ -66,12 +66,6 @@
     "url": "https://github.com/mahaaoo/react-native-maui/issues"
   },
   "homepage": "https://github.com/mahaaoo/react-native-maui#readme",
-  "jest": {
-    "preset": "jest-expo",
-    "setupFiles": [
-      "./node_modules/react-native-gesture-handler/jestSetup.js"
-    ]
-  },
   "setupFilesAfterEnv": [
     "@testing-library/jest-native/extend-expect"
   ],
