@@ -9,7 +9,7 @@ import {
 interface TabBarItemProps {
   index: number;
   title: string;
-  style: ViewStyle;
+  style?: ViewStyle;
   width?: DimensionValue;
   onLayout: (index: number, layout: Layout) => void;
   onPress: (index: number) => void;

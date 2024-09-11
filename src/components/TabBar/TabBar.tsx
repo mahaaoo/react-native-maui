@@ -30,6 +30,7 @@ interface TabBarProps {
   defaultSliderStyle?: ViewStyle;
   style?: ViewStyle;
   tabBarItemStyle?: ViewStyle;
+  initialTab?: number;
 
   onPress?: (index: number) => void;
 }
@@ -43,16 +44,26 @@ interface Layout {
 
 interface TabBarVerifyProps extends TabBarProps {
   defalutSliderWidth: number;
+  contentSize: number;
 }
 
 const verifyProps = (props: TabBarProps): TabBarVerifyProps => {
-  const { tabs, defaultSliderStyle } = props;
+  const { tabs, defaultSliderStyle, style } = props;
 
   if (!Array.isArray(tabs)) {
     throw new Error('TabBar tabs must be array');
   }
   if (tabs.length <= 0) {
     throw new Error("TabBar tabs can't be empty");
+  }
+
+  let contentSize: number = WIDTH;
+  if (style && style.width) {
+    if (typeof style.width === 'number') {
+      contentSize = style.width;
+    } else {
+      throw new Error('PageView width only support number');
+    }
   }
 
   let defalutSliderWidth: number = 20;
@@ -67,6 +78,7 @@ const verifyProps = (props: TabBarProps): TabBarVerifyProps => {
   return {
     ...props,
     defalutSliderWidth,
+    contentSize,
   };
 };
 
@@ -85,14 +97,22 @@ const TabBar: React.FC<TabBarProps> = (props) => {
     sliderComponent,
     onPress,
 
+    initialTab = 0,
     defalutSliderWidth,
+    contentSize,
   } = verifyProps(props);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(initialTab);
   const sliderOffset = useSharedValue(0);
   const scrollSize = useRef(0);
-  const scrollRef = useRef<ScrollView>();
+  const scrollRef = useRef<ScrollView>(null);
   const layouts = useRef<Layout[]>([]).current;
   const sliderWidth = useRef(defalutSliderWidth);
+
+  const handleOnPress = (index: number) => {
+    setCurrentIndex(index);
+    calculateSliderOffset(index);
+    onPress && onPress(index);
+  };
 
   const onTabBarItemLayout = (index: number, layout: Layout) => {
     layouts[index] = layout;
@@ -117,10 +137,10 @@ const TabBar: React.FC<TabBarProps> = (props) => {
     'worklet';
     const { x, y, width, height } = layouts[index];
     const toValue = x + (width - sliderWidth.current) / 2;
-    if (toValue > WIDTH / 2) {
+    if (toValue > contentSize / 2) {
       scrollRef.current &&
         scrollRef.current?.scrollTo({
-          x: toValue - WIDTH / 2,
+          x: toValue - contentSize / 2,
           y: 0,
           animated: true,
         });
@@ -160,16 +180,14 @@ const TabBar: React.FC<TabBarProps> = (props) => {
                   width={
                     flex === 'auto'
                       ? 'auto'
-                      : (WIDTH - (tabs.length + 1) * spacing) / tabs.length
+                      : (contentSize - (tabs.length + 1) * spacing) /
+                        tabs.length
                   }
                   style={tabBarItemStyle}
                   index={index}
                   title={tab}
                   onLayout={onTabBarItemLayout}
-                  onPress={(index) => {
-                    setCurrentIndex(index);
-                    calculateSliderOffset(index);
-                  }}
+                  onPress={handleOnPress}
                 />
                 <Separator spacing={spacing}>
                   {index !== tabs.length - 1 &&

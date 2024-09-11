@@ -24,12 +24,20 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
         tabBarItemStyle={{
           height: 50,
           borderRadius: 25,
+          paddingHorizontal: 30,
+          paddingVertical: 10,
+          backgroundColor: 'orange',
         }}
       />
       <TabBar
         tabs={tabs2}
         flex="equal-width"
         scrollEnabled={false}
+        spacing={30}
+        showSeparator
+        separatorComponent={() => (
+          <View style={{ height: 18, width: 30, backgroundColor: 'blue' }} />
+        )}
         sliderComponent={() => (
           <View
             style={{
@@ -42,10 +50,17 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
         )}
         style={{ height: 80 }}
       />
-      <TabBar tabs={tabs3} spacing={18} flex="equal-width" hideSlider />
+      <TabBar
+        tabs={tabs3}
+        spacing={18}
+        flex="equal-width"
+        hideSlider
+        tabBarItemStyle={{ backgroundColor: 'pink' }}
+      />
       <TabBar
         style={{ width: 200 }}
         tabs={tabs4}
+        initialTab={3}
         defaultSliderStyle={{ width: 50, height: 8, borderRadius: 4 }}
       />
     </>

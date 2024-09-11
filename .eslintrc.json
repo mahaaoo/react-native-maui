@@ -18,7 +18,9 @@
     "no-array-constructor": 0,
     "@typescript-eslint/no-shadow": 0,
     "jest/no-identical-title": 0,
-    "@typescript-eslint/no-unused-vars": "warn"
+    "@typescript-eslint/no-unused-vars": "warn",
+    "react-native/no-inline-styles": 0,
+    "react/no-unstable-nested-components": 0
   },
   "plugins": ["prettier"]
 }
