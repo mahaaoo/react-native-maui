@@ -55,6 +55,11 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
         spacing={18}
         flex="equal-width"
         hideSlider
+        tabBarItemTitleStyle={{
+          fontSize: 20,
+          color: 'grey',
+          fontWeight: 'bold',
+        }}
         tabBarItemStyle={{ backgroundColor: 'pink' }}
       />
       <TabBar

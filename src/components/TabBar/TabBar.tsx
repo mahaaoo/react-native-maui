@@ -1,11 +1,5 @@
-import React, { useRef, useState } from 'react';
-import {
-  View,
-  ScrollView,
-  Dimensions,
-  ViewStyle,
-  LayoutChangeEvent,
-} from 'react-native';
+import React, { useMemo, useRef, useState } from 'react';
+import { View, ScrollView, LayoutChangeEvent, StyleSheet } from 'react-native';
 import TabBarItem from './TabBarItem';
 import Animated, {
   useAnimatedStyle,
@@ -14,73 +8,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import TabBarSlider from './TabBarSlider';
 import Separator from './Separator';
-
-const { width: WIDTH } = Dimensions.get('window');
-
-interface TabBarProps {
-  tabs: Array<string>;
-
-  flex?: 'auto' | 'equal-width';
-  scrollEnabled?: boolean;
-  spacing?: number;
-  showSeparator?: boolean;
-  separatorComponent?: (index: number) => React.ReactNode;
-  hideSlider?: boolean;
-  sliderComponent?: () => React.ReactNode;
-  defaultSliderStyle?: ViewStyle;
-  style?: ViewStyle;
-  tabBarItemStyle?: ViewStyle;
-  initialTab?: number;
-
-  onPress?: (index: number) => void;
-}
-
-interface Layout {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-interface TabBarVerifyProps extends TabBarProps {
-  defalutSliderWidth: number;
-  contentSize: number;
-}
-
-const verifyProps = (props: TabBarProps): TabBarVerifyProps => {
-  const { tabs, defaultSliderStyle, style } = props;
-
-  if (!Array.isArray(tabs)) {
-    throw new Error('TabBar tabs must be array');
-  }
-  if (tabs.length <= 0) {
-    throw new Error("TabBar tabs can't be empty");
-  }
-
-  let contentSize: number = WIDTH;
-  if (style && style.width) {
-    if (typeof style.width === 'number') {
-      contentSize = style.width;
-    } else {
-      throw new Error('PageView width only support number');
-    }
-  }
-
-  let defalutSliderWidth: number = 20;
-  if (!!defaultSliderStyle && !!defaultSliderStyle?.width) {
-    if (typeof defaultSliderStyle.width === 'number') {
-      defalutSliderWidth = defaultSliderStyle.width;
-    } else {
-      throw new Error('TabBar defaultSliderStyle width only support number');
-    }
-  }
-
-  return {
-    ...props,
-    defalutSliderWidth,
-    contentSize,
-  };
-};
+import { TabBarProps, TabBarItemLayout } from './type';
+import { useVerifyProps } from './hook';
 
 const TabBar: React.FC<TabBarProps> = (props) => {
   const {
@@ -93,6 +22,7 @@ const TabBar: React.FC<TabBarProps> = (props) => {
     hideSlider = false,
     defaultSliderStyle,
     tabBarItemStyle,
+    tabBarItemTitleStyle,
     separatorComponent,
     sliderComponent,
     onPress,
@@ -100,12 +30,13 @@ const TabBar: React.FC<TabBarProps> = (props) => {
     initialTab = 0,
     defalutSliderWidth,
     contentSize,
-  } = verifyProps(props);
+  } = useVerifyProps(props);
+
   const [currentIndex, setCurrentIndex] = useState(initialTab);
   const sliderOffset = useSharedValue(0);
   const scrollSize = useRef(0);
   const scrollRef = useRef<ScrollView>(null);
-  const layouts = useRef<Layout[]>([]).current;
+  const layouts = useRef<TabBarItemLayout[]>([]).current;
   const sliderWidth = useRef(defalutSliderWidth);
 
   const handleOnPress = (index: number) => {
@@ -114,18 +45,16 @@ const TabBar: React.FC<TabBarProps> = (props) => {
     onPress && onPress(index);
   };
 
-  const onTabBarItemLayout = (index: number, layout: Layout) => {
+  const onTabBarItemLayout = (index: number, layout: TabBarItemLayout) => {
     layouts[index] = layout;
     const length = layouts.filter((layout) => layout.width > 0).length;
     if (length === tabs.length) {
-      // console.log('layouts', layouts);
       calculateSliderOffset(currentIndex);
     }
   };
 
   const onContentSizeChange = (w: number) => {
     scrollSize.current = w;
-    // console.log('scrollSize', scrollSize.current);
   };
 
   const onSliderLayout = (event: LayoutChangeEvent) => {
@@ -151,6 +80,12 @@ const TabBar: React.FC<TabBarProps> = (props) => {
     sliderOffset.value = withTiming(toValue);
   };
 
+  const tabBarItemWidth = useMemo(() => {
+    return flex === 'auto'
+      ? 'auto'
+      : (contentSize - (tabs.length + 1) * spacing) / tabs.length;
+  }, [flex, contentSize, tabs, spacing]);
+
   const animatedSlider = useAnimatedStyle(() => {
     return {
       transform: [
@@ -168,7 +103,7 @@ const TabBar: React.FC<TabBarProps> = (props) => {
         horizontal
         scrollEnabled={scrollEnabled}
         onContentSizeChange={onContentSizeChange}
-        contentContainerStyle={{ alignItems: 'center' }}
+        contentContainerStyle={styles.contentContainerStyle}
         showsHorizontalScrollIndicator={false}
       >
         {tabs?.length > 0 &&
@@ -177,13 +112,9 @@ const TabBar: React.FC<TabBarProps> = (props) => {
               <>
                 {index === 0 ? <Separator spacing={spacing} /> : null}
                 <TabBarItem
-                  width={
-                    flex === 'auto'
-                      ? 'auto'
-                      : (contentSize - (tabs.length + 1) * spacing) /
-                        tabs.length
-                  }
+                  width={tabBarItemWidth}
                   style={tabBarItemStyle}
+                  titleStyle={tabBarItemTitleStyle}
                   index={index}
                   title={tab}
                   onLayout={onTabBarItemLayout}
@@ -199,12 +130,7 @@ const TabBar: React.FC<TabBarProps> = (props) => {
             );
           })}
         {!hideSlider ? (
-          <Animated.View
-            style={[
-              { position: 'absolute', left: 0, bottom: 0 },
-              animatedSlider,
-            ]}
-          >
+          <Animated.View style={[styles.sliderContainer, animatedSlider]}>
             {sliderComponent ? (
               <View onLayout={onSliderLayout}>{sliderComponent()}</View>
             ) : (
@@ -216,5 +142,16 @@ const TabBar: React.FC<TabBarProps> = (props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  sliderContainer: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+  },
+  contentContainerStyle: {
+    alignItems: 'center',
+  },
+});
 
 export default TabBar;
