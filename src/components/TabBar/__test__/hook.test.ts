@@ -29,10 +29,11 @@ describe('Test:TabBar->hook/useVerifyProps', () => {
     );
   });
   it('contentSize default and normal', () => {
-    // const { contentSize } = useVerifyProps({
+    // const { contentSize: contentSize1 } = useVerifyProps({
     //   tabs: ['1'],
     // });
-    // expect(contentSize).toEqual();
+    // expect(contentSize1).toEqual(width);
+
     const { contentSize } = useVerifyProps({
       tabs: ['1'],
       style: {
@@ -40,5 +41,30 @@ describe('Test:TabBar->hook/useVerifyProps', () => {
       },
     });
     expect(contentSize).toEqual(200);
+  });
+  it('defalutSliderWidth must be number', () => {
+    const errorProps = {
+      tabs: ['1'],
+      defaultSliderStyle: {
+        width: 'auto',
+      },
+    };
+    expect(() => useVerifyProps(errorProps)).toThrow(
+      'TabBar defaultSliderStyle width only support number'
+    );
+  });
+  it('defalutSliderWidth default and normal', () => {
+    const { defalutSliderWidth } = useVerifyProps({
+      tabs: ['1'],
+    });
+    expect(defalutSliderWidth).toEqual(20);
+
+    const { defalutSliderWidth: defalutSliderWidth2 } = useVerifyProps({
+      tabs: ['1'],
+      defaultSliderStyle: {
+        width: 50,
+      },
+    });
+    expect(defalutSliderWidth2).toEqual(50);
   });
 });
