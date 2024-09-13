@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, ViewStyle } from 'react-native';
 interface SectionProps {
   title: string;
   style?: ViewStyle;
+  children: React.ReactNode;
 }
 
 const Section: React.FC<SectionProps> = (props) => {
