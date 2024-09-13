@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   },
   tabViewContainer: {
     flexDirection: 'row',
-    height: 40,
+    height: 30,
     width: 120,
     backgroundColor: 'white',
     alignItems: 'center',
@@ -559,6 +559,7 @@ const exampleList: Example[] = [
           <Text style={styles.tabViewUnSelected}>Tab2</Text>
         </View>
         <View style={styles.tabViewLine} />
+        <View style={{ height: 20, width: 120, backgroundColor: '#fff' }} />
       </View>
     ),
   },
@@ -568,11 +569,42 @@ const exampleList: Example[] = [
   },
   {
     title: 'PageView',
-    content: null,
+    content: (
+      <View style={{ flexDirection: 'row' }}>
+        <View
+          style={{
+            width: 35,
+            height: 55,
+            backgroundColor: '#fff',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text>1</Text>
+        </View>
+        <View
+          style={{
+            marginLeft: 1,
+            width: 35,
+            height: 55,
+            backgroundColor: '#fff',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text>2</Text>
+        </View>
+      </View>
+    ),
   },
   {
     title: 'TabBar',
-    content: null,
+    content: (
+      <View style={styles.tabViewContainer}>
+        <Text style={styles.tabViewSelected}>Tab1</Text>
+        <Text style={styles.tabViewUnSelected}>Tab2</Text>
+      </View>
+    ),
   },
 ];
 

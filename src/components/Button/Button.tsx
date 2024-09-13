@@ -8,6 +8,7 @@ interface ButtonProps extends BaseButtonProps {
   style?: StyleProp<ViewStyle>;
   type?: ButtonType;
   textStyle?: TextStyle;
+  children: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
