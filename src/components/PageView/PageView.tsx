@@ -1,5 +1,5 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { Dimensions, View, ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -9,64 +9,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { snapPoint, clamp } from '../../index';
-
-interface PageViewProps {
-  children: React.ReactElement;
-
-  style?: ViewStyle;
-  initialPage?: number;
-  scrollEnabled?: boolean;
-  bounces?: boolean;
-  gestureBack?: boolean;
-
-  onPageScroll?: (translate: number) => void;
-  onPageSelected?: (currentPage: number) => void;
-  onPageScrollStateChanged?: (state: PageStateType) => void;
-}
-
-interface PageViewRef {
-  setPage: (index: number) => void;
-  setPageWithoutAnimation: (index: number) => void;
-  getCurrentPage: () => number;
-}
-
-const { width, height } = Dimensions.get('window');
-const DURATION = 350;
-
-type PageStateType = 'dragging' | 'settling' | 'idle';
-
-interface PageViewVerifyProps extends PageViewProps {
-  pageSize: number;
-  contentSize: number;
-  snapPoints: number[];
-}
-
-const verifyProps = (props: PageViewProps): PageViewVerifyProps => {
-  const { children, style } = props;
-  const pageSize = React.Children.count(children);
-  if (pageSize === 0) {
-    throw new Error('PageView must be contains at least one chid');
-  }
-  let contentSize: number = width;
-  if (style && style.width) {
-    if (typeof style.width === 'number') {
-      contentSize = style.width;
-    } else {
-      throw new Error('PageView width only support number');
-    }
-  }
-
-  const snapPoints = new Array(pageSize)
-    .fill(0)
-    .map((_, index) => -index * contentSize);
-
-  return {
-    ...props,
-    pageSize,
-    contentSize,
-    snapPoints,
-  };
-};
+import { PageViewRef, PageViewProps, PageStateType, DURATION } from './type';
+import { useVerifyProps } from './hook';
+import SiglePage from './SiglePage';
 
 const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   const {
@@ -82,7 +27,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     onPageScroll,
     onPageSelected,
     onPageScrollStateChanged,
-  } = verifyProps(props);
+  } = useVerifyProps(props);
 
   const pageMove = useSharedValue(-initialPage * contentSize);
   const offset = useSharedValue(0);
@@ -220,24 +165,12 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
           ]}
         >
           {React.Children.map(children, (child) => {
-            return (
-              <PageContainer contentSize={contentSize}>{child}</PageContainer>
-            );
+            return <SiglePage contentSize={contentSize}>{child}</SiglePage>;
           })}
         </Animated.View>
       </GestureDetector>
     </View>
   );
 });
-
-interface PageContainerProps {
-  children: React.ReactElement;
-  contentSize: number;
-}
-
-const PageContainer: React.FC<PageContainerProps> = (props) => {
-  const { children, contentSize } = props;
-  return <View style={{ width: contentSize }}>{children}</View>;
-};
 
 export default PageView;
