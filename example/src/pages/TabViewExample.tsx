@@ -29,6 +29,7 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
 
   return (
     <View style={styles.container}>
+      <TabView />
     </View>
   );
 };
