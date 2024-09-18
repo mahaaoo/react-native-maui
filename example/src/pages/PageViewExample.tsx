@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { PageView } from 'react-native-maui';
+import { PageView, PageViewRef } from 'react-native-maui';
 
 interface PageViewExampleProps {}
 
 const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
   const {} = props;
-  const ref = useRef(null);
+  const ref = useRef<PageViewRef>(null);
 
   return (
     <PageView

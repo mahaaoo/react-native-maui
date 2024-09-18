@@ -63,10 +63,10 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
         tabBarItemStyle={{ backgroundColor: 'pink' }}
       />
       <TabBar
-        style={{ width: 200 }}
+        style={{ width: 300 }}
         tabs={tabs4}
         initialTab={3}
-        defaultSliderStyle={{ width: 50, height: 8, borderRadius: 4 }}
+        defaultSliderStyle={{ width: 50, height: 4, borderRadius: 4 }}
       />
     </>
   );

@@ -1,7 +1,7 @@
 import { ViewStyle } from 'react-native';
 
 export interface PageViewProps {
-  children: React.ReactElement;
+  children: React.ReactNode;
 
   style?: ViewStyle;
   initialPage?: number;

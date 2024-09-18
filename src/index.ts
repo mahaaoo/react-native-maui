@@ -85,7 +85,7 @@ export { RefreshScrollView, NormalControl } from './components/RefreshControl';
 export { snapPoint, clamp } from './utils/redash';
 export { Freeze } from './utils/Freeze';
 
-export { TabView, DefaultTabBar } from './components/TabView';
+export { TabView } from './components/TabView';
 export { HeadTabView } from './components/HeadTabView';
-export { PageView } from './components/PageView';
+export { PageView, PageViewRef } from './components/PageView';
 export { TabBar } from './components/TabBar';

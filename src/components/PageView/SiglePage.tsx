@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
 interface SiglePageProps {
-  children: React.ReactElement;
+  children: React.ReactNode;
   contentSize: number;
 }
 
