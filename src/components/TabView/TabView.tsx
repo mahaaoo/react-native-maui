@@ -1,7 +1,10 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, Dimensions } from 'react-native';
 import { TabBar } from '../TabBar';
-import { PageView } from '../PageView';
+import { PageView, PageViewRef } from '../PageView';
+import Animated, { useSharedValue } from 'react-native-reanimated';
+
+const { width } = Dimensions.get('window');
 
 interface TabViewProps {}
 
@@ -9,11 +12,16 @@ const tabs = ['tab1', 'tab2', 'this is tab3', 'tab5', '11', 'tab8', 'ta11'];
 
 const TabView: React.FC<TabViewProps> = (props) => {
   const {} = props;
+  // const contentSize = width;
+  const currentIndex = useSharedValue(2);
+  const pageRef = useRef<PageViewRef>(null);
+  const tabRef = useRef(null);
 
   return (
-    <View style={{ flex: 1 }}>
+    <Animated.View style={{ flex: 1 }}>
       <TabBar
         tabs={tabs}
+        ref={tabRef}
         spacing={20}
         showSeparator
         separatorComponent={() => (
@@ -26,18 +34,30 @@ const TabView: React.FC<TabViewProps> = (props) => {
           paddingVertical: 10,
           backgroundColor: 'orange',
         }}
+        onPress={(index) => {
+          // pageRef.current && pageRef.current?.setPage(index);
+          console.log('onPress index', index);
+          // currentIndex.value = index;
+        }}
+        initialTab={currentIndex.value}
       />
       <PageView
         style={{ flex: 1 }}
-        initialPage={1}
+        ref={pageRef}
+        initialPage={currentIndex.value}
         onPageSelected={(currentPage) => {
           // console.log('currentPage:', currentPage);
+          // tabRef.current && tabRef.current?.setTab(currentPage);
         }}
         onPageScrollStateChanged={(state) => {
           // console.log('state:', state);
         }}
         onPageScroll={(translate) => {
           // console.log('translate', translate);
+          // currentIndex.value = translate;
+          // const page = pageRef.current && pageRef.current?.getCurrentPage();
+          // console.log('translate', page);
+
         }}
         scrollEnabled={true}
         bounces={true}
@@ -58,7 +78,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
           );
         })}
       </PageView>
-    </View>
+    </Animated.View>
   );
 };
 

@@ -1,7 +1,15 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { View, ScrollView, LayoutChangeEvent, StyleSheet } from 'react-native';
 import TabBarItem from './TabBarItem';
 import Animated, {
+  runOnUI,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -11,7 +19,11 @@ import Separator from './Separator';
 import { TabBarProps, TabBarItemLayout } from './type';
 import { useVerifyProps } from './hook';
 
-const TabBar: React.FC<TabBarProps> = (props) => {
+interface TabBarRef {
+  setTab: (index: number) => void;
+}
+
+const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   const {
     tabs,
     style,
@@ -32,15 +44,22 @@ const TabBar: React.FC<TabBarProps> = (props) => {
     contentSize,
   } = useVerifyProps(props);
 
-  const [currentIndex, setCurrentIndex] = useState(initialTab);
   const sliderOffset = useSharedValue(0);
   const scrollSize = useRef(0);
   const scrollRef = useRef<ScrollView>(null);
   const layouts = useRef<TabBarItemLayout[]>([]).current;
   const sliderWidth = useRef(defalutSliderWidth);
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      setTab: handleOnPress,
+    }),
+    []
+  );
+
   const handleOnPress = (index: number) => {
-    setCurrentIndex(index);
+    // setCurrentIndex(index);
     calculateSliderOffset(index);
     onPress && onPress(index);
   };
@@ -48,8 +67,9 @@ const TabBar: React.FC<TabBarProps> = (props) => {
   const onTabBarItemLayout = (index: number, layout: TabBarItemLayout) => {
     layouts[index] = layout;
     const length = layouts.filter((layout) => layout.width > 0).length;
+
     if (length === tabs.length) {
-      calculateSliderOffset(currentIndex);
+      calculateSliderOffset(initialTab);
     }
   };
 
@@ -64,7 +84,14 @@ const TabBar: React.FC<TabBarProps> = (props) => {
 
   const calculateSliderOffset = (index: number) => {
     'worklet';
+    if (index < 0 || index >= tabs.length) {
+      throw new Error(
+        'calculateSliderOffset can only handle index [0, tabs.length - 1]'
+      );
+    }
+
     const { x, y, width, height } = layouts[index];
+
     const toValue = x + (width - sliderWidth.current) / 2;
     if (toValue > contentSize / 2) {
       scrollRef.current &&
@@ -104,12 +131,13 @@ const TabBar: React.FC<TabBarProps> = (props) => {
         scrollEnabled={scrollEnabled}
         onContentSizeChange={onContentSizeChange}
         contentContainerStyle={styles.contentContainerStyle}
+        scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
       >
         {tabs?.length > 0 &&
           tabs.map((tab, index) => {
             return (
-              <>
+              <React.Fragment key={index}>
                 {index === 0 ? <Separator spacing={spacing} /> : null}
                 <TabBarItem
                   width={tabBarItemWidth}
@@ -126,7 +154,7 @@ const TabBar: React.FC<TabBarProps> = (props) => {
                     separatorComponent &&
                     separatorComponent(index)}
                 </Separator>
-              </>
+              </React.Fragment>
             );
           })}
         {!hideSlider ? (
@@ -141,7 +169,7 @@ const TabBar: React.FC<TabBarProps> = (props) => {
       </ScrollView>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   sliderContainer: {

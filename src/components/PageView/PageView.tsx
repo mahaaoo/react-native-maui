@@ -31,7 +31,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
 
   const pageMove = useSharedValue(-initialPage * contentSize);
   const offset = useSharedValue(0);
-  const currentPage = useSharedValue(initialPage);
+  const currentIndex = useSharedValue(initialPage);
   const pageState = useSharedValue<PageStateType>('idle');
 
   const pageSelected = (nextPage: number) => {
@@ -47,18 +47,28 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   };
 
   const setPage = (index: number) => {
+    if (index < 0 || index >= pageSize) {
+      throw new Error('setPage can only handle index [0, pageSize]');
+    }
+
     moveTo(index);
   };
 
   const setPageWithoutAnimation = (index: number) => {
+    if (index < 0 || index >= pageSize) {
+      throw new Error(
+        'setPageWithoutAnimation can only handle index [0, pageSize]'
+      );
+    }
+
     pageMove.value = -index * contentSize;
-    currentPage.value = index;
+    currentIndex.value = index;
     pageState.value = 'idle';
     runOnJS(pageSelected)(index);
   };
 
   const getCurrentPage = () => {
-    return currentPage.value;
+    return currentIndex.value;
   };
 
   useImperativeHandle(
@@ -92,7 +102,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
       { duration: DURATION },
       () => {
         const nextPage = Math.abs(Math.round(pageMove.value / contentSize));
-        currentPage.value = nextPage;
+        currentIndex.value = nextPage;
         pageState.value = 'idle';
         runOnJS(pageSelected)(nextPage);
       }
@@ -102,7 +112,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   const panGesture = Gesture.Pan()
     .activeOffsetX([-10, 10])
     .onTouchesDown((event, stateManager) => {
-      if (currentPage.value === 0 && gestureBack) {
+      if (currentIndex.value === 0 && gestureBack) {
         const allTouches = event.allTouches[0];
         if (allTouches.x <= 35) {
           stateManager.fail();
@@ -134,8 +144,8 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
       const willToPage = Math.abs(Math.round(dest / contentSize));
       const toValue = clamp(
         willToPage,
-        currentPage.value - 1,
-        currentPage.value + 1
+        currentIndex.value - 1,
+        currentIndex.value + 1
       );
 
       moveTo(toValue);

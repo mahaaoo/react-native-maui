@@ -1,4 +1,5 @@
 import { DimensionValue, TextStyle, ViewStyle } from 'react-native';
+import { SharedValue } from 'react-native-reanimated';
 
 export interface TabBarProps {
   tabs: Array<string>;
