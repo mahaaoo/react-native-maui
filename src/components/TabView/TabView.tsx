@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { View, Text, Dimensions } from 'react-native';
-import { TabBar } from '../TabBar';
+import { TabBar, TabBarRef } from '../TabBar';
 import { PageView, PageViewRef } from '../PageView';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 
@@ -15,7 +15,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
   // const contentSize = width;
   const currentIndex = useSharedValue(2);
   const pageRef = useRef<PageViewRef>(null);
-  const tabRef = useRef(null);
+  const tabRef = useRef<TabBarRef>(null);
 
   return (
     <Animated.View style={{ flex: 1 }}>
@@ -35,9 +35,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
           backgroundColor: 'orange',
         }}
         onPress={(index) => {
-          // pageRef.current && pageRef.current?.setPage(index);
-          console.log('onPress index', index);
-          // currentIndex.value = index;
+          pageRef.current && pageRef.current?.setPage(index);
         }}
         initialTab={currentIndex.value}
       />
@@ -46,17 +44,13 @@ const TabView: React.FC<TabViewProps> = (props) => {
         ref={pageRef}
         initialPage={currentIndex.value}
         onPageSelected={(currentPage) => {
-          // console.log('currentPage:', currentPage);
-          // tabRef.current && tabRef.current?.setTab(currentPage);
+          tabRef.current && tabRef.current?.keepScrollViewMiddle(currentPage);
         }}
         onPageScrollStateChanged={(state) => {
           // console.log('state:', state);
         }}
         onPageScroll={(translate) => {
-          // console.log('translate', translate);
-          // currentIndex.value = translate;
-          // const page = pageRef.current && pageRef.current?.getCurrentPage();
-          // console.log('translate', page);
+          tabRef.current && tabRef.current?.syncCurrentIndex(translate / width);
         }}
         scrollEnabled={true}
         bounces={true}

@@ -43,7 +43,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   };
 
   const pageScroll = (translate: number) => {
-    onPageScroll && onPageScroll(Math.abs(translate));
+    onPageScroll && onPageScroll(-translate);
   };
 
   const setPage = (index: number) => {

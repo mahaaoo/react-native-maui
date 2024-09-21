@@ -23,10 +23,13 @@ export interface TabBarProps {
 export interface TabBarRef {
   setTab: (index: number) => void;
   getCurrent: () => number;
+  syncCurrentIndex: (offset: number) => void;
+  keepScrollViewMiddle: (index: number) => void;
 }
 
 export interface TabBarItemProps {
   index: number;
+  currentIndex: SharedValue<number>;
   title: string;
   style?: ViewStyle;
   titleStyle?: TextStyle;

@@ -1,13 +1,16 @@
 import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { View, ScrollView, LayoutChangeEvent, StyleSheet } from 'react-native';
-import TabBarItem from './TabBarItem';
 import Animated, {
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+
+import TabBarItem from './TabBarItem';
 import TabBarSlider from './TabBarSlider';
 import Separator from './Separator';
+
 import { TabBarProps, TabBarItemLayout, TabBarRef } from './type';
 import { useVerifyProps } from './hook';
 
@@ -38,18 +41,27 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   const scrollRef = useRef<ScrollView>(null);
   const layouts = useRef<TabBarItemLayout[]>([]).current;
   const sliderWidth = useRef(defalutSliderWidth);
+  const sliderOutput = useRef<number[]>([]);
+  const intput = tabs.map((_, index) => index);
 
   useImperativeHandle(
     ref,
     () => ({
       setTab: handleOnPress,
       getCurrent: () => currentIndex.value,
+      syncCurrentIndex,
+      keepScrollViewMiddle,
     }),
     []
   );
 
+  const syncCurrentIndex = (offset: number) => {
+    currentIndex.value = offset;
+    sliderOffset.value = interpolate(offset, intput, sliderOutput.current);
+  };
+
   const handleOnPress = (index: number) => {
-    currentIndex.value = index;
+    currentIndex.value = withTiming(index);
     calculateSliderOffset(index);
     onPress && onPress(index);
   };
@@ -59,6 +71,11 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     const length = layouts.filter((layout) => layout.width > 0).length;
 
     if (length === tabs.length) {
+      sliderOutput.current = layouts.map((layout: TabBarItemLayout) => {
+        const { x, y, width, height } = layout;
+        const toValue = x + (width - sliderWidth.current) / 2;
+        return toValue;
+      });
       calculateSliderOffset(initialTab);
     }
   };
@@ -72,17 +89,8 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     sliderWidth.current = width;
   };
 
-  const calculateSliderOffset = (index: number) => {
-    'worklet';
-    if (index < 0 || index >= tabs.length) {
-      throw new Error(
-        'calculateSliderOffset can only handle index [0, tabs.length - 1]'
-      );
-    }
-
-    const { x, y, width, height } = layouts[index];
-
-    const toValue = x + (width - sliderWidth.current) / 2;
+  const keepScrollViewMiddle = (index: number) => {
+    const toValue = sliderOutput.current[index];
     if (toValue > contentSize / 2) {
       scrollRef.current &&
         scrollRef.current?.scrollTo({
@@ -94,6 +102,18 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
       scrollRef.current &&
         scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
     }
+  };
+
+  const calculateSliderOffset = (index: number) => {
+    'worklet';
+    if (index < 0 || index >= tabs.length) {
+      throw new Error(
+        'calculateSliderOffset can only handle index [0, tabs.length - 1]'
+      );
+    }
+
+    keepScrollViewMiddle(index);
+    const toValue = sliderOutput.current[index];
     sliderOffset.value = withTiming(toValue);
   };
 
@@ -134,6 +154,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
                   style={tabBarItemStyle}
                   titleStyle={tabBarItemTitleStyle}
                   index={index}
+                  currentIndex={currentIndex}
                   title={tab}
                   onLayout={onTabBarItemLayout}
                   onPress={handleOnPress}

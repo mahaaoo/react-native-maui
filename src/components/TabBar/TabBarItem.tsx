@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { TabBarItemProps } from './type';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
 const TabBarItem: React.FC<TabBarItemProps> = (props) => {
   const {
@@ -9,9 +10,31 @@ const TabBarItem: React.FC<TabBarItemProps> = (props) => {
     width = 'auto',
     style,
     titleStyle,
+    currentIndex,
     onLayout,
     onPress,
   } = props;
+
+  const animatedText = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        currentIndex.value,
+        [index - 1, index, index + 1],
+        [0.8, 1, 0.8],
+        Extrapolation.CLAMP
+      ),
+      transform: [
+        {
+          scale: interpolate(
+            currentIndex.value,
+            [index - 1, index, index + 1],
+            [0.9, 1.1, 0.9],
+            Extrapolation.CLAMP
+          ),
+        },
+      ],
+    };
+  });
 
   return (
     <TouchableOpacity
@@ -19,7 +42,7 @@ const TabBarItem: React.FC<TabBarItemProps> = (props) => {
       onLayout={(event) => onLayout(index, event.nativeEvent.layout)}
       style={[styles.container, { width: width }, style]}
     >
-      <Text style={titleStyle}>{title}</Text>
+      <Animated.Text style={[titleStyle, animatedText]}>{title}</Animated.Text>
     </TouchableOpacity>
   );
 };
