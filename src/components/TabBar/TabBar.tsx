@@ -1,27 +1,15 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { View, ScrollView, LayoutChangeEvent, StyleSheet } from 'react-native';
 import TabBarItem from './TabBarItem';
 import Animated, {
-  runOnUI,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import TabBarSlider from './TabBarSlider';
 import Separator from './Separator';
-import { TabBarProps, TabBarItemLayout } from './type';
+import { TabBarProps, TabBarItemLayout, TabBarRef } from './type';
 import { useVerifyProps } from './hook';
-
-interface TabBarRef {
-  setTab: (index: number) => void;
-}
 
 const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   const {
@@ -44,6 +32,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     contentSize,
   } = useVerifyProps(props);
 
+  const currentIndex = useSharedValue(initialTab);
   const sliderOffset = useSharedValue(0);
   const scrollSize = useRef(0);
   const scrollRef = useRef<ScrollView>(null);
@@ -54,12 +43,13 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     ref,
     () => ({
       setTab: handleOnPress,
+      getCurrent: () => currentIndex.value,
     }),
     []
   );
 
   const handleOnPress = (index: number) => {
-    // setCurrentIndex(index);
+    currentIndex.value = index;
     calculateSliderOffset(index);
     onPress && onPress(index);
   };

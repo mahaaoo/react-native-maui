@@ -20,6 +20,11 @@ export interface TabBarProps {
   onPress?: (index: number) => void;
 }
 
+export interface TabBarRef {
+  setTab: (index: number) => void;
+  getCurrent: () => number;
+}
+
 export interface TabBarItemProps {
   index: number;
   title: string;

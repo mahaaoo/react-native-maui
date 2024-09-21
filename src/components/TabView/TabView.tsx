@@ -57,7 +57,6 @@ const TabView: React.FC<TabViewProps> = (props) => {
           // currentIndex.value = translate;
           // const page = pageRef.current && pageRef.current?.getCurrentPage();
           // console.log('translate', page);
-
         }}
         scrollEnabled={true}
         bounces={true}
