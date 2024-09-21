@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { TabBar, TabBarRef } from '../TabBar';
 import { PageView, PageViewRef } from '../PageView';
-import Animated, { useSharedValue } from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
 
@@ -18,7 +18,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
   const tabRef = useRef<TabBarRef>(null);
 
   return (
-    <Animated.View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <TabBar
         tabs={tabs}
         ref={tabRef}
@@ -37,17 +37,14 @@ const TabView: React.FC<TabViewProps> = (props) => {
         onPress={(index) => {
           pageRef.current && pageRef.current?.setPage(index);
         }}
-        initialTab={currentIndex.value}
+        initialTab={0}
       />
       <PageView
         style={{ flex: 1 }}
         ref={pageRef}
-        initialPage={currentIndex.value}
+        initialPage={0}
         onPageSelected={(currentPage) => {
           tabRef.current && tabRef.current?.keepScrollViewMiddle(currentPage);
-        }}
-        onPageScrollStateChanged={(state) => {
-          // console.log('state:', state);
         }}
         onPageScroll={(translate) => {
           tabRef.current && tabRef.current?.syncCurrentIndex(translate / width);
@@ -71,7 +68,7 @@ const TabView: React.FC<TabViewProps> = (props) => {
           );
         })}
       </PageView>
-    </Animated.View>
+    </View>
   );
 };
 

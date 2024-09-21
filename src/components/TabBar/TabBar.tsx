@@ -29,6 +29,8 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     separatorComponent,
     sliderComponent,
     onPress,
+    activeTextColor,
+    inactiveTextColor,
 
     initialTab = 0,
     defalutSliderWidth,
@@ -155,6 +157,8 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
                   titleStyle={tabBarItemTitleStyle}
                   index={index}
                   currentIndex={currentIndex}
+                  activeTextColor={activeTextColor}
+                  inactiveTextColor={inactiveTextColor}             
                   title={tab}
                   onLayout={onTabBarItemLayout}
                   onPress={handleOnPress}

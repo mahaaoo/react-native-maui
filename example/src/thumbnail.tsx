@@ -551,21 +551,13 @@ const exampleList: Example[] = [
     ),
   },
   {
-    title: 'TabView',
+    title: 'TabBar',
     content: (
-      <View>
-        <View style={styles.tabViewContainer}>
-          <Text style={styles.tabViewSelected}>Tab1</Text>
-          <Text style={styles.tabViewUnSelected}>Tab2</Text>
-        </View>
-        <View style={styles.tabViewLine} />
-        <View style={{ height: 20, width: 120, backgroundColor: '#fff' }} />
+      <View style={styles.tabViewContainer}>
+        <Text style={styles.tabViewSelected}>Tab1</Text>
+        <Text style={styles.tabViewUnSelected}>Tab2</Text>
       </View>
     ),
-  },
-  {
-    title: 'HeadTabView',
-    content: null,
   },
   {
     title: 'PageView',
@@ -598,13 +590,21 @@ const exampleList: Example[] = [
     ),
   },
   {
-    title: 'TabBar',
+    title: 'TabView',
     content: (
-      <View style={styles.tabViewContainer}>
-        <Text style={styles.tabViewSelected}>Tab1</Text>
-        <Text style={styles.tabViewUnSelected}>Tab2</Text>
+      <View>
+        <View style={styles.tabViewContainer}>
+          <Text style={styles.tabViewSelected}>Tab1</Text>
+          <Text style={styles.tabViewUnSelected}>Tab2</Text>
+        </View>
+        <View style={styles.tabViewLine} />
+        <View style={{ height: 20, width: 120, backgroundColor: '#fff' }} />
       </View>
     ),
+  },
+  {
+    title: 'HeadTabView',
+    content: null,
   },
 ];
 

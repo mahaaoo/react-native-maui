@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { TabBarItemProps } from './type';
-import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, interpolateColor, useAnimatedStyle } from 'react-native-reanimated';
 
 const TabBarItem: React.FC<TabBarItemProps> = (props) => {
   const {
@@ -11,24 +11,29 @@ const TabBarItem: React.FC<TabBarItemProps> = (props) => {
     style,
     titleStyle,
     currentIndex,
+    activeTextColor = 'black',
+    inactiveTextColor = 'black',  
     onLayout,
     onPress,
   } = props;
+
+  const input = [index - 1, index, index + 1];
 
   const animatedText = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
         currentIndex.value,
-        [index - 1, index, index + 1],
+        input,
         [0.8, 1, 0.8],
         Extrapolation.CLAMP
       ),
+      color: interpolateColor(currentIndex.value, input, [inactiveTextColor, activeTextColor, inactiveTextColor], 'RGB'),
       transform: [
         {
           scale: interpolate(
             currentIndex.value,
-            [index - 1, index, index + 1],
-            [0.9, 1.1, 0.9],
+            input,
+            [0.9, 1, 0.9],
             Extrapolation.CLAMP
           ),
         },

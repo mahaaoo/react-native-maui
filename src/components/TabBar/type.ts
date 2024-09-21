@@ -1,4 +1,4 @@
-import { DimensionValue, TextStyle, ViewStyle } from 'react-native';
+import { ColorValue, DimensionValue, TextStyle, ViewStyle } from 'react-native';
 import { SharedValue } from 'react-native-reanimated';
 
 export interface TabBarProps {
@@ -16,6 +16,8 @@ export interface TabBarProps {
   tabBarItemStyle?: ViewStyle;
   tabBarItemTitleStyle?: TextStyle;
   initialTab?: number;
+  activeTextColor?: string,
+  inactiveTextColor?: string,
 
   onPress?: (index: number) => void;
 }
@@ -31,6 +33,8 @@ export interface TabBarItemProps {
   index: number;
   currentIndex: SharedValue<number>;
   title: string;
+  activeTextColor?: string,
+  inactiveTextColor?: string,
   style?: ViewStyle;
   titleStyle?: TextStyle;
   width?: DimensionValue;
