@@ -13,6 +13,7 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
   withTiming,
+  SharedValue,
 } from 'react-native-reanimated';
 import { snapPoint } from '../../utils/redash';
 import { useOverlay } from '../Overlay';
@@ -28,7 +29,7 @@ interface ImageOverlayProps {
   paddingTop?: number;
   paddingBottom?: number;
   initialIndex: number;
-  currentIndex: Animated.SharedValue<number>;
+  currentIndex: SharedValue<number>;
   data: any[];
   readonly innerKey?: string;
 
@@ -116,7 +117,7 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>(
       .onEnd(({ velocityX }) => {
         // TODO: ensure every sigle pan only move one screen width
         // const distance = (translateX.value + 0.2 * velocityX) / Width + scrollIndex.value;
-        // const dest = interpolate(distance, [-0.5, 0, 0.5], [1, 0, -1], Extrapolate.CLAMP);
+        // const dest = interpolate(distance, [-0.5, 0, 0.5], [1, 0, -1], Extrapolation.CLAMP);
         // console.log(Math.round(dest));
 
         const destX = snapPoint(translateX.value, velocityX, snapPointsX);

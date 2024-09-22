@@ -21,6 +21,7 @@ import { View, StyleSheet, StatusBar } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  SharedValue,
 } from 'react-native-reanimated';
 import { useTheme } from '../Theme';
 import { useForceUpdate } from '../../utils/hooks';
@@ -51,9 +52,9 @@ export interface OverlayRef {
 }
 
 export interface OverlayContextProps extends OverlayRef {
-  initialValue: Animated.SharedValue<number>;
-  progress: Animated.SharedValue<number>;
-  targetValue: Animated.SharedValue<number>;
+  initialValue: SharedValue<number>;
+  progress: SharedValue<number>;
+  targetValue: SharedValue<number>;
 }
 
 export const OverlayContext = createContext({} as OverlayContextProps);

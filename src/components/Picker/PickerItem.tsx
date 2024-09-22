@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
@@ -26,7 +26,7 @@ const PickerItem: React.FC<PickerItemProps> = (props) => {
       paningIndex.value,
       visibleIndex,
       visibleRotateX,
-      Extrapolate.CLAMP
+      Extrapolation.CLAMP
     );
     const offsetY = interpolate(
       paningIndex.value,
@@ -49,7 +49,7 @@ const PickerItem: React.FC<PickerItemProps> = (props) => {
             paningIndex.value,
             visibleIndex,
             [0.9, 0.92, 0.95, 1, 0.95, 0.92, 0.9],
-            Extrapolate.CLAMP
+            Extrapolation.CLAMP
           ),
         },
         {
@@ -57,7 +57,7 @@ const PickerItem: React.FC<PickerItemProps> = (props) => {
             paningIndex.value,
             visibleIndex,
             [0.9, 0.92, 0.95, 1, 0.95, 0.92, 0.9],
-            Extrapolate.CLAMP
+            Extrapolation.CLAMP
           ),
         },
       ],

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { DerivedValue, SharedValue } from 'react-native-reanimated';
 import BaseLayout from './BaseLayout';
 import ScaleLayout from './ScaleLayout';
 
@@ -31,10 +31,10 @@ export interface CarouselContextProps {
   layoutOption?: LayoutOption;
   container: { width: number; height: number };
 
-  translate: Animated.SharedValue<number>; // 当前滑动/偏移距离，正负代表方向
-  translateIndex: Animated.DerivedValue<number>; // 当前是第几张卡片，取值范围[0, size]，动态值，通过translate计算得出
-  currentIndex: Animated.DerivedValue<number>; // 当前卡片位置，可取负值，整数值，当每次滑动结束之后相应+1或-1
-  indexAtData: Animated.DerivedValue<number>; // 当前是第几张卡片，取值范围[0, size]，整数值，由currentIndex计算得出
+  translate: SharedValue<number>; // 当前滑动/偏移距离，正负代表方向
+  translateIndex: DerivedValue<number>; // 当前是第几张卡片，取值范围[0, size]，动态值，通过translate计算得出
+  currentIndex: DerivedValue<number>; // 当前卡片位置，可取负值，整数值，当每次滑动结束之后相应+1或-1
+  indexAtData: DerivedValue<number>; // 当前是第几张卡片，取值范围[0, size]，整数值，由currentIndex计算得出
   itemSize?: number;
 }
 
@@ -92,10 +92,12 @@ export interface UseAutoScrollReturn {
 
 export interface ItemWrapperProps {
   index: number;
+  children: React.ReactNode;
 }
 
 export interface BaseLayoutProps {
   index: number;
+  children: React.ReactNode;
 }
 
 export interface ScaleLayoutProps extends BaseLayoutProps {}

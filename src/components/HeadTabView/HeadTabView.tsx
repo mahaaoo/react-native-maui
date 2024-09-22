@@ -15,7 +15,8 @@ import Animated, {
   useAnimatedRef,
   scrollTo,
   useAnimatedReaction,
-  Extrapolate,
+  Extrapolation,
+  SharedValue,
   withTiming,
   Easing,
 } from 'react-native-reanimated';
@@ -39,7 +40,7 @@ const TabListColor = [
 type GestureTypeRef = React.MutableRefObject<GestureType | undefined>;
 
 export interface HeadTabViewContextProps {
-  mainTranslate: Animated.SharedValue<number>;
+  mainTranslate: SharedValue<number>;
   handleChildRef: (ref: GestureTypeRef) => void;
 }
 
@@ -134,7 +135,7 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
             mainTranslate.value,
             [0, height / 4],
             [1, 5],
-            Extrapolate.CLAMP
+            Extrapolation.CLAMP
           ),
         },
       ],
@@ -165,7 +166,7 @@ const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
           >
             <Text>HEAD</Text>
           </Animated.View>
-          <TabView tabBar={TabList} onChangeTab={setCurrentIndex}>
+          <TabView tabs={TabList} onTabPress={setCurrentIndex}>
             {TabList.map((_, index) => {
               return (
                 <HeadTabViewItem

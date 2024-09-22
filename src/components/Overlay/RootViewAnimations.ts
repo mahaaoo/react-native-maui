@@ -1,8 +1,9 @@
 import { Dimensions, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import Animated, {
-  AnimatedStyleProp,
-  Extrapolate,
+  AnimatedProps,
+  Extrapolation,
   interpolate,
+  SharedValue,
 } from 'react-native-reanimated';
 const { height } = Dimensions.get('window');
 
@@ -12,8 +13,8 @@ const addDeg = (deg: number): string => {
 };
 
 export const scaleAnimation = (
-  progress: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+  progress: SharedValue<number>
+) => {
   'worklet';
   return {
     transform: [
@@ -22,7 +23,7 @@ export const scaleAnimation = (
           progress.value,
           [0, 1],
           [1, 0.94],
-          Extrapolate.CLAMP
+          Extrapolation.CLAMP
         ),
       },
     ],
@@ -30,9 +31,9 @@ export const scaleAnimation = (
 };
 
 export const translateXAnimation = (
-  progress: Animated.SharedValue<number>,
-  targetValue: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+  progress: SharedValue<number>,
+  targetValue: SharedValue<number>
+) => {
   'worklet';
   return {
     transform: [
@@ -41,7 +42,7 @@ export const translateXAnimation = (
           progress.value,
           [0, 1],
           [0, targetValue.value],
-          Extrapolate.CLAMP
+          Extrapolation.CLAMP
         ),
       },
     ],
@@ -49,8 +50,8 @@ export const translateXAnimation = (
 };
 
 export const rotateXAnimation = (
-  progress: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+  progress: SharedValue<number>
+) => {
   'worklet';
   return {
     transform: [
@@ -62,7 +63,7 @@ export const rotateXAnimation = (
       },
       {
         rotateX: addDeg(
-          interpolate(progress.value, [0, 0.5], [0, 4], Extrapolate.CLAMP)
+          interpolate(progress.value, [0, 0.5], [0, 4], Extrapolation.CLAMP)
         ),
       },
       {
@@ -70,7 +71,7 @@ export const rotateXAnimation = (
       },
       {
         rotateX: addDeg(
-          interpolate(progress.value, [0.5, 1], [0, -4], Extrapolate.CLAMP)
+          interpolate(progress.value, [0.5, 1], [0, -4], Extrapolation.CLAMP)
         ),
       },
       {
@@ -81,9 +82,9 @@ export const rotateXAnimation = (
 };
 
 export const scaleAndTranslateX = (
-  progress: Animated.SharedValue<number>,
-  targetValue: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+  progress: SharedValue<number>,
+  targetValue: SharedValue<number>
+) => {
   'worklet';
   return {
     transform: [
@@ -92,7 +93,7 @@ export const scaleAndTranslateX = (
           progress.value,
           [0, 1],
           [1, 0.94],
-          Extrapolate.CLAMP
+          Extrapolation.CLAMP
         ),
       },
       {
@@ -100,7 +101,7 @@ export const scaleAndTranslateX = (
           progress.value,
           [0, 1],
           [0, targetValue.value],
-          Extrapolate.CLAMP
+          Extrapolation.CLAMP
         ),
       },
     ],
@@ -116,32 +117,32 @@ export type RootAnimationType =
 
 const TypeToAnimation: {
   [key in RootAnimationType]: (
-    progress: Animated.SharedValue<number>,
-    targetValue: Animated.SharedValue<number>
-  ) => AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle>;
+    progress: SharedValue<number>,
+    targetValue: SharedValue<number>
+  ) => any;
 } = {
   'null': () => {
     'worklet';
     return {};
   },
-  'scale': (progress: Animated.SharedValue<number>) => {
+  'scale': (progress: SharedValue<number>) => {
     'worklet';
     return scaleAnimation(progress);
   },
   'translateX': (
-    progress: Animated.SharedValue<number>,
-    targetValue: Animated.SharedValue<number>
+    progress: SharedValue<number>,
+    targetValue: SharedValue<number>
   ) => {
     'worklet';
     return translateXAnimation(progress, targetValue);
   },
-  'rotateX': (progress: Animated.SharedValue<number>) => {
+  'rotateX': (progress: SharedValue<number>) => {
     'worklet';
     return rotateXAnimation(progress);
   },
   'scaleAndtranslateX': (
-    progress: Animated.SharedValue<number>,
-    targetValue: Animated.SharedValue<number>
+    progress: SharedValue<number>,
+    targetValue: SharedValue<number>
   ) => {
     'worklet';
     return scaleAndTranslateX(progress, targetValue);
@@ -150,9 +151,9 @@ const TypeToAnimation: {
 
 export const configAnimation = (
   type: RootAnimationType,
-  progress: Animated.SharedValue<number>,
-  targetValue: Animated.SharedValue<number>
-): AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle> => {
+  progress: SharedValue<number>,
+  targetValue: SharedValue<number>
+) => {
   'worklet';
   const animation = TypeToAnimation[type];
   return animation(progress, targetValue);

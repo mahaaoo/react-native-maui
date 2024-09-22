@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
@@ -45,14 +45,14 @@ const ScaleLayout: React.FC<ScaleLayoutProps> = (props) => {
       value,
       [index - 1, index, index + 1],
       [0.9, 1, 0.9],
-      Extrapolate.CLAMP
+      Extrapolation.CLAMP
     );
 
     const zIndex = interpolate(
       value,
       [index - 1, index, index + 1],
       [1, 99, 1],
-      Extrapolate.CLAMP
+      Extrapolation.CLAMP
     );
 
     if (horizontal) {

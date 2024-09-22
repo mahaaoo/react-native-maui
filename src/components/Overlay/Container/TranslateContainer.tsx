@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   runOnJS,
   runOnUI,
@@ -88,7 +88,7 @@ const TranslateContainer = forwardRef<
         value,
         [0, targetValue.value],
         [0, 1],
-        Extrapolate.CLAMP
+        Extrapolation.CLAMP
       );
     }
   );

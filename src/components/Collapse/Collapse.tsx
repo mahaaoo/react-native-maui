@@ -6,7 +6,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
   interpolate,
-  Extrapolate,
+  Extrapolation,
 } from 'react-native-reanimated';
 import { useCollapse } from './type';
 import { Icon } from '../Icon';
@@ -66,7 +66,7 @@ const Collapse: React.FC<CollapseProps> = (props) => {
       transition.value,
       [0, 1],
       [0, 90],
-      Extrapolate.CLAMP
+      Extrapolation.CLAMP
     );
     return {
       transform: [

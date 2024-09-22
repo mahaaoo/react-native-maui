@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
+  SharedValue,
   interpolate,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -19,10 +20,10 @@ interface DisplayProps {
   paddingTop: number;
   paddingBottom: number;
   item: any;
-  currentIndex: Animated.SharedValue<number>;
+  currentIndex: SharedValue<number>;
   index: number;
-  willUnMount: Animated.SharedValue<boolean>;
-  containerTranslateY: Animated.SharedValue<number>;
+  willUnMount: SharedValue<boolean>;
+  containerTranslateY: SharedValue<number>;
 }
 
 const Display: React.FC<DisplayProps> = (props) => {
@@ -108,7 +109,7 @@ const Display: React.FC<DisplayProps> = (props) => {
         value,
         [-Height / 2, 0, Height / 2],
         [0.5, 1, 0.5],
-        Extrapolate.CLAMP
+        Extrapolation.CLAMP
       );
       scale.value = withTiming(ratio, { duration });
       opacity.value = withTiming(ratio, { duration });

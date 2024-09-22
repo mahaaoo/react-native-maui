@@ -142,7 +142,7 @@ const Carousel = forwardRef<CarouselRef, CarouselProps>((props, ref) => {
 
   // Carousel Animation will be move actually in this function
   const scrollTo = useCallback(
-    (step, callback: () => void) => {
+    (step: number, callback: () => void) => {
       'worklet';
       translate.value = withTiming(
         step * stepDistance,

@@ -1,10 +1,10 @@
 import React, { useCallback, useRef } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, SharedValue } from 'react-native-reanimated';
 
 interface ImageContainerProps {
   children: React.ReactNode;
-  currentIndex: Animated.SharedValue<number>;
+  currentIndex: SharedValue<number>;
   index: number;
 
   onPress: () => void;

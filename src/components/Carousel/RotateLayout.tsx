@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
@@ -55,7 +55,7 @@ const RotateLayout: React.FC<RotateLayoutProps> = (props) => {
       value,
       [index - 1, index, index + 1],
       [-45, 0, 45],
-      Extrapolate.CLAMP
+      Extrapolation.CLAMP
     );
 
     return {

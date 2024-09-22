@@ -3,6 +3,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedStyle,
+  SharedValue,
 } from 'react-native-reanimated';
 import { RefreshStatus } from './type';
 
@@ -17,9 +18,10 @@ export const RefreshContainerContext =
 export const useRefresh = () => useContext(RefreshContainerContext);
 
 interface RefreshContainerProps {
-  transitionY: Animated.SharedValue<number>;
+  transitionY: SharedValue<number>;
   triggleHeight: number; // 当下拉距离超过该值，触发下拉刷新方法
-  refreshStatus: Animated.SharedValue<RefreshStatus>;
+  refreshStatus: SharedValue<RefreshStatus>;
+  children: React.ReactNode;
 }
 
 const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {

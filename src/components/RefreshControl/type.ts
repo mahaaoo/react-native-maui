@@ -1,16 +1,16 @@
 import { createContext, useContext } from 'react';
-import Animated from 'react-native-reanimated';
+import { SharedValue, DerivedValue } from 'react-native-reanimated';
 
 interface SkeletonContextProps {
   /**
    * Refresh Container transitionY
    */
-  transitionY: Animated.SharedValue<number>;
+  transitionY: SharedValue<number>;
   /**
    * ScrollView scroll to the top with velocity. It can continue scroll a little, scrollBounse is a marker to mark the progress
    * If True, scrollView is bounceing, and refresh animation will not triggle
    */
-  scrollBounse: Animated.SharedValue<boolean>;
+  scrollBounse: SharedValue<boolean>;
   /**
    * Only transitionY bigger than triggleHeight, refresh animation will triggle
    */
@@ -23,17 +23,17 @@ interface SkeletonContextProps {
    * RefreshStatus by transitionY
    * When transitionY.value reach some point, it will change
    */
-  refreshStatus: Animated.SharedValue<RefreshStatus>;
+  refreshStatus: SharedValue<RefreshStatus>;
   /**
    * ScrollView pulling direction
    * 1: down
    * -1: up
    *  */
-  direction: Animated.DerivedValue<1 | -1>;
+  direction: DerivedValue<1 | -1>;
   /**
    * inside scrollView wheather reach boundary
    */
-  canRefresh: Animated.DerivedValue<boolean>;
+  canRefresh: DerivedValue<boolean>;
 }
 
 export const RefreshContainerContext = createContext<SkeletonContextProps>(

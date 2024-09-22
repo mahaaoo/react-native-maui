@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ViewStyle } from 'react-native';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   interpolateColor,
   useAnimatedStyle,
@@ -41,13 +41,13 @@ const DotItem: React.FC<DotItemProps> = (props) => {
       value,
       inputRange,
       [0.5, 1, 0.5],
-      Extrapolate.CLAMP
+      Extrapolation.CLAMP
     );
     const scale = interpolate(
       value,
       inputRange,
       [1, 1.25, 1],
-      Extrapolate.CLAMP
+      Extrapolation.CLAMP
     );
 
     return {

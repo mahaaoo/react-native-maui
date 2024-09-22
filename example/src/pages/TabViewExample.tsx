@@ -1,8 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, ScrollView, Text, Dimensions } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { TabView } from 'react-native-maui';
-
-const { height } = Dimensions.get('window');
 
 interface TabViewExampleProps {}
 
@@ -19,6 +17,8 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
             return (
               <View key={index} style={{ flex: 1, backgroundColor: 'pink' }}>
                 <Text>{tab}</Text>
+                                <Text>{tab}</Text>
+
               </View>      
             )
           })

@@ -6,6 +6,7 @@ import Animated, {
   useSharedValue,
   withRepeat,
   withTiming,
+  SharedValue,
 } from 'react-native-reanimated';
 
 interface SpinnerProps {
@@ -49,7 +50,7 @@ const Spinner: React.FC<SpinnerProps> = (props) => {
 };
 
 interface SpinnerItemProps {
-  currentIndex: Animated.SharedValue<number>;
+  currentIndex: SharedValue<number>;
   index: number;
   inactiveColor: string;
   activeColor: string;

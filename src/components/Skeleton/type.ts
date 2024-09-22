@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { ViewStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { SharedValue } from 'react-native-reanimated';
 import { Breath, Shine, Normal, Load, ShineOver } from './Animation';
 
 export const SkeletonContext = React.createContext<SkeletonContextProps>(
@@ -18,7 +18,7 @@ export interface SkeletonContextProps {
   /**
    * animationProgress will repeat animation from 0 to 1
    */
-  animationProgress: Animated.SharedValue<number>;
+  animationProgress: SharedValue<number>;
   /**
    * Skeleton finished
    */

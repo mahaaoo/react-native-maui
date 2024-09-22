@@ -1,5 +1,5 @@
 import { ViewStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { SharedValue, DerivedValue } from 'react-native-reanimated';
 
 export interface PickOptions {
   itemHeight?: number;
@@ -29,9 +29,9 @@ export interface PickerDefaultProps {
 
 export interface PickerItemProps {
   index: number;
-  currentIndex: Animated.SharedValue<number>;
-  translateY: Animated.SharedValue<number>;
+  currentIndex: SharedValue<number>;
+  translateY: SharedValue<number>;
   options: PickDefaultOptions;
-  paningIndex: Animated.DerivedValue<number>;
+  paningIndex: DerivedValue<number>;
   item: number;
 }

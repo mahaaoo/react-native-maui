@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react';
 import Animated, {
   DerivedValue,
-  Extrapolate,
+  SharedValue,
+  Extrapolation,
   interpolate,
   runOnJS,
   useAnimatedReaction,
@@ -64,7 +65,7 @@ const useProps = (props: CarouselProps): CarouselDefaultProps => {
  * @returns TurnRange
  */
 const useRange = (
-  index: Animated.SharedValue<number>
+  index: SharedValue<number>
 ): DerivedValue<TurnRange> => {
   const range = useDerivedValue(() => {
     const inputRange = [
@@ -93,7 +94,7 @@ const getStep = (distance: number, range: DerivedValue<TurnRange>): number => {
       distance,
       range.value.inputRange,
       range.value.outputRange,
-      Extrapolate.CLAMP
+      Extrapolation.CLAMP
     )
   );
 };
@@ -245,7 +246,7 @@ const useAutoScroll = (
 const useTouching = (
   start: () => void,
   stop: () => void,
-  touching: Animated.SharedValue<boolean>
+  touching: SharedValue<boolean>
 ) => {
   'worklet';
   const handleTouching = useCallback((value: boolean) => {
@@ -271,7 +272,7 @@ const useTouching = (
  * @returns index at data, range is [0, data.length-1]
  */
 const useIndexAtData = (
-  currentIndex: Animated.SharedValue<number>,
+  currentIndex: SharedValue<number>,
   size: number
 ): Animated.DerivedValue<number> => {
   const index = useDerivedValue(() => {
@@ -292,7 +293,7 @@ const useIndexAtData = (
 const judgeRelativePosition = (
   direction: number,
   index: number,
-  indexAtData: Animated.SharedValue<number>,
+  indexAtData: SharedValue<number>,
   size: number
 ) => {
   'worklet';
@@ -336,10 +337,10 @@ const judgeRelativePosition = (
 // TODO: 在切换到最后一条的时候，有明显的白屏加载过程，应提前计算
 const getLayoutValue = (
   index: number,
-  translateIndex: Animated.SharedValue<number>,
-  currentIndex: Animated.SharedValue<number>,
-  indexAtData: Animated.SharedValue<number>,
-  translate: Animated.SharedValue<number>,
+  translateIndex: SharedValue<number>,
+  currentIndex: SharedValue<number>,
+  indexAtData: SharedValue<number>,
+  translate: SharedValue<number>,
   stepDistance: number,
   size: number,
   converse: boolean
