@@ -22,7 +22,7 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
       onPageScroll={(translate) => {
         // console.log('translate', translate);
       }}
-      scrollEnabled={true}
+      pageScrollEnabled={true}
       bounces={true}
     >
       <View key="1" style={{ flex: 1, backgroundColor: 'orange' }}>

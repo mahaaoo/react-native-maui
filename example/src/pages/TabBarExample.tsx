@@ -31,7 +31,7 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
       />
       <TabBar
         tabs={tabs2}
-        flex="equal-width"
+        tabBarflex="equal-width"
         scrollEnabled={false}
         spacing={30}
         showSeparator
@@ -53,7 +53,7 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
       <TabBar
         tabs={tabs3}
         spacing={18}
-        flex="equal-width"
+        tabBarflex="equal-width"
         hideSlider
         tabBarItemTitleStyle={{
           fontSize: 20,

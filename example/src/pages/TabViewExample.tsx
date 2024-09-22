@@ -6,30 +6,24 @@ const { height } = Dimensions.get('window');
 
 interface TabViewExampleProps {}
 
-const TabList = ['Tab1', 'Tab2', 'Tab3', 'Tab4', 'Tab5', 'Tab6', 'Tab7'];
-const TabListColor = [
-  'orange',
-  '#666',
-  'cyan',
-  'pink',
-  'purple',
-  'orange',
-  '#666',
-];
+const tabs = ['tab1', 'tab2', 'this is tab3', 'tab5', '11', 'tab8', 'ta11'];
 
 const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
-  const tabRef = useRef(null);
-
-  useEffect(() => {
-    // setTimeout(() => {
-    //   tabRef.current && tabRef.current?.previous();
-    // }, 3000);
-  }, []);
-
+  
   return (
     <View style={styles.container}>
-      <TabView />
+      <TabView tabs={tabs} tabBarflex='equal-width'>
+        {
+          tabs.map((tab, index) => {
+            return (
+              <View key={index} style={{ flex: 1, backgroundColor: 'pink' }}>
+                <Text>{tab}</Text>
+              </View>      
+            )
+          })
+        }
+      </TabView>
     </View>
   );
 };

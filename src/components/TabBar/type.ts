@@ -4,8 +4,8 @@ import { SharedValue } from 'react-native-reanimated';
 export interface TabBarProps {
   tabs: Array<string>;
 
-  flex?: 'auto' | 'equal-width';
-  scrollEnabled?: boolean;
+  tabBarflex?: 'auto' | 'equal-width';
+  tabScrollEnabled?: boolean;
   spacing?: number;
   showSeparator?: boolean;
   separatorComponent?: (index: number) => React.ReactNode;
@@ -19,7 +19,7 @@ export interface TabBarProps {
   activeTextColor?: string,
   inactiveTextColor?: string,
 
-  onPress?: (index: number) => void;
+  onTabPress?: (index: number) => void;
 }
 
 export interface TabBarRef {

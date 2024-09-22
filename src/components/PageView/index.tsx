@@ -1,4 +1,4 @@
 import PageView from './PageView';
-export { PageViewRef } from './type';
+export { PageViewRef, PageViewProps, PageStateType } from './type';
 
 export { PageView };

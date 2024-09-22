@@ -5,7 +5,7 @@ export interface PageViewProps {
 
   style?: ViewStyle;
   initialPage?: number;
-  scrollEnabled?: boolean;
+  pageScrollEnabled?: boolean;
   bounces?: boolean;
   gestureBack?: boolean;
 

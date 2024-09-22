@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, ViewStyle, StyleSheet } from 'react-native';
+import { View, ViewStyle, StyleSheet, StyleProp } from 'react-native';
 
 interface TabBarSliderProps {
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 const TabBarSlider: React.FC<TabBarSliderProps> = (props) => {

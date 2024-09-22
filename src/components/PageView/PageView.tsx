@@ -21,7 +21,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     pageSize,
     snapPoints,
     initialPage = 0,
-    scrollEnabled = true,
+    pageScrollEnabled = true,
     bounces = true,
     gestureBack = true,
     onPageScroll,
@@ -48,7 +48,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
 
   const setPage = (index: number) => {
     if (index < 0 || index >= pageSize) {
-      throw new Error('setPage can only handle index [0, pageSize]');
+      throw new Error('setPage can only handle index [0, pageSize - 1]');
     }
 
     moveTo(index);
@@ -118,7 +118,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
           stateManager.fail();
         }
       }
-      if (scrollEnabled === false) {
+      if (pageScrollEnabled === false) {
         stateManager.fail();
       }
     })

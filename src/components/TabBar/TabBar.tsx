@@ -18,17 +18,17 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   const {
     tabs,
     style,
-    flex = 'auto',
+    tabBarflex = 'auto',
     spacing = 0,
     showSeparator = false,
-    scrollEnabled = true,
+    tabScrollEnabled = true,
     hideSlider = false,
     defaultSliderStyle,
     tabBarItemStyle,
     tabBarItemTitleStyle,
     separatorComponent,
     sliderComponent,
-    onPress,
+    onTabPress,
     activeTextColor,
     inactiveTextColor,
 
@@ -58,14 +58,15 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   );
 
   const syncCurrentIndex = (offset: number) => {
-    currentIndex.value = offset;
-    sliderOffset.value = interpolate(offset, intput, sliderOutput.current);
+    const index = offset / contentSize;
+    currentIndex.value = index
+    sliderOffset.value = interpolate(index, intput, sliderOutput.current);
   };
 
   const handleOnPress = (index: number) => {
     currentIndex.value = withTiming(index);
     calculateSliderOffset(index);
-    onPress && onPress(index);
+    onTabPress && onTabPress(index);
   };
 
   const onTabBarItemLayout = (index: number, layout: TabBarItemLayout) => {
@@ -120,10 +121,10 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   };
 
   const tabBarItemWidth = useMemo(() => {
-    return flex === 'auto'
+    return tabBarflex === 'auto'
       ? 'auto'
       : (contentSize - (tabs.length + 1) * spacing) / tabs.length;
-  }, [flex, contentSize, tabs, spacing]);
+  }, [tabBarflex, contentSize, tabs, spacing]);
 
   const animatedSlider = useAnimatedStyle(() => {
     return {
@@ -140,7 +141,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
       <ScrollView
         ref={scrollRef}
         horizontal
-        scrollEnabled={scrollEnabled}
+        scrollEnabled={tabScrollEnabled}
         onContentSizeChange={onContentSizeChange}
         contentContainerStyle={styles.contentContainerStyle}
         scrollEventThrottle={16}

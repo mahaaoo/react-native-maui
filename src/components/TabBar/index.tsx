@@ -1,3 +1,3 @@
 import TabBar from './TabBar';
-export { TabBarRef } from './type';
+export { TabBarRef, TabBarProps } from './type';
 export { TabBar };

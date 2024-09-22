@@ -1,75 +1,75 @@
-import React, { useRef } from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import { View } from 'react-native';
 import { TabBar, TabBarRef } from '../TabBar';
 import { PageView, PageViewRef } from '../PageView';
-import { useSharedValue } from 'react-native-reanimated';
 
-const { width } = Dimensions.get('window');
+import { TabViewProps, TabViewRef } from './type';
+import { useVerifyProps } from './hook';
+import { isInteger } from '../../utils/typeUtil';
 
-interface TabViewProps {}
+const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
+  const {
+    style,
+    children,
+    pageProps,
+    tabProps,
 
-const tabs = ['tab1', 'tab2', 'this is tab3', 'tab5', '11', 'tab8', 'ta11'];
-
-const TabView: React.FC<TabViewProps> = (props) => {
-  const {} = props;
-  // const contentSize = width;
-  const currentIndex = useSharedValue(2);
+    onTabPress,
+    onPageScroll,
+    onPageScrollStateChanged,
+    onPageSelected,
+  } = useVerifyProps(props);
   const pageRef = useRef<PageViewRef>(null);
   const tabRef = useRef<TabBarRef>(null);
 
+  const setPage = (index: number) => {
+    if (!isInteger(index)) {
+      throw new Error('index type must be Integer');
+    }
+    if (index < 0 || index >= tabProps.tabs.length) {
+      throw new Error('setPage can only handle index [0, pageSize - 1]');
+    }
+    pageRef.current && pageRef.current?.setPage(index);
+  }
+
+  const getCurrentPage = () => {
+    return pageRef.current && pageRef.current?.getCurrentPage() || 0;
+  }
+
+  useImperativeHandle(ref, () => (
+    {
+      setPage,
+      getCurrentPage,
+    }
+  ))
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={[{ flex: 1 }, style]}>
       <TabBar
-        tabs={tabs}
         ref={tabRef}
-        spacing={20}
-        showSeparator
-        separatorComponent={() => (
-          <View style={{ height: 18, width: 4, backgroundColor: '#000' }} />
-        )}
-        tabBarItemStyle={{
-          height: 50,
-          borderRadius: 25,
-          paddingHorizontal: 30,
-          paddingVertical: 10,
-          backgroundColor: 'orange',
-        }}
-        onPress={(index) => {
+        {...{...tabProps}}
+        onTabPress={(index) => {
           pageRef.current && pageRef.current?.setPage(index);
+          onTabPress && onTabPress(index);
         }}
-        initialTab={0}
       />
       <PageView
-        style={{ flex: 1 }}
         ref={pageRef}
-        initialPage={0}
+        {...{...pageProps}}
         onPageSelected={(currentPage) => {
           tabRef.current && tabRef.current?.keepScrollViewMiddle(currentPage);
+          onPageSelected && onPageSelected(currentPage)
         }}
         onPageScroll={(translate) => {
-          tabRef.current && tabRef.current?.syncCurrentIndex(translate / width);
+          tabRef.current && tabRef.current?.syncCurrentIndex(translate);
+          onPageScroll && onPageScroll(translate);
         }}
-        scrollEnabled={true}
-        bounces={true}
+        onPageScrollStateChanged={onPageScrollStateChanged}
       >
-        {tabs.map((tab, index) => {
-          return (
-            <View
-              key={index}
-              style={{
-                flex: 1,
-                backgroundColor: 'pink',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text style={{ fontSize: 25 }}>{tab} </Text>
-            </View>
-          );
-        })}
+        {children}
       </PageView>
     </View>
   );
-};
+});
 
 export default TabView;
