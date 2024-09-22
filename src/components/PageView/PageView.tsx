@@ -8,7 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { snapPoint, clamp } from '../../index';
+import { snapPoint, clamp } from '../../utils/redash';
 import { PageViewRef, PageViewProps, PageStateType, DURATION } from './type';
 import { useVerifyProps } from './hook';
 import SiglePage from './SiglePage';
