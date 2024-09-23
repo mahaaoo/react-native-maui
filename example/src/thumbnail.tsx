@@ -222,8 +222,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   waterFallList: {
-    flex: 1,
+    width: 150,
+    height: 60,
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'flex-start',
   },
   waterFallListUp: {

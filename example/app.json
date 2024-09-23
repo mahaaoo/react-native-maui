@@ -36,6 +36,9 @@
     },
     "updates": {
       "url": "https://u.expo.dev/bc991390-e718-43ce-8c10-a24fc7ad7244"
+    },
+    "experiments": {
+      "baseUrl": "/react-native-maui/"
     }
   }
 }

@@ -12,7 +12,9 @@
     "testc": "jest --coverage",
     "buildios": "npx expo run:ios",
     "e2e-build": "detox build -c ios",
-    "e2e-test": "detox test -c ios"
+    "e2e-test": "detox test -c ios",
+    "deploy": "gh-pages -t -d dist",
+    "predeploy": "expo export -p web"  
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
@@ -44,6 +46,7 @@
     "@types/react-native": "~0.70.6",
     "babel-plugin-module-resolver": "^4.1.0",
     "detox": "^19.11.0",
+    "gh-pages": "^6.1.1",
     "jest": "^29.3.1",
     "typescript": "^5.3.3"
   },
