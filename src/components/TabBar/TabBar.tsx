@@ -13,6 +13,7 @@ import Separator from './Separator';
 
 import { TabBarProps, TabBarItemLayout, TabBarRef } from './type';
 import { useVerifyProps } from './hook';
+import { isInteger } from '../../utils/typeUtil';
 
 const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   const {
@@ -109,6 +110,9 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
 
   const calculateSliderOffset = (index: number) => {
     'worklet';
+    if (!isInteger(index)) {
+      throw new Error('index type must be Integer');
+    }
     if (index < 0 || index >= tabs.length) {
       throw new Error(
         'calculateSliderOffset can only handle index [0, tabs.length - 1]'

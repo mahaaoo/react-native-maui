@@ -12,6 +12,7 @@ import { snapPoint, clamp } from '../../utils/redash';
 import { PageViewRef, PageViewProps, PageStateType, DURATION } from './type';
 import { useVerifyProps } from './hook';
 import SiglePage from './SiglePage';
+import { isInteger } from '../../utils/typeUtil';
 
 const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   const {
@@ -47,6 +48,9 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   };
 
   const setPage = (index: number) => {
+    if (!isInteger(index)) {
+      throw new Error('index type must be Integer');
+    }
     if (index < 0 || index >= pageSize) {
       throw new Error('setPage can only handle index [0, pageSize - 1]');
     }
@@ -55,6 +59,9 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   };
 
   const setPageWithoutAnimation = (index: number) => {
+    if (!isInteger(index)) {
+      throw new Error('index type must be Integer');
+    }
     if (index < 0 || index >= pageSize) {
       throw new Error(
         'setPageWithoutAnimation can only handle index [0, pageSize]'
