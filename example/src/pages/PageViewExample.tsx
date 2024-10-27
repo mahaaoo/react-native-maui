@@ -4,6 +4,8 @@ import { PageView, PageViewRef } from 'react-native-maui';
 
 interface PageViewExampleProps {}
 
+const tabs = ["page1", "page2", "page3"]
+
 const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
   const {} = props;
   const ref = useRef<PageViewRef>(null);
@@ -25,53 +27,37 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
       pageScrollEnabled={true}
       bounces={true}
     >
-      <View key="1" style={{ flex: 1, backgroundColor: 'orange' }}>
-        <Text>first page</Text>
-        <Text
-          onPress={() => {
-            ref.current && ref.current?.setPage(2);
-          }}
-        >
-          go page 3
-        </Text>
-        <Text
-          onPress={() => {
-            ref.current && ref.current?.setPageWithoutAnimation(2);
-          }}
-        >
-          go page 3 widthout animate
-        </Text>
-        <Text
-          onPress={() => {
-            const page = ref.current && ref.current?.getCurrentPage();
-            console.log(page);
-          }}
-        >
-          getCurrentPage
-        </Text>
-      </View>
-      <View key="2" style={{ flex: 1, backgroundColor: 'pink' }}>
-        <Text>Second page</Text>
-        <Text
-          onPress={() => {
-            const page = ref.current && ref.current?.getCurrentPage();
-            console.log(page);
-          }}
-        >
-          getCurrentPage
-        </Text>
-      </View>
-      <View key="3" style={{ flex: 1, backgroundColor: 'blue' }}>
-        <Text>Second page</Text>
-        <Text
-          onPress={() => {
-            const page = ref.current && ref.current?.getCurrentPage();
-            console.log(page);
-          }}
-        >
-          getCurrentPage
-        </Text>
-      </View>
+      {
+        tabs.map((tab, index) => {
+          return (
+            <View key={tab} style={{ flex: 1, backgroundColor: 'orange' }}>
+              <Text>first page</Text>
+              <Text
+                onPress={() => {
+                  ref.current && ref.current?.setPage(2);
+                }}
+              >
+                go page 3
+              </Text>
+              <Text
+                onPress={() => {
+                  ref.current && ref.current?.setPageWithoutAnimation(2);
+                }}
+              >
+                go page 3 widthout animate
+              </Text>
+              <Text
+                onPress={() => {
+                  const page = ref.current && ref.current?.getCurrentPage();
+                  console.log(page);
+                }}
+              >
+                getCurrentPage
+              </Text>
+            </View>
+          )
+        })
+      }
     </PageView>
   );
 };

@@ -17,8 +17,7 @@ const TabViewExample: React.FC<TabViewExampleProps> = (props) => {
             return (
               <View key={index} style={{ flex: 1, backgroundColor: 'pink' }}>
                 <Text>{tab}</Text>
-                                <Text>{tab}</Text>
-
+                <Text>{tab}</Text>
               </View>      
             )
           })
