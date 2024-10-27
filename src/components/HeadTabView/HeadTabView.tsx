@@ -1,12 +1,24 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react'
 import {Text, View} from 'react-native'
-import Animated, { Extrapolation, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, useAnimatedRef, scrollTo, withTiming, useAnimatedReaction, withDecay, cancelAnimation, useDerivedValue, SharedValue } from 'react-native-reanimated';
+import Animated, { 
+  Extrapolation, 
+  interpolate, 
+  useAnimatedScrollHandler, 
+  useAnimatedStyle, 
+  useSharedValue, 
+  useAnimatedRef, 
+  scrollTo, 
+  useAnimatedReaction, 
+  withDecay, 
+  cancelAnimation, 
+  useDerivedValue, 
+  SharedValue
+} from 'react-native-reanimated';
 import {
-    Gesture,
-    GestureDetector,
-    GestureHandlerRootView,
-    GestureType,
-  } from 'react-native-gesture-handler';
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import { TabBar } from '../TabBar';
 import { PageView } from '../PageView';
 
@@ -217,7 +229,7 @@ const HeadTabSigle = ({
   setChildScrolls,
   index,
 }) => {
-  const animatedRef = useAnimatedRef();
+  const animatedRef = useAnimatedRef<any>();
 
   const nativeRef = useRef();
   const nativeGes = Gesture.Native().withRef(nativeRef);
