@@ -12,21 +12,25 @@ import Animated, {
   withDecay, 
   cancelAnimation, 
   useDerivedValue, 
-  SharedValue
+  SharedValue,
+  clamp
 } from 'react-native-reanimated';
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
-import { TabBar } from '../TabBar';
-import { PageView } from '../PageView';
+import { TabBar, TabBarRef } from '../TabBar';
+import { PageView, PageViewRef } from '../PageView';
 
 const HEADE_HEIGHT = 180;
 const TABBAR_HEIGHT = 55;
 const TABS = ['tab1', 'tab2'];
 
 const HeadTabView: React.FC<null> = (props) => {
+  const pageRef = useRef<PageViewRef>(null);
+  const tabRef = useRef<TabBarRef>(null);
+
   const headerY = useSharedValue(0);
   const headerYOffset = useSharedValue(0);
 
@@ -44,14 +48,12 @@ const HeadTabView: React.FC<null> = (props) => {
   const [childScrollRefs, setChildScrollRefs] = useState<{ [index: number]: any }>({})
   const [childNativeRefs, setChildNativeRefs] = useState<React.RefObject<any>[]>([])
 
+  const sharedTranslate = useSharedValue(0);
+
   const stopAnimation = () => {
       'worklet';
       cancelAnimation(headerY)
   }
-
-  console.log('childScrollRefs',childScrollRefs)
-  console.log('childScrollValues',childScrollValues)
-  console.log('setChildNativeRef',childNativeRefs)
 
   // 用Gesture.Native包裹内部scrollview并获取此ref
   const setChildNativeRef = useCallback((ref: React.RefObject<any>) => {
@@ -106,13 +108,13 @@ const HeadTabView: React.FC<null> = (props) => {
 
 
   const headerStyleInter = useDerivedValue(() => {
-      return interpolate(integralY.value, [0,HEADE_HEIGHT-TABBAR_HEIGHT],[0, -HEADE_HEIGHT+TABBAR_HEIGHT], Extrapolation.CLAMP);
+      return interpolate(sharedTranslate.value, [0,HEADE_HEIGHT-TABBAR_HEIGHT],[0, -HEADE_HEIGHT+TABBAR_HEIGHT], Extrapolation.CLAMP);
   }, [integralY])
 
   const headerStyle = useAnimatedStyle(() => {
       return {
           transform: [{
-              translateY: 0,
+              translateY: headerStyleInter.value,
           }, {
               scale: 1
           }]
@@ -174,13 +176,15 @@ const HeadTabView: React.FC<null> = (props) => {
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[{ flex: 1 }, containerStyle]}>
           <PageView
+            ref={pageRef}
             style={{ flex: 1 }}
             onPageSelected={(currentPage) => {
-              // tabRef.current && tabRef.current?.keepScrollViewMiddle(currentPage);
+              tabRef.current && tabRef.current?.keepScrollViewMiddle(currentPage);
               // onPageSelected && onPageSelected(currentPage)
+              currentIdx.value = currentPage;
             }}
             onPageScroll={(translate) => {
-              // tabRef.current && tabRef.current?.syncCurrentIndex(translate);
+              tabRef.current && tabRef.current?.syncCurrentIndex(translate);
               // onPageScroll && onPgeScroll(translate);
             }}
             onPageScrollStateChanged={() => {
@@ -191,7 +195,7 @@ const HeadTabView: React.FC<null> = (props) => {
                 TABS.length > 0 && TABS.map((tab, index) => {
                   return (
                     <HeadTabSigle
-                      {...{ setChildNativeRef, setChildScrollRef, setChildScrolls, index }}
+                      {...{ setChildNativeRef, setChildScrollRef, setChildScrolls, index, sharedTranslate, currentIdx }}
                       key={tab}
                     />
                   )
@@ -208,10 +212,11 @@ const HeadTabView: React.FC<null> = (props) => {
                   <Text>Header View</Text>
                 </View>
                 <TabBar
+                  ref={tabRef}
                   tabs={TABS}
                   tabBarflex={"equal-width"}
                   onTabPress={(index) => {
-                    // pageRef.current && pageRef.current?.setPage(index);
+                    pageRef.current && pageRef.current?.setPage(index);
                     // onTabPress && onTabPress(index);
                   }}
                 />
@@ -228,6 +233,8 @@ const HeadTabSigle = ({
   setChildScrollRef,
   setChildScrolls,
   index,
+  sharedTranslate,
+  currentIdx,
 }) => {
   const animatedRef = useAnimatedRef<any>();
 
@@ -235,6 +242,28 @@ const HeadTabSigle = ({
   const nativeGes = Gesture.Native().withRef(nativeRef);
 
   const scrollValue = useSharedValue(0);
+
+  // 非当前活动的scrollview不允许滚动
+  const scrollEnabledValue = useDerivedValue(() => {
+    return currentIdx.value === index
+  })
+
+  // 设置scrollEnabled
+  useAnimatedReaction(() => {
+    return scrollEnabledValue.value
+  }, (enabled) => {
+    animatedRef && animatedRef.current && animatedRef.current.setNativeProps({ scrollEnabled: enabled });
+  }, [scrollEnabledValue, animatedRef])
+
+  // 向其他非活动的scrollview同步当前滚动距离
+  useAnimatedReaction(() => {
+    return sharedTranslate.value
+  }, (sharedTranslate) => {
+    if (currentIdx.value !== index) {
+      const syncTanslate = clamp(sharedTranslate, 0, HEADE_HEIGHT-TABBAR_HEIGHT)
+      scrollTo(animatedRef, 0, syncTanslate, false);
+    }
+  });
 
   useEffect(() => {
     setChildNativeRef && setChildNativeRef(nativeRef)
@@ -252,7 +281,11 @@ const HeadTabSigle = ({
     onBeginDrag: () => {
     },
     onScroll: (event) => {
-        scrollValue.value = event.contentOffset.y;
+        if (currentIdx.value === index) {
+          const moveY = Math.max(0, event.contentOffset.y);
+          scrollValue.value = moveY;
+          sharedTranslate.value = moveY;  
+        }
     },
     onMomentumEnd: () =>{
         console.log('onMomentumEnd', scrollValue.value);
