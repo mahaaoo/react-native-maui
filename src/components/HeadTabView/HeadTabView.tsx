@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
@@ -9,115 +8,60 @@ import Animated, {
   useSharedValue,
   useAnimatedRef,
   scrollTo,
-  withTiming,
   useAnimatedReaction,
   withDecay,
   cancelAnimation,
   useDerivedValue,
   SharedValue,
-=======
-import React, {useState, useRef, useEffect, useCallback} from 'react'
-import {Text, View} from 'react-native'
-import Animated, { 
-  Extrapolation, 
-  interpolate, 
-  useAnimatedScrollHandler, 
-  useAnimatedStyle, 
-  useSharedValue, 
-  useAnimatedRef, 
-  scrollTo, 
-  useAnimatedReaction, 
-  withDecay, 
-  cancelAnimation, 
-  useDerivedValue, 
-  SharedValue
->>>>>>> 815dc52 (style: 调整import格式)
+  clamp,
 } from 'react-native-reanimated';
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
-<<<<<<< HEAD
-  GestureType,
-=======
->>>>>>> 815dc52 (style: 调整import格式)
 } from 'react-native-gesture-handler';
-import { TabBar } from '../TabBar';
-import { PageView } from '../PageView';
+import { TabBar, TabBarRef } from '../TabBar';
+import { PageView, PageViewRef } from '../PageView';
 
 const HEADE_HEIGHT = 180;
 const TABBAR_HEIGHT = 55;
 const TABS = ['tab1', 'tab2'];
 
 const HeadTabView: React.FC<null> = (props) => {
+  const pageRef = useRef<PageViewRef>(null);
+  const tabRef = useRef<TabBarRef>(null);
+
+  // 头部Header
   const headerY = useSharedValue(0);
   const headerYOffset = useSharedValue(0);
+  const headerRef = useRef();
+  // 头部Header是否正在惯性滚动
+  const isHeaderDecay = useSharedValue(false);
 
+  // 最外层
   const integralY = useSharedValue(0);
   const integralYOffset = useSharedValue(0);
-
   const totalRef = useRef();
-  const headerRef = useRef();
-
-  const isHeaderDecay = useSharedValue(false);
 
   const currentIdx = useSharedValue(0);
 
-  const [childScrollValues, setChildScrollValues] = useState<{
-    [index: number]: SharedValue<number>;
-  }>({});
-  const [childScrollRefs, setChildScrollRefs] = useState<{
-    [index: number]: any;
-  }>({});
-  const [childNativeRefs, setChildNativeRefs] = useState<
-    React.RefObject<any>[]
-  >([]);
+  // 所有scroll共享的滚动距离，用于控制Header以及顶吸
+  const sharedTranslate = useSharedValue(0);
+
+  const {
+    setNativeRef,
+    setScrollRef,
+    setScrollValue,
+    childNativeRefs,
+    childScrollValues,
+    childScrollRefs,
+  } = useHeadTab();
 
   const stopAnimation = () => {
     'worklet';
     cancelAnimation(headerY);
+    cancelAnimation(sharedTranslate);
   };
-
-  console.log('childScrollRefs', childScrollRefs);
-  console.log('childScrollValues', childScrollValues);
-  console.log('setChildNativeRef', childNativeRefs);
-
-  // 用Gesture.Native包裹内部scrollview并获取此ref
-  const setChildNativeRef = useCallback(
-    (ref: React.RefObject<any>) => {
-      if (!ref) return;
-      const findRef = childNativeRefs.find(
-        (item) => item.current === ref.current
-      );
-      if (findRef) return;
-      setChildNativeRefs((prechildRefs) => {
-        return [...prechildRefs, ref];
-      });
-    },
-    [childNativeRefs]
-  );
-
-  // 获取内部scrollview的ref
-  const setChildScrollRef = useCallback(
-    (index: number, scrollRef: React.RefObject<any>) => {
-      if (!scrollRef) return;
-      setChildScrollRefs((preChildRef) => {
-        return { ...preChildRef, [index]: scrollRef };
-      });
-    },
-    []
-  );
-
-  // 获取内部scrollview的value
-  const setChildScrolls = useCallback(
-    (index: number, scrollValue: SharedValue<number>) => {
-      if (!scrollValue) return;
-      setChildScrollValues((preChildScrollValues) => {
-        return { ...preChildScrollValues, [index]: scrollValue };
-      });
-    },
-    []
-  );
 
   const panGesture = Gesture.Pan()
     .withRef(totalRef)
@@ -146,7 +90,7 @@ const HeadTabView: React.FC<null> = (props) => {
 
   const headerStyleInter = useDerivedValue(() => {
     return interpolate(
-      integralY.value,
+      sharedTranslate.value,
       [0, HEADE_HEIGHT - TABBAR_HEIGHT],
       [0, -HEADE_HEIGHT + TABBAR_HEIGHT],
       Extrapolation.CLAMP
@@ -157,7 +101,7 @@ const HeadTabView: React.FC<null> = (props) => {
     return {
       transform: [
         {
-          translateY: 0,
+          translateY: headerStyleInter.value,
         },
         {
           scale: 1,
@@ -209,7 +153,6 @@ const HeadTabView: React.FC<null> = (props) => {
       headerYOffset.value = 0;
     })
     .onUpdate(({ translationY }) => {
-      console.log('value:', childScrollValues[currentIdx.value].value);
       if (!isHeaderDecay.value) {
         headerYOffset.value = childScrollValues[currentIdx.value].value;
         isHeaderDecay.value = true;
@@ -228,13 +171,16 @@ const HeadTabView: React.FC<null> = (props) => {
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[{ flex: 1 }, containerStyle]}>
           <PageView
+            ref={pageRef}
             style={{ flex: 1 }}
             onPageSelected={(currentPage) => {
-              // tabRef.current && tabRef.current?.keepScrollViewMiddle(currentPage);
+              tabRef.current &&
+                tabRef.current?.keepScrollViewMiddle(currentPage);
               // onPageSelected && onPageSelected(currentPage)
+              currentIdx.value = currentPage;
             }}
             onPageScroll={(translate) => {
-              // tabRef.current && tabRef.current?.syncCurrentIndex(translate);
+              tabRef.current && tabRef.current?.syncCurrentIndex(translate);
               // onPageScroll && onPgeScroll(translate);
             }}
             onPageScrollStateChanged={() => {}}
@@ -244,10 +190,12 @@ const HeadTabView: React.FC<null> = (props) => {
                 return (
                   <HeadTabSigle
                     {...{
-                      setChildNativeRef,
-                      setChildScrollRef,
-                      setChildScrolls,
+                      setNativeRef,
+                      setScrollRef,
+                      setScrollValue,
                       index,
+                      sharedTranslate,
+                      currentIdx,
                     }}
                     key={tab}
                   />
@@ -272,10 +220,11 @@ const HeadTabView: React.FC<null> = (props) => {
                 <Text>Header View</Text>
               </View>
               <TabBar
+                ref={tabRef}
                 tabs={TABS}
                 tabBarflex={'equal-width'}
                 onTabPress={(index) => {
-                  // pageRef.current && pageRef.current?.setPage(index);
+                  pageRef.current && pageRef.current?.setPage(index);
                   // onTabPress && onTabPress(index);
                 }}
               />
@@ -288,10 +237,12 @@ const HeadTabView: React.FC<null> = (props) => {
 };
 
 const HeadTabSigle = ({
-  setChildNativeRef,
-  setChildScrollRef,
-  setChildScrolls,
+  setNativeRef,
+  setScrollRef,
+  setScrollValue,
   index,
+  sharedTranslate,
+  currentIdx,
 }) => {
   const animatedRef = useAnimatedRef<any>();
 
@@ -300,22 +251,78 @@ const HeadTabSigle = ({
 
   const scrollValue = useSharedValue(0);
 
+  // 非当前活动的scrollview不允许滚动
+  const scrollEnabledValue = useDerivedValue(() => {
+    return currentIdx.value === index;
+  });
+
+  // 设置scrollEnabled
+  useAnimatedReaction(
+    () => {
+      return scrollEnabledValue.value;
+    },
+    (enabled) => {
+      animatedRef &&
+        animatedRef.current &&
+        animatedRef.current.setNativeProps({ scrollEnabled: enabled });
+    },
+    [scrollEnabledValue, animatedRef]
+  );
+
+  // 向其他非活动的scrollview同步当前滚动距离
+  useAnimatedReaction(
+    () => {
+      return sharedTranslate.value;
+    },
+    (sharedTranslate) => {
+      if (currentIdx.value !== index) {
+        // 处理切换tab之间，scroll是否重置
+        let syncTanslate = 0;
+        if (scrollValue.value >= HEADE_HEIGHT - TABBAR_HEIGHT) {
+          if (sharedTranslate === 0) {
+            syncTanslate = 0;
+            scrollValue.value = 0;
+          } else {
+            syncTanslate = scrollValue.value;
+          }
+        } else {
+          syncTanslate = clamp(
+            sharedTranslate,
+            0,
+            HEADE_HEIGHT - TABBAR_HEIGHT
+          );
+        }
+        scrollTo(animatedRef, 0, syncTanslate, false);
+      }
+    }
+  );
+
   useEffect(() => {
-    setChildNativeRef && setChildNativeRef(nativeRef);
+    if (nativeRef) {
+      setNativeRef && setNativeRef(nativeRef);
+    }
   }, [nativeGes]);
 
   useEffect(() => {
-    setChildScrollRef && setChildScrollRef(index, animatedRef);
-  }, [animatedRef]);
+    if (animatedRef) {
+      setScrollRef && setScrollRef(index, animatedRef);
+    }
+  }, [animatedRef, index]);
 
   useEffect(() => {
-    setChildScrolls && setChildScrolls(index, scrollValue);
-  }, [scrollValue]);
+    if (scrollValue) {
+      setScrollValue && setScrollValue(index, scrollValue);
+    }
+  }, [scrollValue, index]);
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {},
     onScroll: (event) => {
-      scrollValue.value = event.contentOffset.y;
+      if (currentIdx.value === index) {
+        const moveY = Math.max(0, event.contentOffset.y);
+        scrollValue.value = moveY;
+        sharedTranslate.value = moveY;
+      }
     },
     onMomentumEnd: () => {
       console.log('onMomentumEnd', scrollValue.value);
@@ -343,6 +350,67 @@ const HeadTabSigle = ({
       </Animated.ScrollView>
     </GestureDetector>
   );
+};
+
+const useHeadTab = () => {
+  // 子scroll当前滚动距离
+  const [childScrollValues, setChildScrollValues] = useState<{
+    [index: number]: SharedValue<number>;
+  }>({});
+  // 子scroll的引用ref
+  const [childScrollRefs, setChildScrollRefs] = useState<{
+    [index: number]: any;
+  }>({});
+  // 子scroll的Native容器引用ref
+  const [childNativeRefs, setChildNativeRefs] = useState<
+    React.RefObject<any>[]
+  >([]);
+
+  // 用Gesture.Native包裹内部scrollview并获取此ref
+  const setNativeRef = useCallback(
+    (ref: React.RefObject<any>) => {
+      if (!ref) return;
+      const findRef = childNativeRefs.find(
+        (item) => item.current === ref.current
+      );
+      if (findRef) return;
+      setChildNativeRefs((prechildRefs) => {
+        return [...prechildRefs, ref];
+      });
+    },
+    [childNativeRefs]
+  );
+
+  // 获取内部scrollview的ref
+  const setScrollRef = useCallback(
+    (index: number, scrollRef: React.RefObject<any>) => {
+      if (!scrollRef) return;
+      setChildScrollRefs((preChildRef) => {
+        return { ...preChildRef, [index]: scrollRef };
+      });
+    },
+    []
+  );
+
+  // 获取内部scrollview的value
+  const setScrollValue = useCallback(
+    (index: number, scrollValue: SharedValue<number>) => {
+      if (!scrollValue) return;
+      setChildScrollValues((preChildScrollValues) => {
+        return { ...preChildScrollValues, [index]: scrollValue };
+      });
+    },
+    []
+  );
+
+  return {
+    setNativeRef,
+    setScrollRef,
+    setScrollValue,
+    childNativeRefs,
+    childScrollValues,
+    childScrollRefs,
+  };
 };
 
 export default HeadTabView;
