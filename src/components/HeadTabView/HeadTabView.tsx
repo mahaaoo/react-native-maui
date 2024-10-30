@@ -53,6 +53,7 @@ const HeadTabView: React.FC<null> = (props) => {
   const stopAnimation = () => {
       'worklet';
       cancelAnimation(headerY)
+      cancelAnimation(sharedTranslate)
   }
 
   // 用Gesture.Native包裹内部scrollview并获取此ref
@@ -157,7 +158,6 @@ const HeadTabView: React.FC<null> = (props) => {
           headerYOffset.value = 0;
       })
       .onUpdate(({ translationY }) => {
-        console.log('value:',childScrollValues[currentIdx.value].value);
           if (!isHeaderDecay.value) {
               headerYOffset.value = childScrollValues[currentIdx.value].value;
               isHeaderDecay.value = true;    
@@ -260,7 +260,18 @@ const HeadTabSigle = ({
     return sharedTranslate.value
   }, (sharedTranslate) => {
     if (currentIdx.value !== index) {
-      const syncTanslate = clamp(sharedTranslate, 0, HEADE_HEIGHT-TABBAR_HEIGHT)
+      // 处理切换tab之间，scroll是否重置
+      let syncTanslate = 0;
+      if (scrollValue.value >= HEADE_HEIGHT-TABBAR_HEIGHT) {
+        if (sharedTranslate === 0) {
+          syncTanslate = 0;
+          scrollValue.value = 0;
+        } else {
+          syncTanslate = scrollValue.value;
+        }
+      } else {
+        syncTanslate = clamp(sharedTranslate, 0, HEADE_HEIGHT-TABBAR_HEIGHT);
+      }
       scrollTo(animatedRef, 0, syncTanslate, false);
     }
   });
