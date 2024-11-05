@@ -31,23 +31,28 @@ const HeadTabView: React.FC<null> = (props) => {
   const pageRef = useRef<PageViewRef>(null);
   const tabRef = useRef<TabBarRef>(null);
 
+  // 头部Header
   const headerY = useSharedValue(0);
   const headerYOffset = useSharedValue(0);
+  const headerRef = useRef();
+  // 头部Header是否正在惯性滚动
+  const isHeaderDecay = useSharedValue(false);
 
+  // 最外层
   const integralY = useSharedValue(0);
   const integralYOffset = useSharedValue(0);
-
   const totalRef = useRef();
-  const headerRef = useRef();
-
-  const isHeaderDecay = useSharedValue(false);
 
   const currentIdx = useSharedValue(0);
 
+  // 子scroll当前滚动距离
   const [childScrollValues, setChildScrollValues] = useState<{ [index: number]: SharedValue<number> }>({})
+  // 子scroll的引用ref
   const [childScrollRefs, setChildScrollRefs] = useState<{ [index: number]: any }>({})
+  // 子scroll的Native容器引用ref
   const [childNativeRefs, setChildNativeRefs] = useState<React.RefObject<any>[]>([])
 
+  // 所有scroll共享的滚动距离，用于控制Header以及顶吸
   const sharedTranslate = useSharedValue(0);
 
   const stopAnimation = () => {
