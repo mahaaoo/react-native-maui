@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { ViewStyle } from 'react-native';
-import Animated, { SharedValue } from 'react-native-reanimated';
+import { SharedValue } from 'react-native-reanimated';
 import { Breath, Shine, Normal, Load, ShineOver } from './Animation';
 
 export const SkeletonContext = React.createContext<SkeletonContextProps>(

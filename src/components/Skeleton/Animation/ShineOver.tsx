@@ -12,7 +12,6 @@ const { width: Wwidth } = Dimensions.get('window');
 interface ShineOverProps {}
 
 const ShineOver: React.FC<ShineOverProps> = (props) => {
-  const {} = props;
   const { animationProgress } = useSkeletonStyle();
   const width = useSharedValue(Wwidth);
 

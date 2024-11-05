@@ -288,6 +288,8 @@ const Carousel = forwardRef<CarouselRef, CarouselProps>((props, ref) => {
   );
 });
 
+Carousel.displayName = 'Carousel';
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',

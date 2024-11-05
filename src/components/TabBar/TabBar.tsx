@@ -60,7 +60,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
 
   const syncCurrentIndex = (offset: number) => {
     const index = offset / contentSize;
-    currentIndex.value = index
+    currentIndex.value = index;
     sliderOffset.value = interpolate(index, intput, sliderOutput.current);
   };
 
@@ -163,7 +163,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
                   index={index}
                   currentIndex={currentIndex}
                   activeTextColor={activeTextColor}
-                  inactiveTextColor={inactiveTextColor}             
+                  inactiveTextColor={inactiveTextColor}
                   title={tab}
                   onLayout={onTabBarItemLayout}
                   onPress={handleOnPress}
@@ -190,6 +190,8 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     </View>
   );
 });
+
+TabBar.displayName = 'TabBar';
 
 const styles = StyleSheet.create({
   sliderContainer: {

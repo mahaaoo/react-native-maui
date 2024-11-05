@@ -1,5 +1,5 @@
 {
-  "extends": ["@react-native-community", "prettier"],
+  "extends": ["expo", "prettier"],
   "rules": {
     "prettier/prettier": [
       "error",

@@ -68,7 +68,12 @@ const ScaleContainer = forwardRef<ScaleContainerRef, ScaleContainerProps>(
 
     const scaleStyle = useAnimatedStyle(() => {
       return {
-        opacity: interpolate(scale.value, [0.5, 1], [0, 1], Extrapolation.CLAMP),
+        opacity: interpolate(
+          scale.value,
+          [0.5, 1],
+          [0, 1],
+          Extrapolation.CLAMP
+        ),
         transform: [
           {
             scale: scale.value,

@@ -8,11 +8,12 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+
 import { snapPoint, clamp } from '../../utils/redash';
 import { PageViewRef, PageViewProps, PageStateType, DURATION } from './type';
 import { useVerifyProps } from './hook';
-import SiglePage from './SiglePage';
 import { isInteger } from '../../utils/typeUtil';
+import SinglePage from './SinglePage';
 
 const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   const {
@@ -25,6 +26,8 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     pageScrollEnabled = true,
     bounces = true,
     gestureBack = true,
+    lazy = false,
+    lazyPreloadNumber = 0,
     onPageScroll,
     onPageSelected,
     onPageScrollStateChanged,
@@ -181,13 +184,25 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
             animatedStyle,
           ]}
         >
-          {React.Children.map(children, (child) => {
-            return <SiglePage contentSize={contentSize}>{child}</SiglePage>;
+          {React.Children.map(children, (child, index) => {
+            return (
+              <SinglePage
+                contentSize={contentSize}
+                currentIndex={currentIndex}
+                index={index}
+                lazy={lazy}
+                lazyPreloadNumber={lazyPreloadNumber}
+              >
+                {child}
+              </SinglePage>
+            );
           })}
         </Animated.View>
       </GestureDetector>
     </View>
   );
 });
+
+PageView.displayName = 'PageView';
 
 export default PageView;

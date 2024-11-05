@@ -24,7 +24,7 @@ export const getMinHeight = (heightList: number[]): number => {
  * @param array dataSource
  * @returns number
  */
-export const getArrayTotalLength = (array: Array<any>[]): number => {
+export const getArrayTotalLength = (array: any[][]): number => {
   return array.reduce((a, b) => a + b.length, 0);
 };
 
