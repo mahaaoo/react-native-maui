@@ -1,5 +1,5 @@
 import React from 'react';
-import {TabViewProps, TabViewVerifyProps} from './type';
+import { TabViewProps, TabViewVerifyProps } from './type';
 import { Dimensions } from 'react-native';
 
 const { width } = Dimensions.get('window');
@@ -30,14 +30,12 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
     onPageScroll,
     onPageScrollStateChanged,
     onPageSelected,
-    
+
     initialIndex,
     style,
     tabStyle,
-    pageStyle,  
+    pageStyle,
   } = props;
-
-
 
   if (!Array.isArray(tabs)) {
     throw new Error('TabBar tabs must be array');
@@ -80,7 +78,7 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
     inactiveTextColor,
     style: { width: contentSize, ...tabStyle },
     initialTab: initialIndex,
-  }
+  };
 
   const pageProps = {
     pageScrollEnabled,
@@ -88,7 +86,7 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
     gestureBack,
     style: { flex: 1, width: contentSize, ...pageStyle },
     initialPage: initialIndex,
-  }
+  };
 
   return {
     pageProps,
@@ -100,6 +98,5 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
     onPageScroll,
     onPageScrollStateChanged,
     onPageSelected,
-  }
-}
-
+  };
+};

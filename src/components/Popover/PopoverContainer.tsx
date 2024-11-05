@@ -90,6 +90,8 @@ const PopoverContainer = forwardRef<PopoverContainerRef, PopoverContainerProps>(
   }
 );
 
+PopoverContainer.displayName = 'PopoverContainer';
+
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,

@@ -7,7 +7,6 @@ const { width } = Dimensions.get('window');
 interface WaterFallListExampleProps {}
 
 const WaterFallListExample: React.FC<WaterFallListExampleProps> = (props) => {
-  const {} = props;
   const [data, setData] = useState([]);
   const [status, setStatus] = useState<RefreshState>(RefreshState.Idle);
   const total = useRef(0);

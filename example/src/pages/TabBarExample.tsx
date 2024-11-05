@@ -60,8 +60,8 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
           color: 'grey',
           fontWeight: 'bold',
         }}
-        activeTextColor='red'
-        inactiveTextColor='green'
+        activeTextColor="red"
+        inactiveTextColor="green"
         tabBarItemStyle={{ backgroundColor: 'pink' }}
       />
       <TabBar

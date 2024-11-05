@@ -9,6 +9,9 @@ export interface PageViewProps {
   bounces?: boolean;
   gestureBack?: boolean;
 
+  lazy?: boolean;
+  lazyPreloadNumber?: number;
+
   onPageScroll?: (translate: number) => void;
   onPageSelected?: (currentPage: number) => void;
   onPageScrollStateChanged?: (state: PageStateType) => void;

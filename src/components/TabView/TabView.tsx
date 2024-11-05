@@ -30,24 +30,22 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
       throw new Error('setPage can only handle index [0, pageSize - 1]');
     }
     pageRef.current && pageRef.current?.setPage(index);
-  }
+  };
 
   const getCurrentPage = () => {
-    return pageRef.current && pageRef.current?.getCurrentPage() || 0;
-  }
+    return (pageRef.current && pageRef.current?.getCurrentPage()) || 0;
+  };
 
-  useImperativeHandle(ref, () => (
-    {
-      setPage,
-      getCurrentPage,
-    }
-  ))
+  useImperativeHandle(ref, () => ({
+    setPage,
+    getCurrentPage,
+  }));
 
   return (
     <View style={[{ flex: 1 }, style]}>
       <TabBar
         ref={tabRef}
-        {...{...tabProps}}
+        {...{ ...tabProps }}
         onTabPress={(index) => {
           pageRef.current && pageRef.current?.setPage(index);
           onTabPress && onTabPress(index);
@@ -55,10 +53,10 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
       />
       <PageView
         ref={pageRef}
-        {...{...pageProps}}
+        {...{ ...pageProps }}
         onPageSelected={(currentPage) => {
           tabRef.current && tabRef.current?.keepScrollViewMiddle(currentPage);
-          onPageSelected && onPageSelected(currentPage)
+          onPageSelected && onPageSelected(currentPage);
         }}
         onPageScroll={(translate) => {
           tabRef.current && tabRef.current?.syncCurrentIndex(translate);
@@ -71,5 +69,7 @@ const TabView = forwardRef<TabViewRef, TabViewProps>((props, ref) => {
     </View>
   );
 });
+
+TabView.displayName = 'TabView';
 
 export default TabView;

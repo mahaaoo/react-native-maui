@@ -39,7 +39,7 @@ export interface CarouselContextProps {
 }
 
 export interface CarouselProps {
-  dataSource: Array<any>;
+  dataSource: any[];
   renderItem: (item: any) => React.ReactNode;
   onScollStart?: () => void;
   onScollEnd?: (index: number) => void;
@@ -59,7 +59,7 @@ export interface CarouselDefaultOptions {
 }
 
 export interface CarouselDefaultProps {
-  dataSource: Array<any>;
+  dataSource: any[];
   renderItem: (item: any) => React.ReactNode;
   onScollStart?: () => void;
   onScollEnd?: (index: number) => void;
@@ -80,8 +80,8 @@ export interface CarouselRef {
 }
 
 export interface TurnRange {
-  inputRange: Array<number>;
-  outputRange: Array<number>;
+  inputRange: number[];
+  outputRange: number[];
 }
 
 export interface UseAutoScrollReturn {

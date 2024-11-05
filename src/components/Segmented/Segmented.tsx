@@ -15,7 +15,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 interface SegmentedProps {
-  items: Array<string>;
+  items: string[];
 
   defaultIndex?: number;
   style?: ViewStyle;
