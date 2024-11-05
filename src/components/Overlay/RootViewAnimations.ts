@@ -1,6 +1,5 @@
-import { Dimensions, ImageStyle, TextStyle, ViewStyle } from 'react-native';
-import Animated, {
-  AnimatedProps,
+import { Dimensions } from 'react-native';
+import {
   Extrapolation,
   interpolate,
   SharedValue,
@@ -12,9 +11,7 @@ const addDeg = (deg: number): string => {
   return `${deg}deg`;
 };
 
-export const scaleAnimation = (
-  progress: SharedValue<number>
-) => {
+export const scaleAnimation = (progress: SharedValue<number>) => {
   'worklet';
   return {
     transform: [
@@ -49,9 +46,7 @@ export const translateXAnimation = (
   };
 };
 
-export const rotateXAnimation = (
-  progress: SharedValue<number>
-) => {
+export const rotateXAnimation = (progress: SharedValue<number>) => {
   'worklet';
   return {
     transform: [

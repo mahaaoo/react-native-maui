@@ -185,12 +185,24 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
           ]}
         >
           {React.Children.map(children, (child, index) => {
-            return <SinglePage contentSize={contentSize} currentIndex={currentIndex} index={index} lazy={lazy} lazyPreloadNumber={lazyPreloadNumber}>{child}</SinglePage>;
+            return (
+              <SinglePage
+                contentSize={contentSize}
+                currentIndex={currentIndex}
+                index={index}
+                lazy={lazy}
+                lazyPreloadNumber={lazyPreloadNumber}
+              >
+                {child}
+              </SinglePage>
+            );
           })}
         </Animated.View>
       </GestureDetector>
     </View>
   );
 });
+
+PageView.displayName = 'PageView';
 
 export default PageView;

@@ -254,6 +254,8 @@ const ImageOverlay = forwardRef<ImageOverlayRef, ImageOverlayProps>(
   }
 );
 
+ImageOverlay.displayName = 'ImageOverlay';
+
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,

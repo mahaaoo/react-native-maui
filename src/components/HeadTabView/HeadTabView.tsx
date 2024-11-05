@@ -52,9 +52,8 @@ export const useHeadTab = () => React.useContext(HeadTabViewContext);
 const HEADER_HEIGHT = 100;
 
 const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
-  const {} = props;
   const mainTranslate = useSharedValue(0); // 最外层View的Y方向偏移量
-  const [nativeRefs, setNativeRefs] = useState<Array<GestureTypeRef>>([]); // 子view里的scroll ref
+  const [nativeRefs, setNativeRefs] = useState<GestureTypeRef[]>([]); // 子view里的scroll ref
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const main = useAnimatedProps(() => {

@@ -1,11 +1,10 @@
-import { TabBarRef } from '../TabBar';
-import { PageViewRef } from '../PageView';
-
 import { TabBarProps } from '../TabBar';
 import { PageViewProps, PageStateType } from '../PageView';
 import { ViewStyle } from 'react-native';
 
-export interface TabViewProps extends Omit<TabBarProps, 'style' | 'initialTab'>, Omit<PageViewProps, 'style' | 'initialPage'> {
+export interface TabViewProps
+  extends Omit<TabBarProps, 'style' | 'initialTab'>,
+    Omit<PageViewProps, 'style' | 'initialPage'> {
   initialIndex?: number;
   style?: ViewStyle;
   tabStyle?: ViewStyle;
@@ -13,7 +12,10 @@ export interface TabViewProps extends Omit<TabBarProps, 'style' | 'initialTab'>,
 }
 
 export interface TabViewVerifyProps {
-  pageProps: Omit<PageViewProps, 'children' | 'onPageScroll' | 'onPageSelected' | 'onPageScrollStateChanged'>;
+  pageProps: Omit<
+    PageViewProps,
+    'children' | 'onPageScroll' | 'onPageSelected' | 'onPageScrollStateChanged'
+  >;
   tabProps: Omit<TabBarProps, 'onTabPress'>;
   style?: ViewStyle;
   children: React.ReactNode;

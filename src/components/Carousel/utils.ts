@@ -64,9 +64,7 @@ const useProps = (props: CarouselProps): CarouselDefaultProps => {
  * @param index current index
  * @returns TurnRange
  */
-const useRange = (
-  index: SharedValue<number>
-): DerivedValue<TurnRange> => {
+const useRange = (index: SharedValue<number>): DerivedValue<TurnRange> => {
   const range = useDerivedValue(() => {
     const inputRange = [
       index.value - MIN_TRIGGER_DISTANCE,

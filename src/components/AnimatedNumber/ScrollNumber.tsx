@@ -7,7 +7,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-const useNumber = (number: Number) => {
+const useNumber = (number: number) => {
   const numberList = String(number).split('');
   return numberList.map((item: string) => Number(item));
 };

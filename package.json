@@ -9,8 +9,8 @@
     "test": "jest",
     "testc": "jest --coverage",
     "testu": "jest --updateSnapshot",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lintfix": "eslint . --ext .ts,.tsx --fix"
+    "lint": "eslint ./src --ext .ts,.tsx",
+    "lintfix": "eslint ./src --ext .ts,.tsx --fix"
   },
   "keywords": [
     "react-native",

@@ -72,7 +72,7 @@ interface ElementType {
 
 const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
   const { children } = props;
-  const elements = useRef<Array<ElementType>>([]); // all componets saved here
+  const elements = useRef<ElementType[]>([]); // all componets saved here
   const { forceUpdate } = useForceUpdate();
   const elementsIndex = useRef<number>(0);
   const { theme } = useTheme();
@@ -261,6 +261,8 @@ const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     </View>
   );
 });
+
+Overlay.displayName = 'Overlay';
 
 const styles = StyleSheet.create({
   container: {

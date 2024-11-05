@@ -21,7 +21,7 @@ export enum RefreshState {
 }
 
 export interface RefreshListProps extends FlatListProps<any> {
-  data: Array<any>;
+  data: any[];
 
   refreshState: RefreshState;
   onHeaderRefresh?: () => void;

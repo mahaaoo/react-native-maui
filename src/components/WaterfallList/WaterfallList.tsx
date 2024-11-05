@@ -29,7 +29,7 @@ const WaterfallList: React.FC<WaterfallListProps> = (props) => {
     ...others
   } = props;
   const dataQueue = useRef<any[]>([]);
-  const [dataSource, setDataSource] = useState<Array<any>[]>(
+  const [dataSource, setDataSource] = useState<any[][]>(
     new Array(numColumns).fill(0).map((_) => new Array())
   );
   const heightList = useRef(new Array(numColumns).fill(0));

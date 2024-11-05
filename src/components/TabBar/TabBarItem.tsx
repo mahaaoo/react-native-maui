@@ -1,7 +1,12 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { TabBarItemProps } from './type';
-import Animated, { Extrapolation, interpolate, interpolateColor, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 const TabBarItem: React.FC<TabBarItemProps> = (props) => {
   const {
@@ -12,7 +17,7 @@ const TabBarItem: React.FC<TabBarItemProps> = (props) => {
     titleStyle,
     currentIndex,
     activeTextColor = 'black',
-    inactiveTextColor = 'black',  
+    inactiveTextColor = 'black',
     onLayout,
     onPress,
   } = props;
@@ -27,7 +32,12 @@ const TabBarItem: React.FC<TabBarItemProps> = (props) => {
         [0.8, 1, 0.8],
         Extrapolation.CLAMP
       ),
-      color: interpolateColor(currentIndex.value, input, [inactiveTextColor, activeTextColor, inactiveTextColor], 'RGB'),
+      color: interpolateColor(
+        currentIndex.value,
+        input,
+        [inactiveTextColor, activeTextColor, inactiveTextColor],
+        'RGB'
+      ),
       transform: [
         {
           scale: interpolate(
