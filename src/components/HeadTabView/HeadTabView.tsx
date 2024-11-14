@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
   Extrapolation,
@@ -55,7 +61,10 @@ const HeadTabView: React.FC<null> = (props) => {
     childNativeRefs,
     childScrollValues,
     childScrollRefs,
+    isReady,
   } = useHeadTab();
+
+  console.log('是否准备完毕', isReady);
 
   const stopAnimation = () => {
     'worklet';
@@ -73,16 +82,16 @@ const HeadTabView: React.FC<null> = (props) => {
     })
     .onBegin(() => {
       integralYOffset.value = integralY.value;
-      console.log('onBegin');
+      // console.log('onBegin');
     })
     .onUpdate(({ translationY }) => {
-      console.log('integralY', translationY);
+      // console.log('integralY', translationY);
 
       integralY.value = translationY + integralYOffset.value;
       // scrollTo(animatedRef, 0, -integralY.value, false);
     })
     .onEnd(() => {
-      console.log('onEnd');
+      // console.log('onEnd');
       // if (integralY.value > 0) {
       //     integralY.value = withTiming(0);
       // }
@@ -277,20 +286,17 @@ const HeadTabSigle = ({
     (sharedTranslate) => {
       if (currentIdx.value !== index) {
         // 处理切换tab之间，scroll是否重置
+        // 当任意一个scroll滑动展示head区域，则重置所有的scrollValue
         let syncTanslate = 0;
-        if (scrollValue.value >= HEADE_HEIGHT - TABBAR_HEIGHT) {
-          if (sharedTranslate === 0) {
-            syncTanslate = 0;
-            scrollValue.value = 0;
-          } else {
-            syncTanslate = scrollValue.value;
-          }
-        } else {
+        if (sharedTranslate < HEADE_HEIGHT - TABBAR_HEIGHT) {
           syncTanslate = clamp(
             sharedTranslate,
             0,
             HEADE_HEIGHT - TABBAR_HEIGHT
           );
+          scrollValue.value = syncTanslate;
+        } else {
+          syncTanslate = scrollValue.value;
         }
         scrollTo(animatedRef, 0, syncTanslate, false);
       }
@@ -325,7 +331,7 @@ const HeadTabSigle = ({
       }
     },
     onMomentumEnd: () => {
-      console.log('onMomentumEnd', scrollValue.value);
+      // console.log('onMomentumEnd', scrollValue.value);
     },
   });
 
@@ -366,11 +372,19 @@ const useHeadTab = () => {
     React.RefObject<any>[]
   >([]);
 
+  const isReady = useMemo(() => {
+    return (
+      Object.keys(childScrollValues).length > 0 &&
+      Object.keys(childScrollRefs).length > 0 &&
+      childNativeRefs.length > 0
+    );
+  }, [childScrollValues, childScrollRefs, childNativeRefs]);
+
   // 用Gesture.Native包裹内部scrollview并获取此ref
   const setNativeRef = useCallback(
     (ref: React.RefObject<any>) => {
       if (!ref) return;
-      const findRef = childNativeRefs.find(
+      const findRef = childNativeRefs?.find(
         (item) => item.current === ref.current
       );
       if (findRef) return;
@@ -410,6 +424,7 @@ const useHeadTab = () => {
     childNativeRefs,
     childScrollValues,
     childScrollRefs,
+    isReady,
   };
 };
 
