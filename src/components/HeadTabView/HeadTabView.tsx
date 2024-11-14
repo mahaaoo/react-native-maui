@@ -1,291 +1,431 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, Text, Dimensions } from 'react-native';
-import {
-  Gesture,
-  GestureDetector,
-  GestureType,
-} from 'react-native-gesture-handler';
-import { TabView } from '../TabView';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
+import { Text, View } from 'react-native';
 import Animated, {
-  useAnimatedScrollHandler,
-  useSharedValue,
-  useAnimatedProps,
-  useAnimatedStyle,
+  Extrapolation,
   interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
   useAnimatedRef,
   scrollTo,
   useAnimatedReaction,
-  Extrapolation,
+  withDecay,
+  cancelAnimation,
+  useDerivedValue,
   SharedValue,
-  withTiming,
-  Easing,
+  clamp,
 } from 'react-native-reanimated';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
+import { TabBar, TabBarRef } from '../TabBar';
+import { PageView, PageViewRef } from '../PageView';
 
-const { height, width } = Dimensions.get('window');
-const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
+const HEADE_HEIGHT = 180;
+const TABBAR_HEIGHT = 55;
+const TABS = ['tab1', 'tab2'];
 
-interface TabViewExampleProps {}
+const HeadTabView: React.FC<null> = (props) => {
+  const pageRef = useRef<PageViewRef>(null);
+  const tabRef = useRef<TabBarRef>(null);
 
-const TabList = ['Tab1', 'Tab2', 'Tab3', 'Tab4', 'Tab5', 'Tab6'];
-const TabListColor = [
-  'pink',
-  'orange',
-  'cyan',
-  'pink',
-  'purple',
-  'orange',
-  '#666',
-];
+  // 头部Header
+  const headerY = useSharedValue(0);
+  const headerYOffset = useSharedValue(0);
+  const headerRef = useRef();
+  // 头部Header是否正在惯性滚动
+  const isHeaderDecay = useSharedValue(false);
 
-type GestureTypeRef = React.MutableRefObject<GestureType | undefined>;
+  // 最外层
+  const integralY = useSharedValue(0);
+  const integralYOffset = useSharedValue(0);
+  const totalRef = useRef();
 
-export interface HeadTabViewContextProps {
-  mainTranslate: SharedValue<number>;
-  handleChildRef: (ref: GestureTypeRef) => void;
-}
+  const currentIdx = useSharedValue(0);
 
-export const HeadTabViewContext = React.createContext<HeadTabViewContextProps>(
-  {} as HeadTabViewContextProps
-);
-export const useHeadTab = () => React.useContext(HeadTabViewContext);
+  // 所有scroll共享的滚动距离，用于控制Header以及顶吸
+  const sharedTranslate = useSharedValue(0);
 
-const HEADER_HEIGHT = 100;
+  const {
+    setNativeRef,
+    setScrollRef,
+    setScrollValue,
+    childNativeRefs,
+    childScrollValues,
+    childScrollRefs,
+    isReady,
+  } = useHeadTab();
 
-const HeadTabView: React.FC<TabViewExampleProps> = (props) => {
-  const mainTranslate = useSharedValue(0); // 最外层View的Y方向偏移量
-  const [nativeRefs, setNativeRefs] = useState<GestureTypeRef[]>([]); // 子view里的scroll ref
-  const [currentIndex, setCurrentIndex] = useState(0);
+  console.log('是否准备完毕', isReady);
 
-  const main = useAnimatedProps(() => {
-    return {
-      transform: [
-        {
-          translateY: mainTranslate.value,
-        },
-      ],
-    };
-  });
-
-  const onScrollCallback = (y: number) => {
+  const stopAnimation = () => {
     'worklet';
-    if (y < 0) return;
-    if (y <= HEADER_HEIGHT) {
-      mainTranslate.value = -y;
-    } else {
-      mainTranslate.value = -HEADER_HEIGHT;
-    }
+    cancelAnimation(headerY);
+    cancelAnimation(sharedTranslate);
   };
 
-  // useMemo是必须的，在切换到新tab之后，需要重新获取Gesture属性
-  const panGesture = useMemo(() => {
-    return Gesture.Pan()
-      .activeOffsetY([-10, 10])
-      .simultaneousWithExternalGesture(...nativeRefs)
-      .onBegin(() => {
-        // offset.value = mainTranslate.value;
-      })
-      .onUpdate(({ translationY }) => {
-        if (mainTranslate.value < 0) {
-        } else {
-          mainTranslate.value = interpolate(
-            translationY,
-            [0, height],
-            [0, height / 4]
-          );
-        }
-      })
-      .onEnd(() => {
-        if (mainTranslate.value > 0) {
-          console.log('onEndonEnd', mainTranslate.value);
-          mainTranslate.value = withTiming(
-            0,
-            {
-              easing: RESET_TIMING_EASING,
-            },
-            () => {
-              console.log('onEndonEnd', mainTranslate.value);
-              // 确保mainTranslate回到顶端
-              mainTranslate.value = 0;
-            }
-          );
-        }
-      });
-  }, [nativeRefs]);
+  const panGesture = Gesture.Pan()
+    .withRef(totalRef)
+    .activeOffsetX([-500, 500])
+    .activeOffsetY([-10, 10])
+    .simultaneousWithExternalGesture(...childNativeRefs, headerRef)
+    .onTouchesDown(() => {
+      stopAnimation();
+    })
+    .onBegin(() => {
+      integralYOffset.value = integralY.value;
+      // console.log('onBegin');
+    })
+    .onUpdate(({ translationY }) => {
+      // console.log('integralY', translationY);
 
-  const handleChildRef = (ref: GestureTypeRef) => {
-    if (!ref) return;
-    const isExist = nativeRefs.find((item) => item.current === ref.current);
-    if (isExist) return;
-    setNativeRefs((p) => [...p, ref]);
-  };
+      integralY.value = translationY + integralYOffset.value;
+      // scrollTo(animatedRef, 0, -integralY.value, false);
+    })
+    .onEnd(() => {
+      // console.log('onEnd');
+      // if (integralY.value > 0) {
+      //     integralY.value = withTiming(0);
+      // }
+    });
 
-  const header = useAnimatedStyle(() => {
-    if (mainTranslate.value < 0) {
-      return {};
-    }
+  const headerStyleInter = useDerivedValue(() => {
+    return interpolate(
+      sharedTranslate.value,
+      [0, HEADE_HEIGHT - TABBAR_HEIGHT],
+      [0, -HEADE_HEIGHT + TABBAR_HEIGHT],
+      Extrapolation.CLAMP
+    );
+  }, [integralY]);
+
+  const headerStyle = useAnimatedStyle(() => {
     return {
-      height: HEADER_HEIGHT + mainTranslate.value,
       transform: [
         {
-          translateY: -mainTranslate.value,
+          translateY: headerStyleInter.value,
         },
         {
-          scale: interpolate(
-            mainTranslate.value,
-            [0, height / 4],
-            [1, 5],
-            Extrapolation.CLAMP
-          ),
+          scale: 1,
         },
       ],
-      justifyContent: 'center',
-      alignItems: 'center',
     };
   });
+
+  const containerStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: 0,
+        },
+      ],
+    };
+  });
+
+  const stopScrolling = () => {
+    'worklet';
+    if (!!childScrollRefs[currentIdx.value]) {
+      scrollTo(
+        childScrollRefs[currentIdx.value],
+        0,
+        childScrollValues[currentIdx.value].value + 0.1,
+        false
+      );
+    }
+  };
+
+  useAnimatedReaction(
+    () => headerY.value,
+    () => {
+      'worklet';
+      if (isHeaderDecay.value) {
+        scrollTo(childScrollRefs[currentIdx.value], 0, headerY.value, false);
+      }
+    }
+  );
+
+  const headerPan = Gesture.Pan()
+    .activeOffsetY([-10, 10])
+    .withRef(headerRef)
+    .simultaneousWithExternalGesture(totalRef)
+    .onTouchesDown(() => {
+      stopScrolling();
+    })
+    .onBegin(() => {
+      headerYOffset.value = 0;
+    })
+    .onUpdate(({ translationY }) => {
+      if (!isHeaderDecay.value) {
+        headerYOffset.value = childScrollValues[currentIdx.value].value;
+        isHeaderDecay.value = true;
+      }
+      headerY.value = -translationY + headerYOffset.value;
+    })
+    .onEnd(({ velocityY }) => {
+      headerYOffset.value = 0;
+      headerY.value = withDecay({ velocity: -velocityY }, () => {
+        isHeaderDecay.value = false;
+      });
+    });
 
   return (
-    <HeadTabViewContext.Provider
-      value={{
-        mainTranslate,
-        handleChildRef,
-      }}
-    >
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <GestureDetector gesture={panGesture}>
-        <Animated.View style={main}>
-          <Animated.View
-            style={[
-              {
-                height: HEADER_HEIGHT,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'orange',
-              },
-              header,
-            ]}
+        <Animated.View style={[{ flex: 1 }, containerStyle]}>
+          <PageView
+            ref={pageRef}
+            style={{ flex: 1 }}
+            onPageSelected={(currentPage) => {
+              tabRef.current &&
+                tabRef.current?.keepScrollViewMiddle(currentPage);
+              // onPageSelected && onPageSelected(currentPage)
+              currentIdx.value = currentPage;
+            }}
+            onPageScroll={(translate) => {
+              tabRef.current && tabRef.current?.syncCurrentIndex(translate);
+              // onPageScroll && onPgeScroll(translate);
+            }}
+            onPageScrollStateChanged={() => {}}
           >
-            <Text>HEAD</Text>
-          </Animated.View>
-          <TabView tabs={TabList} onTabPress={setCurrentIndex}>
-            {TabList.map((_, index) => {
-              return (
-                <HeadTabViewItem
-                  key={index}
-                  index={index}
-                  currentIndex={currentIndex}
-                  onScrollCallback={onScrollCallback}
-                />
-              );
-            })}
-          </TabView>
+            {TABS.length > 0 &&
+              TABS.map((tab, index) => {
+                return (
+                  <HeadTabSigle
+                    {...{
+                      setNativeRef,
+                      setScrollRef,
+                      setScrollValue,
+                      index,
+                      sharedTranslate,
+                      currentIdx,
+                    }}
+                    key={tab}
+                  />
+                );
+              })}
+          </PageView>
+          <GestureDetector gesture={headerPan}>
+            <Animated.View
+              style={[
+                {
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  backgroundColor: 'orange',
+                  width: '100%',
+                  height: HEADE_HEIGHT,
+                },
+                headerStyle,
+              ]}
+            >
+              <View style={{ height: HEADE_HEIGHT - TABBAR_HEIGHT }}>
+                <Text>Header View</Text>
+              </View>
+              <TabBar
+                ref={tabRef}
+                tabs={TABS}
+                tabBarflex={'equal-width'}
+                onTabPress={(index) => {
+                  pageRef.current && pageRef.current?.setPage(index);
+                  // onTabPress && onTabPress(index);
+                }}
+              />
+            </Animated.View>
+          </GestureDetector>
         </Animated.View>
       </GestureDetector>
-    </HeadTabViewContext.Provider>
+    </GestureHandlerRootView>
   );
 };
 
-interface HeadTabViewItemProps {
-  index: number;
-  currentIndex: number;
-  onScrollCallback: (y: number) => void;
-}
+const HeadTabSigle = ({
+  setNativeRef,
+  setScrollRef,
+  setScrollValue,
+  index,
+  sharedTranslate,
+  currentIdx,
+}) => {
+  const animatedRef = useAnimatedRef<any>();
 
-const HeadTabViewItem: React.FC<HeadTabViewItemProps> = (props) => {
-  const { index, currentIndex, onScrollCallback } = props;
-
-  const scroll = useSharedValue(0);
-  const aref = useAnimatedRef();
-  const { mainTranslate, handleChildRef } = useHeadTab();
   const nativeRef = useRef();
+  const nativeGes = Gesture.Native().withRef(nativeRef);
 
-  // 当某一个tab滑到顶，所有重置所有tab
+  const scrollValue = useSharedValue(0);
+
+  // 非当前活动的scrollview不允许滚动
+  const scrollEnabledValue = useDerivedValue(() => {
+    return currentIdx.value === index;
+  });
+
+  // 设置scrollEnabled
   useAnimatedReaction(
-    () => mainTranslate.value,
-    (value) => {
-      if (index !== currentIndex) {
-        if (value === -HEADER_HEIGHT) {
-          scrollTo(aref, 0, Math.max(-value, scroll.value), false);
-        } else {
-          scrollTo(aref, 0, -value, false);
-        }
-      }
+    () => {
+      return scrollEnabledValue.value;
     },
-    [index, currentIndex]
+    (enabled) => {
+      animatedRef &&
+        animatedRef.current &&
+        animatedRef.current.setNativeProps({ scrollEnabled: enabled });
+    },
+    [scrollEnabledValue, animatedRef]
+  );
+
+  // 向其他非活动的scrollview同步当前滚动距离
+  useAnimatedReaction(
+    () => {
+      return sharedTranslate.value;
+    },
+    (sharedTranslate) => {
+      if (currentIdx.value !== index) {
+        // 处理切换tab之间，scroll是否重置
+        // 当任意一个scroll滑动展示head区域，则重置所有的scrollValue
+        let syncTanslate = 0;
+        if (sharedTranslate < HEADE_HEIGHT - TABBAR_HEIGHT) {
+          syncTanslate = clamp(
+            sharedTranslate,
+            0,
+            HEADE_HEIGHT - TABBAR_HEIGHT
+          );
+          scrollValue.value = syncTanslate;
+        } else {
+          syncTanslate = scrollValue.value;
+        }
+        scrollTo(animatedRef, 0, syncTanslate, false);
+      }
+    }
   );
 
   useEffect(() => {
-    if (aref) {
-      scrollTo(aref, 0, -mainTranslate.value, false);
+    if (nativeRef) {
+      setNativeRef && setNativeRef(nativeRef);
     }
-  }, [aref]);
+  }, [nativeGes]);
 
   useEffect(() => {
-    if (nativeRef.current) {
-      handleChildRef && handleChildRef(nativeRef);
+    if (animatedRef) {
+      setScrollRef && setScrollRef(index, animatedRef);
     }
-  }, [nativeRef.current]);
+  }, [animatedRef, index]);
 
-  const onScroll = useAnimatedScrollHandler({
-    onScroll(event) {
-      scroll.value = event.contentOffset.y;
-      onScrollCallback && onScrollCallback(event.contentOffset.y);
+  useEffect(() => {
+    if (scrollValue) {
+      setScrollValue && setScrollValue(index, scrollValue);
+    }
+  }, [scrollValue, index]);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onBeginDrag: () => {},
+    onScroll: (event) => {
+      if (currentIdx.value === index) {
+        const moveY = Math.max(0, event.contentOffset.y);
+        scrollValue.value = moveY;
+        sharedTranslate.value = moveY;
+      }
+    },
+    onMomentumEnd: () => {
+      // console.log('onMomentumEnd', scrollValue.value);
     },
   });
 
-  const ansyt = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: scroll.value === 0 ? 0 : -mainTranslate.value,
-        },
-      ],
-    };
-  });
-
-  const nativeGesture = Gesture.Native().withRef(nativeRef);
-
   return (
-    <GestureDetector gesture={nativeGesture}>
+    <GestureDetector gesture={nativeGes}>
       <Animated.ScrollView
-        ref={aref}
-        bounces={false}
+        ref={animatedRef}
+        onScroll={scrollHandler}
+        style={{ flex: 1, backgroundColor: 'pink' }}
+        contentContainerStyle={{ paddingTop: HEADE_HEIGHT }}
         scrollEventThrottle={16}
-        onScroll={onScroll}
-        contentContainerStyle={{
-          height: height * 3,
-          width,
-        }}
-        style={{
-          backgroundColor: TabListColor[index],
-          width,
-        }}
+        scrollIndicatorInsets={{ top: HEADE_HEIGHT - 44 }}
+        bounces={false}
       >
-        <Animated.View style={[ansyt, styles.itemContainer]}>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-          <Text style={{ fontSize: 30 }}>{`Tab${index + 1}`}</Text>
-        </Animated.View>
+        {new Array(80).fill(0).map((item, index) => {
+          return (
+            <Text key={index} style={{ margin: 10, fontSize: 20 }}>
+              {index}
+            </Text>
+          );
+        })}
       </Animated.ScrollView>
     </GestureDetector>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  itemContainer: {
-    width: Dimensions.get('window').width,
-  },
-});
+const useHeadTab = () => {
+  // 子scroll当前滚动距离
+  const [childScrollValues, setChildScrollValues] = useState<{
+    [index: number]: SharedValue<number>;
+  }>({});
+  // 子scroll的引用ref
+  const [childScrollRefs, setChildScrollRefs] = useState<{
+    [index: number]: any;
+  }>({});
+  // 子scroll的Native容器引用ref
+  const [childNativeRefs, setChildNativeRefs] = useState<
+    React.RefObject<any>[]
+  >([]);
+
+  const isReady = useMemo(() => {
+    return (
+      Object.keys(childScrollValues).length > 0 &&
+      Object.keys(childScrollRefs).length > 0 &&
+      childNativeRefs.length > 0
+    );
+  }, [childScrollValues, childScrollRefs, childNativeRefs]);
+
+  // 用Gesture.Native包裹内部scrollview并获取此ref
+  const setNativeRef = useCallback(
+    (ref: React.RefObject<any>) => {
+      if (!ref) return;
+      const findRef = childNativeRefs?.find(
+        (item) => item.current === ref.current
+      );
+      if (findRef) return;
+      setChildNativeRefs((prechildRefs) => {
+        return [...prechildRefs, ref];
+      });
+    },
+    [childNativeRefs]
+  );
+
+  // 获取内部scrollview的ref
+  const setScrollRef = useCallback(
+    (index: number, scrollRef: React.RefObject<any>) => {
+      if (!scrollRef) return;
+      setChildScrollRefs((preChildRef) => {
+        return { ...preChildRef, [index]: scrollRef };
+      });
+    },
+    []
+  );
+
+  // 获取内部scrollview的value
+  const setScrollValue = useCallback(
+    (index: number, scrollValue: SharedValue<number>) => {
+      if (!scrollValue) return;
+      setChildScrollValues((preChildScrollValues) => {
+        return { ...preChildScrollValues, [index]: scrollValue };
+      });
+    },
+    []
+  );
+
+  return {
+    setNativeRef,
+    setScrollRef,
+    setScrollValue,
+    childNativeRefs,
+    childScrollValues,
+    childScrollRefs,
+    isReady,
+  };
+};
 
 export default HeadTabView;
