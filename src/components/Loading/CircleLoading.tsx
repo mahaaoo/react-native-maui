@@ -54,6 +54,7 @@ const CircleLoading: React.FC<CircleLoadingProps> = (props) => {
         stroke={color}
         strokeWidth={6}
         strokeDasharray={`${dashPath} ${all}`}
+        fill="#transparent"
       />
     </AnimationSvg>
   );

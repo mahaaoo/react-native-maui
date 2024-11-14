@@ -4,6 +4,22 @@ import { RefreshState, WaterfallList, AsyncImage } from 'react-native-maui';
 
 const { width } = Dimensions.get('window');
 
+const pageItemBgPicList = [
+  '11898897',
+  '26653530',
+  '12974784',
+  '943459',
+  '4424178',
+  '20433037',
+  '4424137',
+  '4955810',
+  '4424137',
+  '18847956',
+].map(
+  (id) =>
+    `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2`
+);
+
 interface WaterFallListExampleProps {}
 
 const WaterFallListExample: React.FC<WaterFallListExampleProps> = (props) => {
@@ -25,7 +41,7 @@ const WaterFallListExample: React.FC<WaterFallListExampleProps> = (props) => {
       const height = Math.round(Math.random() * (500 - 100) + 100);
       data.push({
         id: i + 10 * total.current,
-        url: `https://picsum.photos/${width / 2}/${height}/?random`,
+        url: pageItemBgPicList[i],
         text: Math.random().toFixed(Math.round(Math.random() * (10 - 5) + 5)),
         height,
       });
@@ -42,7 +58,7 @@ const WaterFallListExample: React.FC<WaterFallListExampleProps> = (props) => {
       const height = Math.round(Math.random() * (500 - 100) + 100);
       data.push({
         id: i + 10 * total.current,
-        url: `https://picsum.photos/${width / 2}/${height}/?random`,
+        url: pageItemBgPicList[i],
         text: Math.random().toFixed(Math.round(Math.random() * (10 - 5) + 5)),
         height,
       });

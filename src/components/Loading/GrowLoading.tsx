@@ -61,6 +61,7 @@ const GrowLoading: React.FC<GrowLoadingProps> = (props) => {
         strokeWidth={6}
         strokeDasharray={all}
         animatedProps={animatedProps}
+        fill="#transparent"
       />
     </AnimationSvg>
   );
