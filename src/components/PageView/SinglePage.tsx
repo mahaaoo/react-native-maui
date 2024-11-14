@@ -27,7 +27,7 @@ const SinglePage: React.FC<SinglePageProps> = (props) => {
   const [load, setLoad] = useState(() => {
     if (!lazy) return true;
     return (
-      index >= currentIndex.value - lazyPreloadNumber ||
+      index >= currentIndex.value - lazyPreloadNumber &&
       index <= currentIndex.value + lazyPreloadNumber
     );
   });
@@ -38,9 +38,10 @@ const SinglePage: React.FC<SinglePageProps> = (props) => {
       if (!lazy) return;
       if (!!load) return;
       const canLoad =
-        index >= currentIndex.value - lazyPreloadNumber ||
-        index <= currentIndex.value + lazyPreloadNumber;
+        index >= value - lazyPreloadNumber &&
+        index <= value + lazyPreloadNumber;
       if (!canLoad) return;
+      console.log('首次加载', index);
       runOnJS(setLoad)(canLoad);
     }
   );
