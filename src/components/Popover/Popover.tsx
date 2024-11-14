@@ -1,10 +1,12 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef } from 'react';
 import { View, ViewStyle } from 'react-native';
 import { useOverlay } from '../Overlay';
 import PopoverContainer from './PopoverContainer';
 import { Placement, ArrowPlacement } from './type';
 
 interface PopoverProps {
+  children: ReactNode;
+
   modal: boolean;
   content: React.ReactNode;
 
@@ -72,7 +74,7 @@ const Popover: React.FC<PopoverProps> = (props) => {
   }, [arrowPosition, placement]);
 
   return (
-    <View style={style} ref={(ref) => (aref.current = ref)}>
+    <View style={style} ref={aref}>
       {children}
     </View>
   );

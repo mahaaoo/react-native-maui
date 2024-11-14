@@ -55,11 +55,10 @@ const styles = StyleSheet.create({
   },
   popover: {
     marginLeft: (width - 150) / 2,
-    marginTop: 100,
   },
   button: {
     width: 150,
-    height: 80,
+    height: 200,
   },
   content: {
     backgroundColor: 'white',
