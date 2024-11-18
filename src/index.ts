@@ -86,6 +86,6 @@ export { snapPoint, clamp } from './utils/redash';
 export { Freeze } from './utils/Freeze';
 
 export { TabView } from './components/TabView';
-export { NestedTabView } from './components/NestedTabView';
+export { NestedTabView, Nested } from './components/NestedTabView';
 export { PageView, PageViewRef } from './components/PageView';
 export { TabBar, TabBarRef } from './components/TabBar';

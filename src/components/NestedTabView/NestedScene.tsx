@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
+import {
   SharedValue,
   AnimatedRef,
   useAnimatedRef,
@@ -15,17 +14,24 @@ import { scrollTo } from './util';
 import { useNested } from './hooks';
 
 interface NestedSceneProps {
-  registerNativeRef: (ref: React.RefObject<any>) => void;
-  registerChildInfo: (
+  registerNativeRef?: (ref: React.RefObject<any>) => void;
+  registerChildInfo?: (
     index: number,
     scrollValue: SharedValue<number>,
     scrollRef: AnimatedRef<any>
   ) => void;
-  index: number;
+  index?: number;
+  ScrollableComponent: any;
 }
 
 const NestedScene: React.FC<NestedSceneProps> = (props) => {
-  const { registerNativeRef, registerChildInfo, index } = props;
+  const {
+    registerNativeRef,
+    registerChildInfo,
+    index,
+    ScrollableComponent,
+    ...restProps
+  } = props;
   const { sharedTranslate, currentIdx, headerHeight, stickyHeight } =
     useNested();
   const animatedRef = useAnimatedRef<any>();
@@ -81,7 +87,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   }, [nativeGes]);
 
   useEffect(() => {
-    if (!!scrollValue && !!animatedRef) {
+    if (!!scrollValue && !!animatedRef && index) {
       registerChildInfo && registerChildInfo(index, scrollValue, animatedRef);
     }
   }, [scrollValue, animatedRef, index]);
@@ -102,7 +108,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
 
   return (
     <GestureDetector gesture={nativeGes}>
-      <Animated.ScrollView
+      <ScrollableComponent
         ref={animatedRef}
         onScroll={scrollHandler}
         style={{ flex: 1, backgroundColor: 'pink' }}
@@ -110,15 +116,8 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ top: headerHeight - 44 }}
         bounces={false}
-      >
-        {new Array(80).fill(0).map((item, index) => {
-          return (
-            <Text key={index} style={{ margin: 10, fontSize: 20 }}>
-              {index}
-            </Text>
-          );
-        })}
-      </Animated.ScrollView>
+        {...restProps}
+      />
     </GestureDetector>
   );
 };

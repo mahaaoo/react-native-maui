@@ -19,17 +19,17 @@ import { TabBar, TabBarRef } from '../TabBar';
 import { PageView, PageViewRef } from '../PageView';
 import { NestedContext, useNestRegister } from './hooks';
 import { scrollTo } from './util';
-import NestedScene from './NestedScene';
 
 const TABS = ['tab1', 'tab2'];
 
 interface NestedTabViewProps {
   renderHeader: () => React.ReactNode;
   stickyHeight: number;
+  children: React.ReactNode;
 }
 
 const NestedTabView: React.FC<NestedTabViewProps> = (props) => {
-  const { renderHeader, stickyHeight } = props;
+  const { renderHeader, stickyHeight, children } = props;
   const pageRef = useRef<PageViewRef>(null);
   const tabRef = useRef<TabBarRef>(null);
 
@@ -209,19 +209,14 @@ const NestedTabView: React.FC<NestedTabViewProps> = (props) => {
               }}
               onPageScrollStateChanged={() => {}}
             >
-              {TABS.length > 0 &&
-                TABS.map((tab, index) => {
-                  return (
-                    <NestedScene
-                      {...{
-                        registerNativeRef,
-                        registerChildInfo,
-                        index,
-                      }}
-                      key={tab}
-                    />
-                  );
-                })}
+              {React.Children.map(children, (child: any, index) => {
+                const injectProps = {
+                  registerNativeRef,
+                  registerChildInfo,
+                  index,
+                };
+                return React.cloneElement(child, injectProps);
+              })}
             </PageView>
             <GestureDetector gesture={headerPan}>
               <Animated.View
