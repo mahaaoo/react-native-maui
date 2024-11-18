@@ -35,7 +35,7 @@ export type RootStackParamList = {
   SwipeActionExample: undefined;
   RefreshControlExample: undefined;
   TabViewExample: undefined;
-  HeadTabViewExample: undefined;
+  NestedTabViewExample: undefined;
   PageViewExample: undefined;
   TabBarExample: undefined;
 };

@@ -605,7 +605,7 @@ const exampleList: Example[] = [
     ),
   },
   {
-    title: 'HeadTabView',
+    title: 'NestedTabView',
     content: null,
   },
 ];

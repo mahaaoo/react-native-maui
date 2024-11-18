@@ -26,7 +26,7 @@ import PopoverExample from './PopoverExample';
 import SwipeActionExample from './SwipeActionExample';
 import RefreshControlExample from './RefreshControlExample';
 import TabViewExample from './TabViewExample';
-import HeadTabViewExample from './HeadTabViewExample';
+import NestedTabViewExample from './NestedTabViewExample';
 import PageViewExample from './PageViewExample';
 import TabBarExample from './TabBarExample';
 
@@ -59,7 +59,7 @@ export default {
   SwipeActionExample,
   RefreshControlExample,
   TabViewExample,
-  HeadTabViewExample,
+  NestedTabViewExample,
   PageViewExample,
   TabBarExample,
 };

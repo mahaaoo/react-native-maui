@@ -33,7 +33,7 @@ const HEADE_HEIGHT = 180;
 const TABBAR_HEIGHT = 55;
 const TABS = ['tab1', 'tab2'];
 
-const HeadTabView: React.FC<null> = (props) => {
+const NestedTabView: React.FC<null> = (props) => {
   const pageRef = useRef<PageViewRef>(null);
   const tabRef = useRef<TabBarRef>(null);
 
@@ -62,7 +62,7 @@ const HeadTabView: React.FC<null> = (props) => {
     childScrollValues,
     childScrollRefs,
     isReady,
-  } = useHeadTab();
+  } = useNest();
 
   console.log('是否准备完毕', isReady);
 
@@ -358,7 +358,7 @@ const HeadTabSigle = ({
   );
 };
 
-const useHeadTab = () => {
+const useNest = () => {
   // 子scroll当前滚动距离
   const [childScrollValues, setChildScrollValues] = useState<{
     [index: number]: SharedValue<number>;
@@ -428,4 +428,4 @@ const useHeadTab = () => {
   };
 };
 
-export default HeadTabView;
+export default NestedTabView;

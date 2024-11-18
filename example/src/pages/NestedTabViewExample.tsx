@@ -1,12 +1,12 @@
 import React from 'react';
-import { HeadTabView } from 'react-native-maui';
+import { NestedTabView } from 'react-native-maui';
 
 interface TabViewExampleProps {}
 
 const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
 
-  return <HeadTabView />;
+  return <NestedTabView />;
 };
 
 export default HeadTabViewExample;
