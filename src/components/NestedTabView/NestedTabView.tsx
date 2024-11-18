@@ -20,6 +20,7 @@ import Animated, {
   useDerivedValue,
   SharedValue,
   clamp,
+  AnimatedRef,
 } from 'react-native-reanimated';
 import {
   Gesture,
@@ -55,12 +56,10 @@ const NestedTabView: React.FC<null> = (props) => {
   const sharedTranslate = useSharedValue(0);
 
   const {
-    setNativeRef,
-    setScrollRef,
-    setScrollValue,
+    registerNativeRef,
     childNativeRefs,
-    childScrollValues,
-    childScrollRefs,
+    registerChildInfo,
+    childInfo,
     isReady,
   } = useNest();
 
@@ -131,11 +130,11 @@ const NestedTabView: React.FC<null> = (props) => {
 
   const stopScrolling = () => {
     'worklet';
-    if (!!childScrollRefs[currentIdx.value]) {
+    if (!!childInfo[currentIdx.value]?.scrollRef) {
       scrollTo(
-        childScrollRefs[currentIdx.value],
+        childInfo[currentIdx.value]?.scrollRef,
         0,
-        childScrollValues[currentIdx.value].value + 0.1,
+        childInfo[currentIdx.value]?.scrollValue.value + 0.1,
         false
       );
     }
@@ -146,7 +145,12 @@ const NestedTabView: React.FC<null> = (props) => {
     () => {
       'worklet';
       if (isHeaderDecay.value) {
-        scrollTo(childScrollRefs[currentIdx.value], 0, headerY.value, false);
+        scrollTo(
+          childInfo[currentIdx.value]?.scrollRef,
+          0,
+          headerY.value,
+          false
+        );
       }
     }
   );
@@ -163,7 +167,7 @@ const NestedTabView: React.FC<null> = (props) => {
     })
     .onUpdate(({ translationY }) => {
       if (!isHeaderDecay.value) {
-        headerYOffset.value = childScrollValues[currentIdx.value].value;
+        headerYOffset.value = childInfo[currentIdx.value]?.scrollValue.value;
         isHeaderDecay.value = true;
       }
       headerY.value = -translationY + headerYOffset.value;
@@ -197,14 +201,13 @@ const NestedTabView: React.FC<null> = (props) => {
             {TABS.length > 0 &&
               TABS.map((tab, index) => {
                 return (
-                  <HeadTabSigle
+                  <NestedScene
                     {...{
-                      setNativeRef,
-                      setScrollRef,
-                      setScrollValue,
+                      registerNativeRef,
                       index,
                       sharedTranslate,
                       currentIdx,
+                      registerChildInfo,
                     }}
                     key={tab}
                   />
@@ -245,10 +248,21 @@ const NestedTabView: React.FC<null> = (props) => {
   );
 };
 
-const HeadTabSigle = ({
-  setNativeRef,
-  setScrollRef,
-  setScrollValue,
+interface NestedSceneProps {
+  registerNativeRef: (ref: React.RefObject<any>) => void;
+  registerChildInfo: (
+    index: number,
+    scrollValue: SharedValue<number>,
+    scrollRef: AnimatedRef<any>
+  ) => void;
+  index: number;
+  sharedTranslate: SharedValue<number>;
+  currentIdx: SharedValue<number>;
+}
+
+const NestedScene: React.FC<NestedSceneProps> = ({
+  registerNativeRef,
+  registerChildInfo,
   index,
   sharedTranslate,
   currentIdx,
@@ -305,21 +319,15 @@ const HeadTabSigle = ({
 
   useEffect(() => {
     if (nativeRef) {
-      setNativeRef && setNativeRef(nativeRef);
+      registerNativeRef && registerNativeRef(nativeRef);
     }
   }, [nativeGes]);
 
   useEffect(() => {
-    if (animatedRef) {
-      setScrollRef && setScrollRef(index, animatedRef);
+    if (!!scrollValue && !!animatedRef) {
+      registerChildInfo && registerChildInfo(index, scrollValue, animatedRef);
     }
-  }, [animatedRef, index]);
-
-  useEffect(() => {
-    if (scrollValue) {
-      setScrollValue && setScrollValue(index, scrollValue);
-    }
-  }, [scrollValue, index]);
+  }, [scrollValue, animatedRef, index]);
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {},
@@ -358,30 +366,27 @@ const HeadTabSigle = ({
   );
 };
 
+interface ChildInfoType {
+  scrollValue: SharedValue<number>;
+  scrollRef: AnimatedRef<any>;
+}
+
 const useNest = () => {
-  // 子scroll当前滚动距离
-  const [childScrollValues, setChildScrollValues] = useState<{
-    [index: number]: SharedValue<number>;
+  const [childInfo, setChildInfo] = useState<{
+    [index: number]: ChildInfoType;
   }>({});
-  // 子scroll的引用ref
-  const [childScrollRefs, setChildScrollRefs] = useState<{
-    [index: number]: any;
-  }>({});
+
   // 子scroll的Native容器引用ref
   const [childNativeRefs, setChildNativeRefs] = useState<
     React.RefObject<any>[]
   >([]);
 
   const isReady = useMemo(() => {
-    return (
-      Object.keys(childScrollValues).length > 0 &&
-      Object.keys(childScrollRefs).length > 0 &&
-      childNativeRefs.length > 0
-    );
-  }, [childScrollValues, childScrollRefs, childNativeRefs]);
+    return Object.keys(childInfo).length > 0 && childNativeRefs.length > 0;
+  }, [childInfo, childNativeRefs]);
 
   // 用Gesture.Native包裹内部scrollview并获取此ref
-  const setNativeRef = useCallback(
+  const registerNativeRef = useCallback(
     (ref: React.RefObject<any>) => {
       if (!ref) return;
       const findRef = childNativeRefs?.find(
@@ -395,35 +400,30 @@ const useNest = () => {
     [childNativeRefs]
   );
 
-  // 获取内部scrollview的ref
-  const setScrollRef = useCallback(
-    (index: number, scrollRef: React.RefObject<any>) => {
-      if (!scrollRef) return;
-      setChildScrollRefs((preChildRef) => {
-        return { ...preChildRef, [index]: scrollRef };
-      });
-    },
-    []
-  );
-
-  // 获取内部scrollview的value
-  const setScrollValue = useCallback(
-    (index: number, scrollValue: SharedValue<number>) => {
-      if (!scrollValue) return;
-      setChildScrollValues((preChildScrollValues) => {
-        return { ...preChildScrollValues, [index]: scrollValue };
+  const registerChildInfo = useCallback(
+    (
+      index: number,
+      scrollValue: SharedValue<number>,
+      scrollRef: AnimatedRef<any>
+    ) => {
+      setChildInfo((preChildInfo) => {
+        return {
+          ...preChildInfo,
+          [index]: {
+            scrollValue,
+            scrollRef,
+          },
+        };
       });
     },
     []
   );
 
   return {
-    setNativeRef,
-    setScrollRef,
-    setScrollValue,
+    registerNativeRef,
     childNativeRefs,
-    childScrollValues,
-    childScrollRefs,
+    registerChildInfo,
+    childInfo,
     isReady,
   };
 };
