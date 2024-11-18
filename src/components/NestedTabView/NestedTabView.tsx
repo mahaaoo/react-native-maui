@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Text, View } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import { LayoutChangeEvent, StyleSheet } from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -17,15 +17,19 @@ import {
 } from 'react-native-gesture-handler';
 import { TabBar, TabBarRef } from '../TabBar';
 import { PageView, PageViewRef } from '../PageView';
-import { useNest } from './hooks';
+import { NestedContext, useNestRegister } from './hooks';
 import { scrollTo } from './util';
 import NestedScene from './NestedScene';
 
-const HEADE_HEIGHT = 180;
-const TABBAR_HEIGHT = 55;
 const TABS = ['tab1', 'tab2'];
 
-const NestedTabView: React.FC<null> = (props) => {
+interface NestedTabViewProps {
+  renderHeader: () => React.ReactNode;
+  stickyHeight: number;
+}
+
+const NestedTabView: React.FC<NestedTabViewProps> = (props) => {
+  const { renderHeader, stickyHeight } = props;
   const pageRef = useRef<PageViewRef>(null);
   const tabRef = useRef<TabBarRef>(null);
 
@@ -46,15 +50,25 @@ const NestedTabView: React.FC<null> = (props) => {
   // 所有scroll共享的滚动距离，用于控制Header以及顶吸
   const sharedTranslate = useSharedValue(0);
 
+  const [headerHeight, setHeaderHeight] = useState(0);
+
   const {
     registerNativeRef,
     childNativeRefs,
     registerChildInfo,
     childInfo,
     isReady,
-  } = useNest();
+  } = useNestRegister();
 
   console.log('是否准备完毕', isReady);
+
+  const handleHeaderLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      if (headerHeight === e.nativeEvent.layout.height) return;
+      setHeaderHeight(e.nativeEvent.layout.height);
+    },
+    [headerHeight]
+  );
 
   const stopAnimation = () => {
     'worklet';
@@ -90,11 +104,11 @@ const NestedTabView: React.FC<null> = (props) => {
   const headerStyleInter = useDerivedValue(() => {
     return interpolate(
       sharedTranslate.value,
-      [0, HEADE_HEIGHT - TABBAR_HEIGHT],
-      [0, -HEADE_HEIGHT + TABBAR_HEIGHT],
+      [0, headerHeight - stickyHeight],
+      [0, -headerHeight + stickyHeight],
       Extrapolation.CLAMP
     );
-  }, [integralY]);
+  }, [integralY, headerHeight]);
 
   const headerStyle = useAnimatedStyle(() => {
     return {
@@ -170,71 +184,76 @@ const NestedTabView: React.FC<null> = (props) => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <GestureDetector gesture={panGesture}>
-        <Animated.View style={[{ flex: 1 }, containerStyle]}>
-          <PageView
-            ref={pageRef}
-            style={{ flex: 1 }}
-            onPageSelected={(currentPage) => {
-              tabRef.current &&
-                tabRef.current?.keepScrollViewMiddle(currentPage);
-              // onPageSelected && onPageSelected(currentPage)
-              currentIdx.value = currentPage;
-            }}
-            onPageScroll={(translate) => {
-              tabRef.current && tabRef.current?.syncCurrentIndex(translate);
-              // onPageScroll && onPgeScroll(translate);
-            }}
-            onPageScrollStateChanged={() => {}}
-          >
-            {TABS.length > 0 &&
-              TABS.map((tab, index) => {
-                return (
-                  <NestedScene
-                    {...{
-                      registerNativeRef,
-                      index,
-                      sharedTranslate,
-                      currentIdx,
-                      registerChildInfo,
-                    }}
-                    key={tab}
-                  />
-                );
-              })}
-          </PageView>
-          <GestureDetector gesture={headerPan}>
-            <Animated.View
-              style={[
-                {
-                  position: 'absolute',
-                  left: 0,
-                  right: 0,
-                  backgroundColor: 'orange',
-                  width: '100%',
-                  height: HEADE_HEIGHT,
-                },
-                headerStyle,
-              ]}
+      <NestedContext.Provider
+        value={{
+          sharedTranslate,
+          currentIdx,
+          headerHeight,
+          stickyHeight,
+        }}
+      >
+        <GestureDetector gesture={panGesture}>
+          <Animated.View style={[{ flex: 1 }, containerStyle]}>
+            <PageView
+              ref={pageRef}
+              style={{ flex: 1 }}
+              onPageSelected={(currentPage) => {
+                tabRef.current &&
+                  tabRef.current?.keepScrollViewMiddle(currentPage);
+                // onPageSelected && onPageSelected(currentPage)
+                currentIdx.value = currentPage;
+              }}
+              onPageScroll={(translate) => {
+                tabRef.current && tabRef.current?.syncCurrentIndex(translate);
+                // onPageScroll && onPgeScroll(translate);
+              }}
+              onPageScrollStateChanged={() => {}}
             >
-              <View style={{ height: HEADE_HEIGHT - TABBAR_HEIGHT }}>
-                <Text>Header View</Text>
-              </View>
-              <TabBar
-                ref={tabRef}
-                tabs={TABS}
-                tabBarflex={'equal-width'}
-                onTabPress={(index) => {
-                  pageRef.current && pageRef.current?.setPage(index);
-                  // onTabPress && onTabPress(index);
-                }}
-              />
-            </Animated.View>
-          </GestureDetector>
-        </Animated.View>
-      </GestureDetector>
+              {TABS.length > 0 &&
+                TABS.map((tab, index) => {
+                  return (
+                    <NestedScene
+                      {...{
+                        registerNativeRef,
+                        registerChildInfo,
+                        index,
+                      }}
+                      key={tab}
+                    />
+                  );
+                })}
+            </PageView>
+            <GestureDetector gesture={headerPan}>
+              <Animated.View
+                onLayout={handleHeaderLayout}
+                style={[styles.headerContainer, headerStyle]}
+              >
+                {renderHeader && renderHeader()}
+                <TabBar
+                  ref={tabRef}
+                  tabs={TABS}
+                  tabBarflex={'equal-width'}
+                  onTabPress={(index) => {
+                    pageRef.current && pageRef.current?.setPage(index);
+                    // onTabPress && onTabPress(index);
+                  }}
+                />
+              </Animated.View>
+            </GestureDetector>
+          </Animated.View>
+        </GestureDetector>
+      </NestedContext.Provider>
     </GestureHandlerRootView>
   );
 };
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    width: '100%',
+  },
+});
 
 export default NestedTabView;

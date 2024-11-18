@@ -1,4 +1,10 @@
-import { useState, useMemo, useCallback } from 'react';
+import {
+  useState,
+  useMemo,
+  useCallback,
+  createContext,
+  useContext,
+} from 'react';
 import { SharedValue, AnimatedRef } from 'react-native-reanimated';
 
 interface ChildInfoType {
@@ -6,7 +12,7 @@ interface ChildInfoType {
   scrollRef: AnimatedRef<any>;
 }
 
-export const useNest = () => {
+export const useNestRegister = () => {
   const [childInfo, setChildInfo] = useState<{
     [index: number]: ChildInfoType;
   }>({});
@@ -62,3 +68,15 @@ export const useNest = () => {
     isReady,
   };
 };
+
+interface NestedContextProps {
+  sharedTranslate: SharedValue<number>;
+  currentIdx: SharedValue<number>;
+  headerHeight: number;
+  stickyHeight: number;
+}
+
+export const NestedContext = createContext<NestedContextProps>(
+  {} as NestedContextProps
+);
+export const useNested = () => useContext(NestedContext);

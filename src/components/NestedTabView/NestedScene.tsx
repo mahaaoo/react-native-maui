@@ -12,9 +12,7 @@ import Animated, {
   useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 import { scrollTo } from './util';
-
-const HEADE_HEIGHT = 180;
-const TABBAR_HEIGHT = 55;
+import { useNested } from './hooks';
 
 interface NestedSceneProps {
   registerNativeRef: (ref: React.RefObject<any>) => void;
@@ -24,17 +22,12 @@ interface NestedSceneProps {
     scrollRef: AnimatedRef<any>
   ) => void;
   index: number;
-  sharedTranslate: SharedValue<number>;
-  currentIdx: SharedValue<number>;
 }
 
-const NestedScene: React.FC<NestedSceneProps> = ({
-  registerNativeRef,
-  registerChildInfo,
-  index,
-  sharedTranslate,
-  currentIdx,
-}) => {
+const NestedScene: React.FC<NestedSceneProps> = (props) => {
+  const { registerNativeRef, registerChildInfo, index } = props;
+  const { sharedTranslate, currentIdx, headerHeight, stickyHeight } =
+    useNested();
   const animatedRef = useAnimatedRef<any>();
 
   const nativeRef = useRef();
@@ -70,12 +63,8 @@ const NestedScene: React.FC<NestedSceneProps> = ({
         // 处理切换tab之间，scroll是否重置
         // 当任意一个scroll滑动展示head区域，则重置所有的scrollValue
         let syncTanslate = 0;
-        if (sharedTranslate < HEADE_HEIGHT - TABBAR_HEIGHT) {
-          syncTanslate = clamp(
-            sharedTranslate,
-            0,
-            HEADE_HEIGHT - TABBAR_HEIGHT
-          );
+        if (sharedTranslate < headerHeight - stickyHeight) {
+          syncTanslate = clamp(sharedTranslate, 0, headerHeight - stickyHeight);
           scrollValue.value = syncTanslate;
         } else {
           syncTanslate = scrollValue.value;
@@ -117,9 +106,9 @@ const NestedScene: React.FC<NestedSceneProps> = ({
         ref={animatedRef}
         onScroll={scrollHandler}
         style={{ flex: 1, backgroundColor: 'pink' }}
-        contentContainerStyle={{ paddingTop: HEADE_HEIGHT }}
+        contentContainerStyle={{ paddingTop: headerHeight }}
         scrollEventThrottle={16}
-        scrollIndicatorInsets={{ top: HEADE_HEIGHT - 44 }}
+        scrollIndicatorInsets={{ top: headerHeight - 44 }}
         bounces={false}
       >
         {new Array(80).fill(0).map((item, index) => {

@@ -6,6 +6,7 @@ export const scrollTo = (
   y: number,
   animated: boolean
 ) => {
+  'worklet';
   if (!animatedRef) return;
   _scrollTo(animatedRef, x, y, animated);
 };
