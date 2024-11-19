@@ -1,6 +1,6 @@
-import { scrollTo as _scrollTo, AnimatedRef } from 'react-native-reanimated';
+import { scrollTo, AnimatedRef } from 'react-native-reanimated';
 
-export const scrollTo = (
+export const mscrollTo = (
   animatedRef: AnimatedRef<any>,
   x: number,
   y: number,
@@ -8,5 +8,6 @@ export const scrollTo = (
 ) => {
   'worklet';
   if (!animatedRef) return;
-  _scrollTo(animatedRef, x, y, animated);
+  console.log('滚动到', y);
+  scrollTo(animatedRef, x, y, animated);
 };

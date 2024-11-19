@@ -8,7 +8,7 @@ import {
   clamp,
   useAnimatedScrollHandler,
 } from 'react-native-reanimated';
-import { scrollTo } from './util';
+import { mscrollTo } from './util';
 import { useNested } from './hooks';
 import { NestedSceneProps } from './type';
 
@@ -63,7 +63,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
         } else {
           syncTanslate = scrollValue.value;
         }
-        scrollTo(animatedRef, 0, syncTanslate, false);
+        mscrollTo(animatedRef, 0, syncTanslate, false);
       }
     }
   );
@@ -75,7 +75,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   }, [nativeGes]);
 
   useEffect(() => {
-    if (!!scrollValue && !!animatedRef && index) {
+    if (!!scrollValue && !!animatedRef && typeof index === 'number') {
       registerChildInfo && registerChildInfo(index, scrollValue, animatedRef);
     }
   }, [scrollValue, animatedRef, index]);

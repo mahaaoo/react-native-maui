@@ -35,6 +35,12 @@ export interface NestedTabViewVerifyProps {
   onPageSelected?: (currentPage: number) => void;
 }
 
+export interface NestedTabViewRef {
+  getCurrentPage: () => number;
+  setPage: (index: number) => void;
+  scrollTo: (y: number) => void;
+}
+
 export interface NestedSceneProps {
   registerNativeRef?: (ref: React.RefObject<any>) => void;
   registerChildInfo?: (
