@@ -10,26 +10,27 @@ import Animated, {
   cancelAnimation,
   useDerivedValue,
 } from 'react-native-reanimated';
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { TabBar, TabBarRef } from '../TabBar';
-import { PageView, PageViewRef } from '../PageView';
-import { NestedContext, useNestRegister } from './hooks';
+import { PageStateType, PageView, PageViewRef } from '../PageView';
+import { NestedContext, useNestRegister, useVerifyProps } from './hooks';
 import { scrollTo } from './util';
-
-const TABS = ['tab1', 'tab2'];
-
-interface NestedTabViewProps {
-  renderHeader: () => React.ReactNode;
-  stickyHeight: number;
-  children: React.ReactNode;
-}
+import { NestedTabViewProps } from './type';
 
 const NestedTabView: React.FC<NestedTabViewProps> = (props) => {
-  const { renderHeader, stickyHeight, children } = props;
+  const {
+    renderHeader,
+    stickyHeight = 0,
+    children,
+    initialIndex = 0,
+    style,
+    tabProps,
+    pageProps,
+    onTabPress,
+    onPageSelected,
+    onPageScroll,
+    onPageScrollStateChanged,
+  } = useVerifyProps(props);
   const pageRef = useRef<PageViewRef>(null);
   const tabRef = useRef<TabBarRef>(null);
 
@@ -45,7 +46,7 @@ const NestedTabView: React.FC<NestedTabViewProps> = (props) => {
   const integralYOffset = useSharedValue(0);
   const totalRef = useRef();
 
-  const currentIdx = useSharedValue(0);
+  const currentIdx = useSharedValue(initialIndex);
 
   // 所有scroll共享的滚动距离，用于控制Header以及顶吸
   const sharedTranslate = useSharedValue(0);
@@ -183,62 +184,61 @@ const NestedTabView: React.FC<NestedTabViewProps> = (props) => {
     });
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <NestedContext.Provider
-        value={{
-          sharedTranslate,
-          currentIdx,
-          headerHeight,
-          stickyHeight,
-        }}
-      >
-        <GestureDetector gesture={panGesture}>
-          <Animated.View style={[{ flex: 1 }, containerStyle]}>
-            <PageView
-              ref={pageRef}
-              style={{ flex: 1 }}
-              onPageSelected={(currentPage) => {
-                tabRef.current &&
-                  tabRef.current?.keepScrollViewMiddle(currentPage);
-                // onPageSelected && onPageSelected(currentPage)
-                currentIdx.value = currentPage;
-              }}
-              onPageScroll={(translate) => {
-                tabRef.current && tabRef.current?.syncCurrentIndex(translate);
-                // onPageScroll && onPgeScroll(translate);
-              }}
-              onPageScrollStateChanged={() => {}}
+    <NestedContext.Provider
+      value={{
+        sharedTranslate,
+        currentIdx,
+        headerHeight,
+        stickyHeight,
+      }}
+    >
+      <GestureDetector gesture={panGesture}>
+        <Animated.View style={[style, containerStyle]}>
+          <PageView
+            {...{ ...pageProps }}
+            ref={pageRef}
+            onPageSelected={(currentPage) => {
+              tabRef.current &&
+                tabRef.current?.keepScrollViewMiddle(currentPage);
+              onPageSelected && onPageSelected(currentPage);
+              currentIdx.value = currentPage;
+            }}
+            onPageScroll={(translate) => {
+              tabRef.current && tabRef.current?.syncCurrentIndex(translate);
+              onPageScroll && onPageScroll(translate);
+            }}
+            onPageScrollStateChanged={(state: PageStateType) => {
+              onPageScrollStateChanged && onPageScrollStateChanged(state);
+            }}
+          >
+            {React.Children.map(children, (child: any, index) => {
+              const injectProps = {
+                registerNativeRef,
+                registerChildInfo,
+                index,
+              };
+              return React.cloneElement(child, injectProps);
+            })}
+          </PageView>
+          <GestureDetector gesture={headerPan}>
+            <Animated.View
+              onLayout={handleHeaderLayout}
+              style={[styles.headerContainer, headerStyle]}
             >
-              {React.Children.map(children, (child: any, index) => {
-                const injectProps = {
-                  registerNativeRef,
-                  registerChildInfo,
-                  index,
-                };
-                return React.cloneElement(child, injectProps);
-              })}
-            </PageView>
-            <GestureDetector gesture={headerPan}>
-              <Animated.View
-                onLayout={handleHeaderLayout}
-                style={[styles.headerContainer, headerStyle]}
-              >
-                {renderHeader && renderHeader()}
-                <TabBar
-                  ref={tabRef}
-                  tabs={TABS}
-                  tabBarflex={'equal-width'}
-                  onTabPress={(index) => {
-                    pageRef.current && pageRef.current?.setPage(index);
-                    // onTabPress && onTabPress(index);
-                  }}
-                />
-              </Animated.View>
-            </GestureDetector>
-          </Animated.View>
-        </GestureDetector>
-      </NestedContext.Provider>
-    </GestureHandlerRootView>
+              {renderHeader && renderHeader()}
+              <TabBar
+                {...{ ...tabProps }}
+                ref={tabRef}
+                onTabPress={(index) => {
+                  pageRef.current && pageRef.current?.setPage(index);
+                  onTabPress && onTabPress(index);
+                }}
+              />
+            </Animated.View>
+          </GestureDetector>
+        </Animated.View>
+      </GestureDetector>
+    </NestedContext.Provider>
   );
 };
 

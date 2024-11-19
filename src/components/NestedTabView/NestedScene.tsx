@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
-  SharedValue,
-  AnimatedRef,
   useAnimatedRef,
   useSharedValue,
   useDerivedValue,
@@ -12,17 +10,7 @@ import {
 } from 'react-native-reanimated';
 import { scrollTo } from './util';
 import { useNested } from './hooks';
-
-interface NestedSceneProps {
-  registerNativeRef?: (ref: React.RefObject<any>) => void;
-  registerChildInfo?: (
-    index: number,
-    scrollValue: SharedValue<number>,
-    scrollRef: AnimatedRef<any>
-  ) => void;
-  index?: number;
-  ScrollableComponent: any;
-}
+import { NestedSceneProps } from './type';
 
 const NestedScene: React.FC<NestedSceneProps> = (props) => {
   const {
