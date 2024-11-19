@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   interpolate,
@@ -8,7 +8,9 @@ import { RefreshStatus, useRefreshScroll } from './type';
 
 const { width } = Dimensions.get('window');
 
-interface BottomContainerProps {}
+interface BottomContainerProps {
+  children: ReactNode;
+}
 
 const BottomContainer: React.FC<BottomContainerProps> = (props) => {
   const { children } = props;

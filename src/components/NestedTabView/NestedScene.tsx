@@ -109,14 +109,14 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   return (
     <GestureDetector gesture={nativeGes}>
       <ScrollableComponent
+        {...restProps}
         ref={animatedRef}
         onScroll={scrollHandler}
-        style={{ flex: 1, backgroundColor: 'pink' }}
+        style={{ flex: 1 }}
         contentContainerStyle={{ paddingTop: headerHeight }}
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ top: headerHeight - 44 }}
         bounces={false}
-        {...restProps}
       />
     </GestureDetector>
   );

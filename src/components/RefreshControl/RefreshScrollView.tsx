@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef } from 'react';
 import { Dimensions } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -31,6 +31,8 @@ interface RefreshScrollViewProps {
   triggleHeight?: number;
   canOffset?: boolean;
   bounces?: boolean;
+
+  children: ReactNode;
 }
 
 const MAX_SCROLL_VELOCITY_Y = 20;
@@ -304,15 +306,12 @@ const RefreshScrollView: React.FC<RefreshScrollViewProps> = (props) => {
             scrollEventThrottle={16}
             onScroll={onScroll}
             animatedProps={animatedProps}
+            style={animatedStyle}
+            onContentSizeChange={(w: number, h: number) => {
+              scrollViewTotalHeight.value = h;
+            }}
           >
-            <Animated.View
-              onLayout={(e) => {
-                scrollViewTotalHeight.value = e.nativeEvent.layout.height;
-              }}
-              style={animatedStyle}
-            >
-              {children}
-            </Animated.View>
+            {children}
           </Animated.ScrollView>
         </GestureDetector>
       </GestureDetector>

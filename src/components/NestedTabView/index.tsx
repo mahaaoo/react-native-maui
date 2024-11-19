@@ -15,6 +15,13 @@ const NestedFlatList: React.FC<FlatListProps<any>> = (props: any) => {
   return <NestedScene ScrollableComponent={AnimateFlatList} {...props} />;
 };
 
+// const createNestedComponent = (ScrollableComponent: any) => {
+//   const AnimateList = Animated.createAnimatedComponent(ScrollableComponent);
+//   return forwardRef((props: any, ref) => {
+//     return <NestedScene {...props} ScrollableComponent={AnimateList} />;
+//   });
+// };
+
 const Nested = {
   ScrollView: NestedScrollView,
   FlatList: NestedFlatList,
