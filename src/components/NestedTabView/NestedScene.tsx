@@ -8,7 +8,7 @@ import {
   clamp,
   useAnimatedScrollHandler,
 } from 'react-native-reanimated';
-import { mscrollTo } from './util';
+import { mscrollTo, mergeProps } from './util';
 import { useNested } from './hooks';
 import { NestedSceneProps } from './type';
 
@@ -22,6 +22,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   } = props;
   const { sharedTranslate, currentIdx, headerHeight, stickyHeight } =
     useNested();
+  const mergedProps = mergeProps(restProps, headerHeight);
   const animatedRef = useAnimatedRef<any>();
 
   const nativeRef = useRef();
@@ -97,13 +98,10 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   return (
     <GestureDetector gesture={nativeGes}>
       <ScrollableComponent
-        {...restProps}
+        {...mergedProps}
         ref={animatedRef}
         onScroll={scrollHandler}
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingTop: headerHeight }}
         scrollEventThrottle={16}
-        scrollIndicatorInsets={{ top: headerHeight - 44 }}
         bounces={false}
       />
     </GestureDetector>

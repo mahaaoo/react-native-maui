@@ -85,6 +85,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
 
     const scrollTo = useCallback(
       (y: number) => {
+        // 在ExpoGo中主动调用这个方法，不会滚动，在web端是可以正常滚动的
         mscrollTo(childInfo[currentIdx.value]?.scrollRef, 0, y, true);
       },
       [childInfo, currentIdx]

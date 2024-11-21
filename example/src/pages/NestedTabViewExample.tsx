@@ -62,7 +62,7 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
       tabs={['tab1', 'tab2', '第三个tabs']}
       tabBarflex={'equal-width'}
     >
-      <Nested.ScrollView>
+      <Nested.ScrollView contentContainerStyle={{ backgroundColor: 'orange' }}>
         {new Array(80).fill(0).map((item, index) => {
           return (
             <Text key={index} style={{ margin: 10, fontSize: 20 }}>

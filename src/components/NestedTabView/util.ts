@@ -8,6 +8,20 @@ export const mscrollTo = (
 ) => {
   'worklet';
   if (!animatedRef) return;
-  console.log('滚动到', y);
   scrollTo(animatedRef, x, y, animated);
+};
+
+export const mergeProps = (restProps: any, headerHeight: number) => {
+  restProps.style = {
+    ...restProps.style,
+  };
+  restProps.contentContainerStyle = {
+    ...restProps.contentContainerStyle,
+    paddingTop: headerHeight,
+  };
+  restProps.scrollIndicatorInsets = {
+    ...restProps.scrollIndicatorInsets,
+    top: headerHeight,
+  };
+  return restProps;
 };
