@@ -15,7 +15,7 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
         ref.current?.scrollTo(300);
       }, 2000);
     };
-    autoScroll();
+    // autoScroll();
   }, [])
 
   return (

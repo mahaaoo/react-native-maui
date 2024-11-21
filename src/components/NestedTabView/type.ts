@@ -57,4 +57,34 @@ export interface NestedContextProps {
   currentIdx: SharedValue<number>;
   headerHeight: number;
   stickyHeight: number;
+  refreshStatus: SharedValue<RefreshStatus>;
+  integralY: SharedValue<number>;
+}
+
+/**
+ * Once Refresh LifeCycle:
+ * Idle -> Pulling -> Idle: Not reach triggleHeight, fail to refresh
+ * Idle -> Pulling -> Reached -> Holding -> Done -> Idle: A compelete refresh
+ */
+export enum RefreshStatus {
+  /**
+   * Refresh normal status
+   */
+  Idle,
+  /**
+   * Refresh is pulling down, and not reach triggleHeight
+   */
+  Pulling,
+  /**
+   * Refresh is pulling down continue, and reached triggleHeight
+   */
+  Reached,
+  /**
+   * Refresh is Refreshing
+   */
+  Holding,
+  /**
+   * Refresh is done
+   */
+  Done,
 }

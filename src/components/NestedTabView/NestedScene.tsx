@@ -7,10 +7,11 @@ import {
   useAnimatedReaction,
   clamp,
   useAnimatedScrollHandler,
+  useAnimatedProps,
 } from 'react-native-reanimated';
 import { mscrollTo, mergeProps } from './util';
 import { useNested } from './hooks';
-import { NestedSceneProps } from './type';
+import { NestedSceneProps, RefreshStatus } from './type';
 
 const NestedScene: React.FC<NestedSceneProps> = (props) => {
   const {
@@ -20,8 +21,14 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
     ScrollableComponent,
     ...restProps
   } = props;
-  const { sharedTranslate, currentIdx, headerHeight, stickyHeight } =
-    useNested();
+  const {
+    sharedTranslate,
+    currentIdx,
+    headerHeight,
+    stickyHeight,
+    refreshStatus,
+    integralY,
+  } = useNested();
   const mergedProps = mergeProps(restProps, headerHeight);
   const animatedRef = useAnimatedRef<any>();
 
@@ -32,21 +39,12 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
 
   // 非当前活动的scrollview不允许滚动
   const scrollEnabledValue = useDerivedValue(() => {
-    return currentIdx.value === index;
+    return (
+      currentIdx.value === index &&
+      refreshStatus.value === RefreshStatus.Idle &&
+      integralY.value === 0
+    );
   });
-
-  // 设置scrollEnabled
-  useAnimatedReaction(
-    () => {
-      return scrollEnabledValue.value;
-    },
-    (enabled) => {
-      animatedRef &&
-        animatedRef.current &&
-        animatedRef.current.setNativeProps({ scrollEnabled: enabled });
-    },
-    [scrollEnabledValue, animatedRef]
-  );
 
   // 向其他非活动的scrollview同步当前滚动距离
   useAnimatedReaction(
@@ -81,24 +79,37 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
     }
   }, [scrollValue, animatedRef, index]);
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag: () => {},
-    onScroll: (event) => {
-      if (currentIdx.value === index) {
-        const moveY = Math.max(0, event.contentOffset.y);
-        scrollValue.value = moveY;
-        sharedTranslate.value = moveY;
-      }
+  const scrollHandler = useAnimatedScrollHandler(
+    {
+      onBeginDrag: () => {},
+      onScroll: (event) => {
+        if (
+          currentIdx.value === index &&
+          refreshStatus.value === RefreshStatus.Idle
+        ) {
+          const moveY = Math.max(0, event.contentOffset.y);
+          scrollValue.value = moveY;
+          sharedTranslate.value = moveY;
+        }
+      },
+      onMomentumEnd: () => {
+        // console.log('onMomentumEnd', scrollValue.value);
+      },
     },
-    onMomentumEnd: () => {
-      // console.log('onMomentumEnd', scrollValue.value);
-    },
+    [currentIdx, refreshStatus, scrollValue, sharedTranslate]
+  );
+
+  const animatedProps = useAnimatedProps(() => {
+    return {
+      scrollEnabled: scrollEnabledValue.value,
+    };
   });
 
   return (
     <GestureDetector gesture={nativeGes}>
       <ScrollableComponent
         {...mergedProps}
+        animatedProps={animatedProps}
         ref={animatedRef}
         onScroll={scrollHandler}
         scrollEventThrottle={16}

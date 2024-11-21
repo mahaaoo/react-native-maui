@@ -1,11 +1,12 @@
 import React, {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react';
-import { LayoutChangeEvent, StyleSheet } from 'react-native';
+import { LayoutChangeEvent, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -15,14 +16,24 @@ import Animated, {
   withDecay,
   cancelAnimation,
   useDerivedValue,
+  withTiming,
+  withDelay,
+  runOnJS,
+  Easing,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { TabBar, TabBarRef } from '../TabBar';
 import { PageStateType, PageView, PageViewRef } from '../PageView';
 import { NestedContext, useNestRegister, useVerifyProps } from './hooks';
 import { mscrollTo } from './util';
-import { NestedTabViewProps, NestedTabViewRef } from './type';
+import { NestedTabViewProps, NestedTabViewRef, RefreshStatus } from './type';
 import { isInteger } from '../../utils/typeUtil';
+import { GestureStateManagerType } from 'react-native-gesture-handler/lib/typescript/handlers/gestures/gestureStateManager';
+
+const TRIGGERHEIGHT = 100 * 2;
+const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
+
+const { height: HEIGHT } = Dimensions.get('window');
 
 const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
   (props, ref) => {
@@ -58,8 +69,53 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
 
     // 所有scroll共享的滚动距离，用于控制Header以及顶吸
     const sharedTranslate = useSharedValue(0);
-
     const [headerHeight, setHeaderHeight] = useState(0);
+    const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    useEffect(() => {
+      if (refreshing) {
+        refreshStatus.value = RefreshStatus.Holding;
+        integralY.value = withTiming(TRIGGERHEIGHT, {
+          easing: RESET_TIMING_EASING,
+        });
+      } else if (refreshStatus.value !== RefreshStatus.Idle) {
+        refreshStatus.value = RefreshStatus.Done;
+        // refresh animation
+        integralY.value = withDelay(
+          500,
+          withTiming(
+            0,
+            {
+              easing: RESET_TIMING_EASING,
+            },
+            () => {
+              refreshStatus.value = RefreshStatus.Idle;
+            }
+          )
+        );
+      }
+    }, [refreshing]);
+
+    const handleRefresh = () => {
+      console.log('下拉刷新开始');
+      setRefreshing(true);
+      const end = () => {
+        setTimeout(() => {
+          console.log('下拉刷新结束');
+          setRefreshing(false);
+        }, 2000);
+      };
+      // end();
+    };
+
+    useAnimatedReaction(
+      () => refreshStatus.value,
+      (value) => {
+        console.log(value);
+      }
+    );
 
     const {
       registerNativeRef,
@@ -109,29 +165,97 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       cancelAnimation(sharedTranslate);
     };
 
+    // useAnimatedReaction(
+    //   () => integralY.value,
+    //   (value) => {
+    //     console.log(value);
+    //   }
+    // );
+
+    useAnimatedReaction(
+      () => sharedTranslate.value,
+      (value) => {
+        console.log(value);
+      }
+    );
+
     const panGesture = Gesture.Pan()
       .withRef(totalRef)
       .activeOffsetX([-500, 500])
       .activeOffsetY([-10, 10])
       .simultaneousWithExternalGesture(...childNativeRefs, headerRef)
-      .onTouchesDown(() => {
+      .onTouchesDown((_, stateManager: GestureStateManagerType) => {
         stopAnimation();
+        if (sharedTranslate.value > 0) {
+          console.log('手势触发失败', {
+            sharedTranslate: sharedTranslate.value,
+            integralY: integralY.value,
+          });
+          stateManager.fail();
+        }
       })
       .onBegin(() => {
         integralYOffset.value = integralY.value;
-        // console.log('onBegin');
       })
       .onUpdate(({ translationY }) => {
-        // console.log('integralY', translationY);
-
-        integralY.value = translationY + integralYOffset.value;
-        // scrollTo(animatedRef, 0, -integralY.value, false);
+        const temp = translationY + integralYOffset.value;
+        if (temp > 0) {
+          if (sharedTranslate.value > 0) {
+            sharedTranslate.value = 0;
+          }
+          integralY.value = temp;
+          if (!refreshing) {
+            if (Math.abs(integralY.value) >= TRIGGERHEIGHT) {
+              refreshStatus.value = RefreshStatus.Reached;
+            } else {
+              refreshStatus.value = RefreshStatus.Pulling;
+            }
+          }
+        } else {
+          // console.log(temp);
+        }
       })
       .onEnd(() => {
-        // console.log('onEnd');
-        // if (integralY.value > 0) {
-        //     integralY.value = withTiming(0);
-        // }
+        if (integralY.value < 0) return;
+        if (refreshing) {
+          // 在已经是下拉刷新的状态下，如果继续向下拉，则会回到默认的最大triggleHeight位置处
+          // 如果有向上收起的意图，则将下拉区全部收起
+          if (integralY.value >= TRIGGERHEIGHT) {
+            integralY.value = withTiming(TRIGGERHEIGHT, {
+              easing: RESET_TIMING_EASING,
+            });
+          } else {
+            // 这里要做一个snapPoint
+            const dest =
+              integralY.value <= TRIGGERHEIGHT / 2 ? 0 : TRIGGERHEIGHT;
+            integralY.value = withTiming(
+              dest,
+              {
+                easing: RESET_TIMING_EASING,
+              },
+              () => {
+                if (dest === 0) {
+                  refreshStatus.value = RefreshStatus.Idle;
+                }
+              }
+            );
+          }
+        } else {
+          if (integralY.value >= TRIGGERHEIGHT) {
+            // 这里触发下拉刷新
+            runOnJS(handleRefresh)();
+          } else {
+            integralY.value = withTiming(
+              0,
+              {
+                easing: RESET_TIMING_EASING,
+              },
+              () => {
+                refreshStatus.value = RefreshStatus.Idle;
+              }
+            );
+          }
+        }
       });
 
     const headerStyleInter = useDerivedValue(() => {
@@ -160,7 +284,11 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       return {
         transform: [
           {
-            translateY: 0,
+            translateY: interpolate(
+              integralY.value,
+              [0, HEIGHT],
+              [0, HEIGHT / 2]
+            ),
           },
         ],
       };
@@ -228,6 +356,8 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
           currentIdx,
           headerHeight,
           stickyHeight,
+          refreshStatus,
+          integralY,
         }}
       >
         <GestureDetector gesture={panGesture}>
