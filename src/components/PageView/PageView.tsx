@@ -23,20 +23,27 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     pageSize,
     snapPoints,
     initialPage = 0,
-    pageScrollEnabled = true,
+    scrollEnabled = true,
     bounces = true,
     gestureBack = true,
     lazy = false,
     lazyPreloadNumber = 0,
+    pageMargin,
     onPageScroll,
     onPageSelected,
     onPageScrollStateChanged,
   } = useVerifyProps(props);
 
-  const pageMove = useSharedValue(-initialPage * contentSize);
+  const getMoveFromIndex = (page: number) => {
+    'worklet';
+    return snapPoints[page];
+  };
+
+  const pageMove = useSharedValue(getMoveFromIndex(initialPage));
   const offset = useSharedValue(0);
   const currentIndex = useSharedValue(initialPage);
   const pageState = useSharedValue<PageStateType>('idle');
+  const pageScrollEnabled = useSharedValue(scrollEnabled);
 
   const pageSelected = (nextPage: number) => {
     onPageSelected && onPageSelected(nextPage);
@@ -71,10 +78,15 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
       );
     }
 
-    pageMove.value = -index * contentSize;
+    pageMove.value = getMoveFromIndex(index);
     currentIndex.value = index;
     pageState.value = 'idle';
     runOnJS(pageSelected)(index);
+  };
+
+  const setScrollEnabled = (scrollEnabled: boolean) => {
+    'worklet';
+    pageScrollEnabled.value = scrollEnabled;
   };
 
   const getCurrentPage = () => {
@@ -86,6 +98,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     () => ({
       setPage,
       setPageWithoutAnimation,
+      setScrollEnabled,
       getCurrentPage,
     }),
     []
@@ -108,13 +121,12 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   const moveTo = (page: number) => {
     'worklet';
     pageMove.value = withTiming(
-      -page * contentSize,
+      getMoveFromIndex(page),
       { duration: DURATION },
       () => {
-        const nextPage = Math.abs(Math.round(pageMove.value / contentSize));
-        currentIndex.value = nextPage;
+        currentIndex.value = page;
         pageState.value = 'idle';
-        runOnJS(pageSelected)(nextPage);
+        runOnJS(pageSelected)(page);
       }
     );
   };
@@ -128,7 +140,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
           stateManager.fail();
         }
       }
-      if (pageScrollEnabled === false) {
+      if (!pageScrollEnabled.value) {
         stateManager.fail();
       }
     })
@@ -192,6 +204,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
                 index={index}
                 lazy={lazy}
                 lazyPreloadNumber={lazyPreloadNumber}
+                pageMargin={pageMargin}
               >
                 {child}
               </SinglePage>

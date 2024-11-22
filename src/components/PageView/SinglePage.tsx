@@ -13,6 +13,7 @@ interface SinglePageProps {
   index: number;
   lazy: boolean;
   lazyPreloadNumber: number;
+  pageMargin: number;
 }
 
 const SinglePage: React.FC<SinglePageProps> = (props) => {
@@ -23,6 +24,7 @@ const SinglePage: React.FC<SinglePageProps> = (props) => {
     index,
     lazy,
     lazyPreloadNumber,
+    pageMargin,
   } = props;
   const [load, setLoad] = useState(() => {
     if (!lazy) return true;
@@ -46,9 +48,15 @@ const SinglePage: React.FC<SinglePageProps> = (props) => {
     }
   );
 
-  if (!children) return <View style={{ width: contentSize }} />;
+  const marginLeft = index === 0 ? 0 : pageMargin;
 
-  return <View style={{ width: contentSize }}>{!!load ? children : null}</View>;
+  if (!children) return <View style={{ width: contentSize, marginLeft }} />;
+
+  return (
+    <View style={{ width: contentSize, marginLeft }}>
+      {!!load ? children : null}
+    </View>
+  );
 };
 
 export default SinglePage;

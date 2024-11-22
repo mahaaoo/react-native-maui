@@ -5,9 +5,10 @@ export interface PageViewProps {
 
   style?: ViewStyle;
   initialPage?: number;
-  pageScrollEnabled?: boolean;
+  scrollEnabled?: boolean;
   bounces?: boolean;
   gestureBack?: boolean;
+  pageMargin: number;
 
   lazy?: boolean;
   lazyPreloadNumber?: number;
@@ -20,6 +21,7 @@ export interface PageViewProps {
 export interface PageViewRef {
   setPage: (index: number) => void;
   setPageWithoutAnimation: (index: number) => void;
+  setScrollEnabled: (scrollEnabled: boolean) => void;
   getCurrentPage: () => number;
 }
 

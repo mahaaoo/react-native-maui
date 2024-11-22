@@ -13,11 +13,15 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
   const [status, setStatus] = useState('idle');
   const [current, setCurrent] = useState(0);
   const [currentTranslate, setCurrentTranslate] = useState();
+  const [mscrollEnabled, setmscrollEnabled] = useState(true);
   return (
     <View style={{ flex: 1 }}>
       <Text style={styles.textStyle}>PageView状态:{status}</Text>
       <Text style={styles.textStyle}>当前页面:{current}</Text>
       <Text style={styles.textStyle}>当前偏移量:{currentTranslate}</Text>
+      <Text style={styles.textStyle}>
+        当前是否可以滚动:{mscrollEnabled ? 'true' : 'false'}
+      </Text>
       <PageView
         ref={ref}
         style={styles.pagerView}
@@ -31,7 +35,7 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
         onPageScroll={(translate) => {
           setCurrentTranslate(translate);
         }}
-        pageScrollEnabled={true}
+        scrollEnabled={true}
         bounces={true}
         lazy={true}
         lazyPreloadNumber={1}
@@ -72,6 +76,15 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
                 }}
               >
                 getCurrentPage
+              </Text>
+              <Text
+                style={styles.textStyle}
+                onPress={() => {
+                  ref.current && ref.current?.setScrollEnabled(!mscrollEnabled);
+                  setmscrollEnabled(!mscrollEnabled);
+                }}
+              >
+                scrollEnabled
               </Text>
             </View>
           );

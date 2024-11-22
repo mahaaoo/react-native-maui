@@ -5,7 +5,7 @@ import { PageViewProps, PageViewVerifyProps } from './type';
 const { width } = Dimensions.get('window');
 
 export const useVerifyProps = (props: PageViewProps): PageViewVerifyProps => {
-  const { children, style } = props;
+  const { children, style, pageMargin = 0 } = props;
   const pageSize = React.Children.count(children);
   if (pageSize === 0) {
     throw new Error('PageView must be contains at least one chid');
@@ -21,7 +21,7 @@ export const useVerifyProps = (props: PageViewProps): PageViewVerifyProps => {
 
   const snapPoints = new Array(pageSize)
     .fill(0)
-    .map((_, index) => -index * contentSize);
+    .map((_, index) => -index * contentSize - index * pageMargin);
 
   return {
     ...props,
