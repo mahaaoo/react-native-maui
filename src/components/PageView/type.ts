@@ -8,7 +8,8 @@ export interface PageViewProps {
   scrollEnabled?: boolean;
   bounces?: boolean;
   gestureBack?: boolean;
-  pageMargin: number;
+  pageMargin?: number;
+  orientation?: 'horizontal' | 'vertical';
 
   lazy?: boolean;
   lazyPreloadNumber?: number;

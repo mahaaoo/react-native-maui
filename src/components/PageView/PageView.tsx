@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+} from 'react';
 import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -28,18 +33,35 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     gestureBack = true,
     lazy = false,
     lazyPreloadNumber = 0,
-    pageMargin,
+    pageMargin = 0,
+    orientation,
     onPageScroll,
     onPageSelected,
     onPageScrollStateChanged,
   } = useVerifyProps(props);
 
-  const getMoveFromIndex = (page: number) => {
-    'worklet';
-    return snapPoints[page];
-  };
+  const isHorizontal = useMemo(() => {
+    return orientation === 'horizontal';
+  }, [orientation]);
 
-  const pageMove = useSharedValue(getMoveFromIndex(initialPage));
+  const getMoveFromIndex = useCallback(
+    (page: number) => {
+      'worklet';
+      return snapPoints[page];
+    },
+    [snapPoints]
+  );
+
+  // 这个暂时没什么用，可能后续ltr or rtl会用到
+  const needDirection = useCallback(
+    (n: number) => {
+      'worklet';
+      return -n;
+    },
+    [orientation]
+  );
+
+  const pageMove = useSharedValue(needDirection(getMoveFromIndex(initialPage)));
   const offset = useSharedValue(0);
   const currentIndex = useSharedValue(initialPage);
   const pageState = useSharedValue<PageStateType>('idle');
@@ -78,7 +100,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
       );
     }
 
-    pageMove.value = getMoveFromIndex(index);
+    pageMove.value = needDirection(getMoveFromIndex(index));
     currentIndex.value = index;
     pageState.value = 'idle';
     runOnJS(pageSelected)(index);
@@ -121,7 +143,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
   const moveTo = (page: number) => {
     'worklet';
     pageMove.value = withTiming(
-      getMoveFromIndex(page),
+      needDirection(getMoveFromIndex(page)),
       { duration: DURATION },
       () => {
         currentIndex.value = page;
@@ -133,6 +155,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
 
   const panGesture = Gesture.Pan()
     .activeOffsetX([-10, 10])
+    .activeOffsetY([-10, 10])
     .onTouchesDown((event, stateManager) => {
       if (currentIndex.value === 0 && gestureBack) {
         const allTouches = event.allTouches[0];
@@ -147,21 +170,27 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     .onBegin(() => {
       offset.value = pageMove.value;
     })
-    .onUpdate(({ translationX }) => {
+    .onUpdate(({ translationX, translationY }) => {
       pageState.value = 'dragging';
+      const translation = isHorizontal ? translationX : translationY;
       if (bounces) {
-        pageMove.value = translationX + offset.value;
+        pageMove.value = translation + offset.value;
       } else {
         pageMove.value = clamp(
-          translationX + offset.value,
-          -(pageSize - 1) * contentSize,
-          0
+          needDirection(translation + offset.value),
+          0,
+          getMoveFromIndex(pageSize - 1)
         );
       }
     })
-    .onEnd(({ velocityX }) => {
+    .onEnd(({ velocityX, velocityY }) => {
       pageState.value = 'settling';
-      const dest = snapPoint(pageMove.value, velocityX, snapPoints);
+      const velocity = isHorizontal ? velocityX : velocityY;
+      const dest = snapPoint(
+        needDirection(pageMove.value),
+        needDirection(velocity),
+        snapPoints
+      );
       // 每次移动只能切换一个page
       const willToPage = Math.abs(Math.round(dest / contentSize));
       const toValue = clamp(
@@ -177,25 +206,39 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
     return {
       transform: [
         {
-          translateX: pageMove.value,
+          translateX: isHorizontal ? pageMove.value : 0,
+        },
+        {
+          translateY: !isHorizontal ? pageMove.value : 0,
         },
       ],
     };
   });
 
+  const directionStyle: any = useMemo(() => {
+    return isHorizontal
+      ? {
+          container: { width: contentSize },
+          sence: {
+            height: '100%',
+            flexDirection: 'row',
+            width: getMoveFromIndex(pageSize - 1),
+          },
+        }
+      : {
+          container: { height: contentSize },
+          sence: {
+            width: '100%',
+            height: getMoveFromIndex(pageSize - 1),
+            backgroundColor: 'red',
+          },
+        };
+  }, [isHorizontal, orientation, contentSize, pageSize, getMoveFromIndex]);
+
   return (
-    <View style={{ flex: 1, width: contentSize, overflow: 'hidden' }}>
+    <View style={[style, directionStyle.container, { overflow: 'hidden' }]}>
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          style={[
-            style,
-            {
-              flexDirection: 'row',
-              width: contentSize * pageSize,
-            },
-            animatedStyle,
-          ]}
-        >
+        <Animated.View style={[directionStyle.sence, animatedStyle]}>
           {React.Children.map(children, (child, index) => {
             return (
               <SinglePage
@@ -205,6 +248,7 @@ const PageView = forwardRef<PageViewRef, PageViewProps>((props, ref) => {
                 lazy={lazy}
                 lazyPreloadNumber={lazyPreloadNumber}
                 pageMargin={pageMargin}
+                isHorizontal={isHorizontal}
               >
                 {child}
               </SinglePage>

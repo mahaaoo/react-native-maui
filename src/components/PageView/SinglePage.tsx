@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import {
   SharedValue,
@@ -14,6 +14,7 @@ interface SinglePageProps {
   lazy: boolean;
   lazyPreloadNumber: number;
   pageMargin: number;
+  isHorizontal: boolean;
 }
 
 const SinglePage: React.FC<SinglePageProps> = (props) => {
@@ -25,6 +26,7 @@ const SinglePage: React.FC<SinglePageProps> = (props) => {
     lazy,
     lazyPreloadNumber,
     pageMargin,
+    isHorizontal,
   } = props;
   const [load, setLoad] = useState(() => {
     if (!lazy) return true;
@@ -43,20 +45,27 @@ const SinglePage: React.FC<SinglePageProps> = (props) => {
         index >= value - lazyPreloadNumber &&
         index <= value + lazyPreloadNumber;
       if (!canLoad) return;
-      console.log('首次加载', index);
       runOnJS(setLoad)(canLoad);
     }
   );
 
-  const marginLeft = index === 0 ? 0 : pageMargin;
+  const margin = index === 0 ? 0 : pageMargin;
 
-  if (!children) return <View style={{ width: contentSize, marginLeft }} />;
+  const directionStyle = useMemo(() => {
+    return isHorizontal
+      ? {
+          width: contentSize,
+          marginLeft: margin,
+        }
+      : {
+          height: contentSize,
+          marginTop: margin,
+        };
+  }, [isHorizontal]);
 
-  return (
-    <View style={{ width: contentSize, marginLeft }}>
-      {!!load ? children : null}
-    </View>
-  );
+  if (!children) return <View style={directionStyle} />;
+
+  return <View style={directionStyle}>{!!load ? children : null}</View>;
 };
 
 export default SinglePage;
