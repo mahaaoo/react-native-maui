@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet, Text, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { PageView, PageViewRef } from 'react-native-maui';
 
 interface PageViewExampleProps {}
@@ -19,7 +19,7 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
   const [currentTranslate, setCurrentTranslate] = useState();
   const [mscrollEnabled, setmscrollEnabled] = useState(true);
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Text style={styles.textStyle}>PageView状态:{status}</Text>
       <Text style={styles.textStyle}>当前页面:{current}</Text>
       <Text style={styles.textStyle}>当前偏移量:{currentTranslate}</Text>
@@ -97,7 +97,7 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
       <Text style={styles.textStyle}>纵向滚动</Text>
       <PageView
         ref={ref2}
-        style={{ flex: 1, width, height: 200 }}
+        style={{ width, height: 200 }}
         initialPage={0}
         onPageSelected={(currentPage) => {
         }}
@@ -152,14 +152,13 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
           );
         })}
       </PageView>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   pagerView: {
     height: 200,
-    flex: 1,
   },
   textStyle: {
     fontSize: 20,
