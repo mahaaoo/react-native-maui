@@ -6,7 +6,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { LayoutChangeEvent, StyleSheet, Dimensions } from 'react-native';
+import {
+  LayoutChangeEvent,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -28,12 +32,11 @@ import { NestedContext, useNestRegister, useVerifyProps } from './hooks';
 import { mscrollTo } from './util';
 import { NestedTabViewProps, NestedTabViewRef, RefreshStatus } from './type';
 import { isInteger } from '../../utils/typeUtil';
-import { GestureStateManagerType } from 'react-native-gesture-handler/lib/typescript/handlers/gestures/gestureStateManager';
+import RefreshController from './RefreshController';
+import NormalRefresh from './NormalRefresh';
 
 const TRIGGERHEIGHT = 100 * 2;
 const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
-
-const { height: HEIGHT } = Dimensions.get('window');
 
 const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
   (props, ref) => {
@@ -50,6 +53,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       onPageScroll,
       onPageScrollStateChanged,
     } = useVerifyProps(props);
+    const { height: HEIGHT } = useWindowDimensions();
     const pageRef = useRef<PageViewRef>(null);
     const tabRef = useRef<TabBarRef>(null);
 
@@ -73,6 +77,19 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
     const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
 
     const [refreshing, setRefreshing] = useState(false);
+
+    const isRefreshing = useDerivedValue(() => {
+      return !(
+        integralY.value === 0 && refreshStatus.value === RefreshStatus.Idle
+      );
+    }, [refreshStatus, integralY]);
+
+    useAnimatedReaction(
+      () => isRefreshing.value,
+      (isRefreshing) => {
+        pageRef?.current?.setScrollEnabled(!isRefreshing);
+      }
+    );
 
     useEffect(() => {
       if (refreshing) {
@@ -107,7 +124,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
           setRefreshing(false);
         }, 2000);
       };
-      // end();
+      end();
     };
 
     useAnimatedReaction(
@@ -118,12 +135,12 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
     );
 
     const {
-      registerNativeRef,
-      childNativeRefs,
-      registerChildInfo,
-      childInfo,
       isReady,
-    } = useNestRegister();
+      childInfo,
+      childNativeRefs,
+      registerNativeRef,
+      registerChildInfo,
+    } = useNestRegister(pageRef, tabRef);
 
     const setPage = (index: number) => {
       if (!isInteger(index)) {
@@ -172,19 +189,19 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
     //   }
     // );
 
-    useAnimatedReaction(
-      () => sharedTranslate.value,
-      (value) => {
-        console.log(value);
-      }
-    );
+    // useAnimatedReaction(
+    //   () => sharedTranslate.value,
+    //   (value) => {
+    //     console.log(value);
+    //   }
+    // );
 
     const panGesture = Gesture.Pan()
       .withRef(totalRef)
       .activeOffsetX([-500, 500])
       .activeOffsetY([-10, 10])
       .simultaneousWithExternalGesture(...childNativeRefs, headerRef)
-      .onTouchesDown((_, stateManager: GestureStateManagerType) => {
+      .onTouchesDown((_, stateManager) => {
         stopAnimation();
         if (sharedTranslate.value > 0) {
           console.log('手势触发失败', {
@@ -323,8 +340,11 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       .activeOffsetY([-10, 10])
       .withRef(headerRef)
       .simultaneousWithExternalGesture(totalRef)
-      .onTouchesDown(() => {
+      .onTouchesDown((_, stateManager) => {
         stopScrolling();
+        if (isRefreshing) {
+          stateManager.fail();
+        }
       })
       .onBegin(() => {
         headerYOffset.value = 0;
@@ -365,6 +385,8 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
             <PageView
               {...{ ...pageProps }}
               ref={pageRef}
+              // 只支持横向滚动
+              orientation={'horizontal'}
               onPageSelected={(currentPage) => {
                 tabRef.current &&
                   tabRef.current?.keepScrollViewMiddle(currentPage);
@@ -406,6 +428,13 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
             </GestureDetector>
           </Animated.View>
         </GestureDetector>
+        <RefreshController
+          scrollOffset={integralY}
+          refreshStatus={refreshStatus}
+          triggerHeight={TRIGGERHEIGHT}
+        >
+          <NormalRefresh />
+        </RefreshController>
       </NestedContext.Provider>
     );
   }

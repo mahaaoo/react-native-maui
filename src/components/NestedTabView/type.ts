@@ -88,3 +88,13 @@ export enum RefreshStatus {
    */
   Done,
 }
+
+export interface RefreshControllerProps {
+  scrollOffset: SharedValue<number>;
+  refreshStatus: SharedValue<RefreshStatus>;
+  triggerHeight: number;
+  children: React.ReactNode;
+}
+
+export interface RefreshControllerContextProps
+  extends Omit<RefreshControllerProps, 'children'> {}

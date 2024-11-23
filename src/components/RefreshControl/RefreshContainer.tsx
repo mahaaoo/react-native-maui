@@ -28,7 +28,6 @@ const RefreshContainer: React.FC<RefreshContainerProps> = (props) => {
   const { children, transitionY, triggleHeight, refreshStatus } = props;
 
   const animatedStyle = useAnimatedStyle(() => {
-    console.log('a', transitionY.value);
     if (transitionY.value < 0) {
       return {};
     }

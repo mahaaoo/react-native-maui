@@ -22,7 +22,7 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
 
     children,
 
-    pageScrollEnabled,
+    scrollEnabled,
     bounces,
     gestureBack,
 
@@ -81,7 +81,7 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
   };
 
   const pageProps = {
-    pageScrollEnabled,
+    scrollEnabled,
     bounces,
     gestureBack,
     style: { flex: 1, width: contentSize, ...pageStyle },

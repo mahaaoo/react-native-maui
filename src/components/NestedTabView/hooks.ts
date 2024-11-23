@@ -11,14 +11,20 @@ import {
   NestedContextProps,
   NestedTabViewProps,
   NestedTabViewVerifyProps,
+  RefreshControllerContextProps,
 } from './type';
+import { TabBarRef } from '../TabBar';
+import { PageViewRef } from '../PageView';
 
 interface ChildInfoType {
   scrollValue: SharedValue<number>;
   scrollRef: AnimatedRef<any>;
 }
 
-export const useNestRegister = () => {
+export const useNestRegister = (
+  pageRef: React.RefObject<PageViewRef>,
+  tabRef: React.RefObject<TabBarRef>
+) => {
   const [childInfo, setChildInfo] = useState<{
     [index: number]: ChildInfoType;
   }>({});
@@ -29,7 +35,12 @@ export const useNestRegister = () => {
   >([]);
 
   const isReady = useMemo(() => {
-    return Object.keys(childInfo).length > 0 && childNativeRefs.length > 0;
+    return (
+      Object.keys(childInfo).length > 0 &&
+      childNativeRefs.length > 0 &&
+      pageRef?.current !== null &&
+      tabRef?.current !== null
+    );
   }, [childInfo, childNativeRefs]);
 
   // 用Gesture.Native包裹内部scrollview并获取此ref
@@ -78,7 +89,13 @@ export const useNestRegister = () => {
 export const NestedContext = createContext<NestedContextProps>(
   {} as NestedContextProps
 );
-export const useNested = () => useContext(NestedContext);
+export const useNested = () => {
+  const context = useContext(NestedContext);
+  if (!context) {
+    throw new Error('component must wrapper by NestedContext');
+  }
+  return context;
+};
 
 const { width } = Dimensions.get('window');
 
@@ -101,7 +118,7 @@ export const useVerifyProps = (
     inactiveTextColor,
     tabStyle,
 
-    pageScrollEnabled,
+    scrollEnabled,
     bounces,
     gestureBack,
     pageStyle,
@@ -162,7 +179,7 @@ export const useVerifyProps = (
   };
 
   const pageProps = {
-    pageScrollEnabled,
+    scrollEnabled,
     bounces,
     gestureBack,
     style: { flex: 1, width: contentSize, ...pageStyle },
@@ -183,4 +200,16 @@ export const useVerifyProps = (
     onPageScrollStateChanged,
     onPageSelected,
   };
+};
+
+export const RefreshControllerContext =
+  createContext<RefreshControllerContextProps>(
+    {} as RefreshControllerContextProps
+  );
+export const useRefreshController = () => {
+  const context = useContext(RefreshControllerContext);
+  if (!context) {
+    throw new Error('component must wrapper by RefreshControllerContext');
+  }
+  return context;
 };
