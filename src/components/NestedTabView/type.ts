@@ -17,7 +17,9 @@ export interface NestedTabViewProps
   triggerHeight?: number;
   refreshing?: boolean;
   refreshControl?: () => React.ReactNode;
+
   onRefresh?: () => void;
+  onNestedScroll?: (offset: number) => void;
 }
 
 export interface NestedTabViewVerifyProps {
@@ -37,6 +39,7 @@ export interface NestedTabViewVerifyProps {
   refreshControl?: () => React.ReactNode;
 
   onRefresh?: () => void;
+  onNestedScroll?: (offset: number) => void;
   onTabPress?: (index: number) => void;
   onPageScroll?: (translate: number) => void;
   onPageScrollStateChanged?: (state: PageStateType) => void;
@@ -56,7 +59,7 @@ export interface NestedSceneProps {
     scrollValue: SharedValue<number>,
     scrollRef: AnimatedRef<any>
   ) => void;
-  index?: number;
+  nestedIndex?: number;
   ScrollableComponent: any;
 }
 

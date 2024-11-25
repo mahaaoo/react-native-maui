@@ -136,6 +136,7 @@ export const useVerifyProps = (
     refreshing,
     refreshControl,
     onRefresh,
+    onNestedScroll,
     children,
   } = props;
 
@@ -203,6 +204,7 @@ export const useVerifyProps = (
     refreshControl,
 
     onRefresh,
+    onNestedScroll,
     onTabPress,
     onPageScroll,
     onPageScrollStateChanged,

@@ -17,7 +17,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   const {
     registerNativeRef,
     registerChildInfo,
-    index,
+    nestedIndex,
     ScrollableComponent,
     ...restProps
   } = props;
@@ -40,7 +40,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   // 非当前活动的scrollview不允许滚动
   const scrollEnabledValue = useDerivedValue(() => {
     return (
-      currentIdx.value === index &&
+      currentIdx.value === nestedIndex &&
       refreshStatus.value === RefreshStatus.Idle &&
       integralY.value === 0
     );
@@ -52,7 +52,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
       return sharedTranslate.value;
     },
     (sharedTranslate) => {
-      if (currentIdx.value !== index) {
+      if (currentIdx.value !== nestedIndex) {
         // 处理切换tab之间，scroll是否重置
         // 当任意一个scroll滑动展示head区域，则重置所有的scrollValue
         let syncTanslate = 0;
@@ -74,17 +74,18 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   }, [nativeGes]);
 
   useEffect(() => {
-    if (!!scrollValue && !!animatedRef && typeof index === 'number') {
-      registerChildInfo && registerChildInfo(index, scrollValue, animatedRef);
+    if (!!scrollValue && !!animatedRef && typeof nestedIndex === 'number') {
+      registerChildInfo &&
+        registerChildInfo(nestedIndex, scrollValue, animatedRef);
     }
-  }, [scrollValue, animatedRef, index]);
+  }, [scrollValue, animatedRef, nestedIndex]);
 
   const scrollHandler = useAnimatedScrollHandler(
     {
       onBeginDrag: () => {},
       onScroll: (event) => {
         if (
-          currentIdx.value === index &&
+          currentIdx.value === nestedIndex &&
           refreshStatus.value === RefreshStatus.Idle
         ) {
           const moveY = Math.max(0, event.contentOffset.y);

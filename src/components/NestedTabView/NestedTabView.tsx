@@ -53,6 +53,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       refreshing = false,
       refreshControl,
       onRefresh,
+      onNestedScroll,
       onTabPress,
       onPageSelected,
       onPageScroll,
@@ -95,6 +96,13 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       () => isRefreshing.value,
       (isRefreshing) => {
         pageRef?.current?.setScrollEnabled(!isRefreshing);
+      }
+    );
+
+    useAnimatedReaction(
+      () => sharedTranslate.value,
+      (value) => {
+        onNestedScroll && runOnJS(onNestedScroll)(value);
       }
     );
 
@@ -386,7 +394,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
                 const injectProps = {
                   registerNativeRef,
                   registerChildInfo,
-                  index,
+                  nestedIndex: index,
                 };
                 return React.cloneElement(child, injectProps);
               })}

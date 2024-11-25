@@ -77,6 +77,9 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
       refreshing={refreshing}
       refreshControl={() => <NestedRefresh />}
       onRefresh={handleRefresh}
+      onNestedScroll={(offset) => {
+        console.log(offset);
+      }}
     >
       <Nested.ScrollView contentContainerStyle={{ backgroundColor: 'orange' }}>
         {new Array(80).fill(0).map((item, index) => {
