@@ -16,7 +16,7 @@ import { Icon } from '../Icon';
 import { Loading } from '../Loading';
 import { useRefreshController } from './hooks';
 
-interface NormalControlProps {
+interface NestedRefreshProps {
   textConfig?: {
     normal: string;
     release: string;
@@ -25,7 +25,7 @@ interface NormalControlProps {
   };
 }
 
-const NormalControl: React.FC<NormalControlProps> = (props) => {
+const NestedRefresh: React.FC<NestedRefreshProps> = (props) => {
   const {
     textConfig = {
       normal: '下拉刷新',
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NormalControl;
+export default NestedRefresh;

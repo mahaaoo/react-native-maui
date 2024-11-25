@@ -1,7 +1,9 @@
+import { ScrollViewProps, FlatListProps } from 'react-native';
+import Animated from 'react-native-reanimated';
+
 import NestedTabView from './NestedTabView';
 import NestedScene from './NestedScene';
-import Animated from 'react-native-reanimated';
-import { ScrollViewProps, FlatListProps } from 'react-native';
+import NestedRefresh from './NestedRefresh';
 
 const NestedScrollView: React.FC<ScrollViewProps> = (props: any) => {
   const AnimateScrollView = Animated.ScrollView;
@@ -27,4 +29,4 @@ const Nested = {
   FlatList: NestedFlatList,
 };
 
-export { NestedTabView, Nested };
+export { NestedTabView, Nested, NestedRefresh };

@@ -132,6 +132,10 @@ export const useVerifyProps = (
     style,
     renderHeader,
     stickyHeight,
+    triggerHeight,
+    refreshing,
+    refreshControl,
+    onRefresh,
     children,
   } = props;
 
@@ -194,7 +198,11 @@ export const useVerifyProps = (
     renderHeader,
     stickyHeight,
     initialIndex,
+    triggerHeight,
+    refreshing,
+    refreshControl,
 
+    onRefresh,
     onTabPress,
     onPageScroll,
     onPageScrollStateChanged,

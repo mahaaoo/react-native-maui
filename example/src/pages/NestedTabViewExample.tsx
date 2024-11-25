@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text } from 'react-native';
-import { NestedTabView, Nested } from 'react-native-maui';
+import { NestedTabView, Nested, NestedRefresh } from 'react-native-maui';
 
 interface TabViewExampleProps {}
 
 const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
   const ref = useRef();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const autoScroll = () => {
@@ -16,7 +17,19 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
       }, 2000);
     };
     // autoScroll();
-  }, [])
+  }, []);
+
+  const handleRefresh = () => {
+    console.log('下拉刷新开始');
+    setRefreshing(true);
+    const end = () => {
+      setTimeout(() => {
+        console.log('下拉刷新结束');
+        setRefreshing(false);
+      }, 2000);
+    };
+    end();
+  };
 
   return (
     <NestedTabView
@@ -61,6 +74,9 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
       )}
       tabs={['tab1', 'tab2', '第三个tabs']}
       tabBarflex={'equal-width'}
+      refreshing={refreshing}
+      refreshControl={() => <NestedRefresh />}
+      onRefresh={handleRefresh}
     >
       <Nested.ScrollView contentContainerStyle={{ backgroundColor: 'orange' }}>
         {new Array(80).fill(0).map((item, index) => {

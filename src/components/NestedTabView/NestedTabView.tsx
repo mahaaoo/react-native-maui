@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -23,20 +24,20 @@ import Animated, {
   withTiming,
   withDelay,
   runOnJS,
-  Easing,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { TabBar, TabBarRef } from '../TabBar';
 import { PageStateType, PageView, PageViewRef } from '../PageView';
 import { NestedContext, useNestRegister, useVerifyProps } from './hooks';
 import { mscrollTo } from './util';
-import { NestedTabViewProps, NestedTabViewRef, RefreshStatus } from './type';
+import {
+  NestedTabViewProps,
+  NestedTabViewRef,
+  RefreshStatus,
+  RESET_TIMING_EASING,
+} from './type';
 import { isInteger } from '../../utils/typeUtil';
 import RefreshController from './RefreshController';
-import NormalRefresh from './NormalRefresh';
-
-const TRIGGERHEIGHT = 100 * 2;
-const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
 
 const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
   (props, ref) => {
@@ -48,6 +49,10 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       style,
       tabProps,
       pageProps,
+      triggerHeight = 100 * 2,
+      refreshing = false,
+      refreshControl,
+      onRefresh,
       onTabPress,
       onPageSelected,
       onPageScroll,
@@ -76,13 +81,15 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
     const [headerHeight, setHeaderHeight] = useState(0);
     const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
 
-    const [refreshing, setRefreshing] = useState(false);
-
     const isRefreshing = useDerivedValue(() => {
       return !(
         integralY.value === 0 && refreshStatus.value === RefreshStatus.Idle
       );
     }, [refreshStatus, integralY]);
+
+    const needRefresh = useMemo(() => {
+      return !!refreshControl;
+    }, [refreshControl]);
 
     useAnimatedReaction(
       () => isRefreshing.value,
@@ -92,9 +99,10 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
     );
 
     useEffect(() => {
+      if (!needRefresh) return;
       if (refreshing) {
         refreshStatus.value = RefreshStatus.Holding;
-        integralY.value = withTiming(TRIGGERHEIGHT, {
+        integralY.value = withTiming(triggerHeight, {
           easing: RESET_TIMING_EASING,
         });
       } else if (refreshStatus.value !== RefreshStatus.Idle) {
@@ -113,26 +121,11 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
           )
         );
       }
-    }, [refreshing]);
+    }, [refreshing, needRefresh]);
 
     const handleRefresh = () => {
-      console.log('下拉刷新开始');
-      setRefreshing(true);
-      const end = () => {
-        setTimeout(() => {
-          console.log('下拉刷新结束');
-          setRefreshing(false);
-        }, 2000);
-      };
-      end();
+      onRefresh && onRefresh();
     };
-
-    useAnimatedReaction(
-      () => refreshStatus.value,
-      (value) => {
-        console.log(value);
-      }
-    );
 
     const {
       isReady,
@@ -182,20 +175,6 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       cancelAnimation(sharedTranslate);
     };
 
-    // useAnimatedReaction(
-    //   () => integralY.value,
-    //   (value) => {
-    //     console.log(value);
-    //   }
-    // );
-
-    // useAnimatedReaction(
-    //   () => sharedTranslate.value,
-    //   (value) => {
-    //     console.log(value);
-    //   }
-    // );
-
     const panGesture = Gesture.Pan()
       .withRef(totalRef)
       .activeOffsetX([-500, 500])
@@ -215,6 +194,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
         integralYOffset.value = integralY.value;
       })
       .onUpdate(({ translationY }) => {
+        if (!needRefresh) return;
         const temp = translationY + integralYOffset.value;
         if (temp > 0) {
           if (sharedTranslate.value > 0) {
@@ -222,7 +202,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
           }
           integralY.value = temp;
           if (!refreshing) {
-            if (Math.abs(integralY.value) >= TRIGGERHEIGHT) {
+            if (Math.abs(integralY.value) >= triggerHeight) {
               refreshStatus.value = RefreshStatus.Reached;
             } else {
               refreshStatus.value = RefreshStatus.Pulling;
@@ -233,18 +213,19 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
         }
       })
       .onEnd(() => {
+        if (!needRefresh) return;
         if (integralY.value < 0) return;
         if (refreshing) {
           // 在已经是下拉刷新的状态下，如果继续向下拉，则会回到默认的最大triggleHeight位置处
           // 如果有向上收起的意图，则将下拉区全部收起
-          if (integralY.value >= TRIGGERHEIGHT) {
-            integralY.value = withTiming(TRIGGERHEIGHT, {
+          if (integralY.value >= triggerHeight) {
+            integralY.value = withTiming(triggerHeight, {
               easing: RESET_TIMING_EASING,
             });
           } else {
             // 这里要做一个snapPoint
             const dest =
-              integralY.value <= TRIGGERHEIGHT / 2 ? 0 : TRIGGERHEIGHT;
+              integralY.value <= triggerHeight / 2 ? 0 : triggerHeight;
             integralY.value = withTiming(
               dest,
               {
@@ -258,7 +239,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
             );
           }
         } else {
-          if (integralY.value >= TRIGGERHEIGHT) {
+          if (integralY.value >= triggerHeight) {
             // 这里触发下拉刷新
             runOnJS(handleRefresh)();
           } else {
@@ -431,9 +412,9 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
         <RefreshController
           scrollOffset={integralY}
           refreshStatus={refreshStatus}
-          triggerHeight={TRIGGERHEIGHT}
+          triggerHeight={triggerHeight}
         >
-          <NormalRefresh />
+          {refreshControl && refreshControl()}
         </RefreshController>
       </NestedContext.Provider>
     );

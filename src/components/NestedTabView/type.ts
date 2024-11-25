@@ -1,4 +1,4 @@
-import { SharedValue, AnimatedRef } from 'react-native-reanimated';
+import { SharedValue, AnimatedRef, Easing } from 'react-native-reanimated';
 import { TabBarProps } from '../TabBar';
 import { PageStateType, PageViewProps } from '../PageView';
 import { ViewStyle } from 'react-native';
@@ -14,6 +14,10 @@ export interface NestedTabViewProps
   stickyHeight?: number;
   style?: ViewStyle;
   initialIndex?: number;
+  triggerHeight?: number;
+  refreshing?: boolean;
+  refreshControl?: () => React.ReactNode;
+  onRefresh?: () => void;
 }
 
 export interface NestedTabViewVerifyProps {
@@ -28,7 +32,11 @@ export interface NestedTabViewVerifyProps {
   stickyHeight?: number;
   style?: ViewStyle;
   initialIndex?: number;
+  triggerHeight?: number;
+  refreshing?: boolean;
+  refreshControl?: () => React.ReactNode;
 
+  onRefresh?: () => void;
   onTabPress?: (index: number) => void;
   onPageScroll?: (translate: number) => void;
   onPageScrollStateChanged?: (state: PageStateType) => void;
@@ -98,3 +106,5 @@ export interface RefreshControllerProps {
 
 export interface RefreshControllerContextProps
   extends Omit<RefreshControllerProps, 'children'> {}
+
+export const RESET_TIMING_EASING = Easing.bezier(0.33, 1, 0.68, 1);
