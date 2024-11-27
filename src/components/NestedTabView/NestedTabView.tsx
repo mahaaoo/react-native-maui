@@ -331,7 +331,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       .simultaneousWithExternalGesture(totalRef)
       .onTouchesDown((_, stateManager) => {
         stopScrolling();
-        if (isRefreshing) {
+        if (isRefreshing.value) {
           stateManager.fail();
         }
       })
