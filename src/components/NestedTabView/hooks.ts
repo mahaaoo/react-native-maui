@@ -135,6 +135,7 @@ export const useVerifyProps = (
     triggerHeight,
     refreshing,
     refreshControl,
+    refreshAnimateType,
     onRefresh,
     onNestedScroll,
     children,
@@ -202,6 +203,7 @@ export const useVerifyProps = (
     triggerHeight,
     refreshing,
     refreshControl,
+    refreshAnimateType,
 
     onRefresh,
     onNestedScroll,

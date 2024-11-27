@@ -52,6 +52,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       triggerHeight = 100 * 2,
       refreshing = false,
       refreshControl,
+      refreshAnimateType = 'pull',
       onRefresh,
       onNestedScroll,
       onTabPress,
@@ -279,9 +280,6 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
           {
             translateY: headerStyleInter.value,
           },
-          {
-            scale: 1,
-          },
         ],
       };
     });
@@ -290,11 +288,10 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       return {
         transform: [
           {
-            translateY: interpolate(
-              integralY.value,
-              [0, HEIGHT],
-              [0, HEIGHT / 2]
-            ),
+            translateY:
+              refreshAnimateType === 'pull'
+                ? interpolate(integralY.value, [0, HEIGHT], [0, HEIGHT / 2])
+                : 0,
           },
         ],
       };

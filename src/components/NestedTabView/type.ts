@@ -17,6 +17,7 @@ export interface NestedTabViewProps
   triggerHeight?: number;
   refreshing?: boolean;
   refreshControl?: () => React.ReactNode;
+  refreshAnimateType?: 'pull' | 'over';
 
   onRefresh?: () => void;
   onNestedScroll?: (offset: number) => void;
@@ -37,6 +38,7 @@ export interface NestedTabViewVerifyProps {
   triggerHeight?: number;
   refreshing?: boolean;
   refreshControl?: () => React.ReactNode;
+  refreshAnimateType?: 'pull' | 'over';
 
   onRefresh?: () => void;
   onNestedScroll?: (offset: number) => void;
