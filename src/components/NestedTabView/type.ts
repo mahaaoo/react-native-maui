@@ -3,12 +3,7 @@ import { TabBarProps } from '../TabBar';
 import { PageStateType, PageViewProps } from '../PageView';
 import { ViewStyle } from 'react-native';
 
-export interface NestedTabViewProps
-  extends Omit<TabBarProps, 'style' | 'initialTab'>,
-    Omit<PageViewProps, 'style' | 'initialPage'> {
-  tabStyle?: ViewStyle;
-  pageStyle?: ViewStyle;
-
+export interface NestedTabViewOwnProps {
   renderHeader: () => React.ReactNode;
   children: React.ReactNode;
   stickyHeight?: number;
@@ -18,30 +13,28 @@ export interface NestedTabViewProps
   refreshing?: boolean;
   refreshControl?: () => React.ReactNode;
   refreshAnimateType?: 'pull' | 'over';
+  needRefresh?: boolean;
+  waitForRefresh?: boolean;
 
   onRefresh?: () => void;
   onNestedScroll?: (offset: number) => void;
 }
 
-export interface NestedTabViewVerifyProps {
+export interface NestedTabViewProps
+  extends Omit<TabBarProps, 'style' | 'initialTab'>,
+    Omit<PageViewProps, 'style' | 'initialPage'>,
+    NestedTabViewOwnProps {
+  tabStyle?: ViewStyle;
+  pageStyle?: ViewStyle;
+}
+
+export interface NestedTabViewVerifyProps extends NestedTabViewOwnProps {
   pageProps: Omit<
     PageViewProps,
     'children' | 'onPageScroll' | 'onPageSelected' | 'onPageScrollStateChanged'
   >;
   tabProps: Omit<TabBarProps, 'onTabPress'>;
 
-  renderHeader: () => React.ReactNode;
-  children: React.ReactNode;
-  stickyHeight?: number;
-  style?: ViewStyle;
-  initialIndex?: number;
-  triggerHeight?: number;
-  refreshing?: boolean;
-  refreshControl?: () => React.ReactNode;
-  refreshAnimateType?: 'pull' | 'over';
-
-  onRefresh?: () => void;
-  onNestedScroll?: (offset: number) => void;
   onTabPress?: (index: number) => void;
   onPageScroll?: (translate: number) => void;
   onPageScrollStateChanged?: (state: PageStateType) => void;

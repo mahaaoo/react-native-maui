@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -53,6 +52,8 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       refreshing = false,
       refreshControl,
       refreshAnimateType = 'pull',
+      needRefresh = false,
+      waitForRefresh = true,
       onRefresh,
       onNestedScroll,
       onTabPress,
@@ -89,10 +90,6 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       );
     }, [refreshStatus, integralY]);
 
-    const needRefresh = useMemo(() => {
-      return !!refreshControl;
-    }, [refreshControl]);
-
     useAnimatedReaction(
       () => isRefreshing.value,
       (isRefreshing) => {
@@ -111,26 +108,31 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       if (!needRefresh) return;
       if (refreshing) {
         refreshStatus.value = RefreshStatus.Holding;
-        integralY.value = withTiming(triggerHeight, {
+        const waitingHeight = waitForRefresh ? triggerHeight : 0;
+        integralY.value = withTiming(waitingHeight, {
           easing: RESET_TIMING_EASING,
         });
       } else if (refreshStatus.value !== RefreshStatus.Idle) {
         refreshStatus.value = RefreshStatus.Done;
         // refresh animation
-        integralY.value = withDelay(
-          500,
-          withTiming(
-            0,
-            {
-              easing: RESET_TIMING_EASING,
-            },
-            () => {
-              refreshStatus.value = RefreshStatus.Idle;
-            }
-          )
-        );
+        if (waitForRefresh) {
+          integralY.value = withDelay(
+            500,
+            withTiming(
+              0,
+              {
+                easing: RESET_TIMING_EASING,
+              },
+              () => {
+                refreshStatus.value = RefreshStatus.Idle;
+              }
+            )
+          );
+        } else {
+          refreshStatus.value = RefreshStatus.Idle;
+        }
       }
-    }, [refreshing, needRefresh]);
+    }, [refreshing, needRefresh, waitForRefresh]);
 
     const handleRefresh = () => {
       onRefresh && onRefresh();
@@ -225,27 +227,33 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
         if (!needRefresh) return;
         if (integralY.value < 0) return;
         if (refreshing) {
-          // 在已经是下拉刷新的状态下，如果继续向下拉，则会回到默认的最大triggleHeight位置处
-          // 如果有向上收起的意图，则将下拉区全部收起
-          if (integralY.value >= triggerHeight) {
-            integralY.value = withTiming(triggerHeight, {
+          if (!waitForRefresh) {
+            integralY.value = withTiming(0, {
               easing: RESET_TIMING_EASING,
             });
           } else {
-            // 这里要做一个snapPoint
-            const dest =
-              integralY.value <= triggerHeight / 2 ? 0 : triggerHeight;
-            integralY.value = withTiming(
-              dest,
-              {
+            // 在已经是下拉刷新的状态下，如果继续向下拉，则会回到默认的最大triggleHeight位置处
+            // 如果有向上收起的意图，则将下拉区全部收起
+            if (integralY.value >= triggerHeight) {
+              integralY.value = withTiming(triggerHeight, {
                 easing: RESET_TIMING_EASING,
-              },
-              () => {
-                if (dest === 0) {
-                  refreshStatus.value = RefreshStatus.Idle;
+              });
+            } else {
+              // 这里要做一个snapPoint
+              const dest =
+                integralY.value <= triggerHeight / 2 ? 0 : triggerHeight;
+              integralY.value = withTiming(
+                dest,
+                {
+                  easing: RESET_TIMING_EASING,
+                },
+                () => {
+                  if (dest === 0) {
+                    refreshStatus.value = RefreshStatus.Idle;
+                  }
                 }
-              }
-            );
+              );
+            }
           }
         } else {
           if (integralY.value >= triggerHeight) {
@@ -419,7 +427,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
           refreshStatus={refreshStatus}
           triggerHeight={triggerHeight}
         >
-          {refreshControl && refreshControl()}
+          {needRefresh && refreshControl && refreshControl()}
         </RefreshController>
       </NestedContext.Provider>
     );

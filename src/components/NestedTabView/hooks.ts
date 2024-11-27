@@ -128,17 +128,10 @@ export const useVerifyProps = (
     onPageScrollStateChanged,
     onPageSelected,
 
-    initialIndex,
+    initialIndex = 0,
     style,
-    renderHeader,
-    stickyHeight,
-    triggerHeight,
-    refreshing,
-    refreshControl,
-    refreshAnimateType,
-    onRefresh,
-    onNestedScroll,
     children,
+    ...restProps
   } = props;
 
   if (!Array.isArray(tabs)) {
@@ -197,20 +190,13 @@ export const useVerifyProps = (
     tabProps,
     style,
     children,
-    renderHeader,
-    stickyHeight,
     initialIndex,
-    triggerHeight,
-    refreshing,
-    refreshControl,
-    refreshAnimateType,
 
-    onRefresh,
-    onNestedScroll,
     onTabPress,
     onPageScroll,
     onPageScrollStateChanged,
     onPageSelected,
+    ...restProps,
   };
 };
 

@@ -21,14 +21,14 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
 
   const handleRefresh = () => {
     console.log('下拉刷新开始');
-    // setRefreshing(true);
-    // const end = () => {
-    //   setTimeout(() => {
-    //     console.log('下拉刷新结束');
-    //     setRefreshing(false);
-    //   }, 2000);
-    // };
-    // end();
+    setRefreshing(true);
+    const end = () => {
+      setTimeout(() => {
+        console.log('下拉刷新结束');
+        setRefreshing(false);
+      }, 2000);
+    };
+    end();
   };
 
   return (
@@ -80,6 +80,7 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
       onNestedScroll={(offset) => {
         console.log(offset);
       }}
+      needRefresh={true}
     >
       <Nested.ScrollView contentContainerStyle={{ backgroundColor: 'orange' }}>
         {new Array(80).fill(0).map((item, index) => {
