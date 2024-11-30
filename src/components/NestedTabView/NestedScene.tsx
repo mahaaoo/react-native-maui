@@ -28,8 +28,9 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
     stickyHeight,
     refreshStatus,
     integralY,
+    childMinHeight,
   } = useNested();
-  const mergedProps = mergeProps(restProps, headerHeight);
+  const mergedProps = mergeProps(restProps, headerHeight, childMinHeight);
   const animatedRef = useAnimatedRef<any>();
 
   const nativeRef = useRef();

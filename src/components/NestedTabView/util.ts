@@ -11,13 +11,18 @@ export const mscrollTo = (
   scrollTo(animatedRef, x, y, animated);
 };
 
-export const mergeProps = (restProps: any, headerHeight: number) => {
+export const mergeProps = (
+  restProps: any,
+  headerHeight: number,
+  childMinHeight: number
+) => {
   restProps.style = {
     ...restProps.style,
   };
   restProps.contentContainerStyle = {
     ...restProps.contentContainerStyle,
     paddingTop: headerHeight,
+    minHeight: childMinHeight,
   };
   restProps.scrollIndicatorInsets = {
     ...restProps.scrollIndicatorInsets,

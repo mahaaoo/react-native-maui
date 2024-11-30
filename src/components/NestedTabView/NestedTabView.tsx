@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -82,6 +83,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
     // 所有scroll共享的滚动距离，用于控制Header以及顶吸
     const sharedTranslate = useSharedValue(0);
     const [headerHeight, setHeaderHeight] = useState(0);
+    const [tabViewHeight, setTabViewHeight] = useState(0);
     const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
 
     const isRefreshing = useDerivedValue(() => {
@@ -179,6 +181,18 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       },
       [headerHeight]
     );
+
+    const handleTabViewHeightLayout = useCallback(
+      (e: LayoutChangeEvent) => {
+        if (tabViewHeight === e.nativeEvent.layout.height) return;
+        setTabViewHeight(e.nativeEvent.layout.height);
+      },
+      [tabViewHeight]
+    );
+
+    const childMinHeight = useMemo(() => {
+      return headerHeight + tabViewHeight - stickyHeight;
+    }, [headerHeight, tabViewHeight, stickyHeight]);
 
     const stopAnimation = () => {
       'worklet';
@@ -372,10 +386,14 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
           stickyHeight,
           refreshStatus,
           integralY,
+          childMinHeight,
         }}
       >
         <GestureDetector gesture={panGesture}>
-          <Animated.View style={[style, containerStyle]}>
+          <Animated.View
+            style={[style, containerStyle]}
+            onLayout={handleTabViewHeightLayout}
+          >
             <PageView
               {...{ ...pageProps }}
               ref={pageRef}

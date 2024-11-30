@@ -65,6 +65,7 @@ export interface NestedContextProps {
   stickyHeight: number;
   refreshStatus: SharedValue<RefreshStatus>;
   integralY: SharedValue<number>;
+  childMinHeight: number;
 }
 
 /**
