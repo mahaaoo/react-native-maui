@@ -55,6 +55,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       refreshAnimateType = 'pull',
       needRefresh = false,
       waitForRefresh = true,
+      snapEnabled = false,
       onRefresh,
       onNestedScroll,
       onTabPress,
@@ -85,6 +86,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
     const [headerHeight, setHeaderHeight] = useState(0);
     const [tabViewHeight, setTabViewHeight] = useState(0);
     const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
+    const isTouching = useSharedValue(false);
 
     const isRefreshing = useDerivedValue(() => {
       return !(
@@ -205,20 +207,18 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
       .activeOffsetX([-500, 500])
       .activeOffsetY([-10, 10])
       .simultaneousWithExternalGesture(...childNativeRefs, headerRef)
-      .onTouchesDown((_, stateManager) => {
+      .onTouchesDown(() => {
         stopAnimation();
-        if (sharedTranslate.value > 0) {
-          console.log('手势触发失败', {
-            sharedTranslate: sharedTranslate.value,
-            integralY: integralY.value,
-          });
-          stateManager.fail();
-        }
+        isTouching.value = true;
+      })
+      .onTouchesUp(() => {
+        isTouching.value = false;
       })
       .onBegin(() => {
         integralYOffset.value = integralY.value;
       })
       .onUpdate(({ translationY }) => {
+        if (sharedTranslate.value > 0) return;
         if (!needRefresh) return;
         const temp = translationY + integralYOffset.value;
         if (temp > 0) {
@@ -238,6 +238,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
         }
       })
       .onEnd(() => {
+        if (sharedTranslate.value > 0) return;
         if (!needRefresh) return;
         if (integralY.value < 0) return;
         if (refreshing) {
@@ -287,20 +288,16 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
         }
       });
 
-    const headerStyleInter = useDerivedValue(() => {
-      return interpolate(
-        sharedTranslate.value,
-        [0, headerHeight - stickyHeight],
-        [0, -headerHeight + stickyHeight],
-        Extrapolation.CLAMP
-      );
-    }, [integralY, headerHeight]);
-
     const headerStyle = useAnimatedStyle(() => {
       return {
         transform: [
           {
-            translateY: headerStyleInter.value,
+            translateY: interpolate(
+              sharedTranslate.value,
+              [0, headerHeight - stickyHeight],
+              [0, -headerHeight + stickyHeight],
+              Extrapolation.CLAMP
+            ),
           },
         ],
       };
@@ -387,6 +384,9 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
           refreshStatus,
           integralY,
           childMinHeight,
+          isTouching,
+          isHeaderDecay,
+          snapEnabled,
         }}
       >
         <GestureDetector gesture={panGesture}>

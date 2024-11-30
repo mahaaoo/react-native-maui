@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
   useAnimatedRef,
@@ -8,6 +8,8 @@ import {
   clamp,
   useAnimatedScrollHandler,
   useAnimatedProps,
+  cancelAnimation,
+  withTiming,
 } from 'react-native-reanimated';
 import { mscrollTo, mergeProps } from './util';
 import { useNested } from './hooks';
@@ -29,6 +31,9 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
     refreshStatus,
     integralY,
     childMinHeight,
+    isTouching,
+    isHeaderDecay,
+    snapEnabled,
   } = useNested();
   const mergedProps = mergeProps(restProps, headerHeight, childMinHeight);
   const animatedRef = useAnimatedRef<any>();
@@ -36,7 +41,11 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   const nativeRef = useRef();
   const nativeGes = Gesture.Native().withRef(nativeRef);
 
+  const checkEndScroll = useSharedValue(0);
   const scrollValue = useSharedValue(0);
+
+  const isTouchingPrev = useSharedValue(false);
+  const isHeaderDecayPrev = useSharedValue(false);
 
   // 非当前活动的scrollview不允许滚动
   const scrollEnabledValue = useDerivedValue(() => {
@@ -46,6 +55,64 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
       integralY.value === 0
     );
   });
+
+  const canSnap = () => {
+    'worklet';
+    return (
+      snapEnabled &&
+      currentIdx.value === nestedIndex &&
+      refreshStatus.value === RefreshStatus.Idle &&
+      integralY.value === 0 &&
+      !isTouching.value &&
+      !isHeaderDecay.value
+    );
+  };
+
+  const snap = useCallback(() => {
+    'worklet';
+    if (!snapEnabled) return;
+    cancelAnimation(checkEndScroll);
+    if (canSnap() && scrollValue.value < headerHeight - stickyHeight) {
+      checkEndScroll.value = 0;
+      checkEndScroll.value = withTiming(1, { duration: 100 }, (finished) => {
+        if (finished && canSnap()) {
+          if (scrollValue.value < (headerHeight - stickyHeight) / 2) {
+            mscrollTo(animatedRef, 0, 0, true);
+          } else {
+            mscrollTo(animatedRef, 0, headerHeight - stickyHeight, true);
+          }
+        }
+      });
+    }
+  }, [
+    snapEnabled,
+    animatedRef,
+    headerHeight,
+    stickyHeight,
+    checkEndScroll,
+    scrollValue,
+    mscrollTo,
+  ]);
+
+  useAnimatedReaction(
+    () => isTouching.value !== isTouchingPrev.value,
+    (result) => {
+      if (!result) return;
+      isTouchingPrev.value = isTouching.value;
+      if (isTouching.value) return;
+      snap();
+    }
+  );
+
+  useAnimatedReaction(
+    () => isHeaderDecay.value !== isHeaderDecayPrev.value,
+    (result) => {
+      if (!result) return;
+      isHeaderDecayPrev.value = isHeaderDecay.value;
+      if (isHeaderDecay.value) return;
+      snap();
+    }
+  );
 
   // 向其他非活动的scrollview同步当前滚动距离
   useAnimatedReaction(
@@ -89,6 +156,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
           currentIdx.value === nestedIndex &&
           refreshStatus.value === RefreshStatus.Idle
         ) {
+          snap();
           const moveY = Math.max(0, event.contentOffset.y);
           scrollValue.value = moveY;
           sharedTranslate.value = moveY;

@@ -15,6 +15,7 @@ export interface NestedTabViewOwnProps {
   refreshAnimateType?: 'pull' | 'over';
   needRefresh?: boolean;
   waitForRefresh?: boolean;
+  snapEnabled?: boolean;
 
   onRefresh?: () => void;
   onNestedScroll?: (offset: number) => void;
@@ -66,6 +67,9 @@ export interface NestedContextProps {
   refreshStatus: SharedValue<RefreshStatus>;
   integralY: SharedValue<number>;
   childMinHeight: number;
+  isTouching: SharedValue<boolean>;
+  isHeaderDecay: SharedValue<boolean>;
+  snapEnabled: boolean;
 }
 
 /**
