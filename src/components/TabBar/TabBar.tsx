@@ -30,6 +30,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     separatorComponent,
     sliderComponent,
     onTabPress,
+    onLayout,
     activeTextColor,
     inactiveTextColor,
 
@@ -68,6 +69,10 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     currentIndex.value = withTiming(index);
     calculateSliderOffset(index);
     onTabPress && onTabPress(index);
+  };
+
+  const handleLayout = (e: LayoutChangeEvent) => {
+    onLayout && onLayout(e);
   };
 
   const onTabBarItemLayout = (index: number, layout: TabBarItemLayout) => {
@@ -141,7 +146,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   });
 
   return (
-    <View style={[{ height: 55 }, style]}>
+    <View style={[{ height: 55 }, style]} onLayout={handleLayout}>
       <ScrollView
         ref={scrollRef}
         horizontal

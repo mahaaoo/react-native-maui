@@ -35,7 +35,6 @@ const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
     <NestedTabView
       ref={ref}
       style={{ flex: 1 }}
-      stickyHeight={55} //TabBar的高度
       renderHeader={() => (
         <View
           style={{

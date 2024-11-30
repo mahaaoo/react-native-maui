@@ -69,6 +69,7 @@ const NestedScene: React.FC<NestedSceneProps> = (props) => {
   };
 
   const snap = useCallback(() => {
+    // reanimated防抖
     'worklet';
     if (!snapEnabled) return;
     cancelAnimation(checkEndScroll);

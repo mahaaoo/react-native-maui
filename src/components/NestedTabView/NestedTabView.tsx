@@ -43,7 +43,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
   (props, ref) => {
     const {
       renderHeader,
-      stickyHeight = 0,
+      stickyHeight: initialStickyHeight,
       children,
       initialIndex = 0,
       style,
@@ -85,6 +85,8 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
     const sharedTranslate = useSharedValue(0);
     const [headerHeight, setHeaderHeight] = useState(0);
     const [tabViewHeight, setTabViewHeight] = useState(0);
+    const [stickyHeight, setStickyHeight] = useState(0);
+
     const refreshStatus = useSharedValue<RefreshStatus>(RefreshStatus.Idle);
     const isTouching = useSharedValue(false);
 
@@ -190,6 +192,17 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
         setTabViewHeight(e.nativeEvent.layout.height);
       },
       [tabViewHeight]
+    );
+
+    const handleTabBarHeightLayout = useCallback(
+      (e: LayoutChangeEvent) => {
+        if (typeof initialStickyHeight === 'number') {
+          setStickyHeight(initialStickyHeight);
+        } else {
+          setStickyHeight(e.nativeEvent.layout.height);
+        }
+      },
+      [stickyHeight, initialStickyHeight]
     );
 
     const childMinHeight = useMemo(() => {
@@ -431,6 +444,7 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
                 <TabBar
                   {...{ ...tabProps }}
                   ref={tabRef}
+                  onLayout={handleTabBarHeightLayout}
                   onTabPress={(index) => {
                     pageRef.current && pageRef.current?.setPage(index);
                     onTabPress && onTabPress(index);
