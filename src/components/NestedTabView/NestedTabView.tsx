@@ -234,20 +234,17 @@ const NestedTabView = forwardRef<NestedTabViewRef, NestedTabViewProps>(
         if (sharedTranslate.value > 0) return;
         if (!needRefresh) return;
         const temp = translationY + integralYOffset.value;
-        if (temp > 0) {
-          if (sharedTranslate.value > 0) {
-            sharedTranslate.value = 0;
+        if (temp <= 0) return;
+        if (sharedTranslate.value > 0) {
+          sharedTranslate.value = 0;
+        }
+        integralY.value = temp;
+        if (!refreshing) {
+          if (Math.abs(integralY.value) >= triggerHeight) {
+            refreshStatus.value = RefreshStatus.Reached;
+          } else {
+            refreshStatus.value = RefreshStatus.Pulling;
           }
-          integralY.value = temp;
-          if (!refreshing) {
-            if (Math.abs(integralY.value) >= triggerHeight) {
-              refreshStatus.value = RefreshStatus.Reached;
-            } else {
-              refreshStatus.value = RefreshStatus.Pulling;
-            }
-          }
-        } else {
-          // console.log(temp);
         }
       })
       .onEnd(() => {
