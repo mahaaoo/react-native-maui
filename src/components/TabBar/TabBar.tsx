@@ -27,12 +27,14 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
     defaultSliderStyle,
     tabBarItemStyle,
     tabBarItemTitleStyle,
+    bounces = true,
     separatorComponent,
     sliderComponent,
     onTabPress,
     onLayout,
     activeTextColor,
     inactiveTextColor,
+    activeScale,
 
     initialTab = 0,
     defalutSliderWidth,
@@ -155,6 +157,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
         contentContainerStyle={styles.contentContainerStyle}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
+        bounces={bounces}
       >
         {tabs?.length > 0 &&
           tabs.map((tab, index) => {
@@ -170,6 +173,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
                   activeTextColor={activeTextColor}
                   inactiveTextColor={inactiveTextColor}
                   title={tab}
+                  activeScale={activeScale}
                   onLayout={onTabBarItemLayout}
                   onPress={handleOnPress}
                 />

@@ -3,10 +3,12 @@ import { PageViewProps, PageStateType } from '../PageView';
 import { ViewStyle } from 'react-native';
 
 export interface TabViewProps
-  extends Omit<TabBarProps, 'style' | 'initialTab'>,
-    Omit<PageViewProps, 'style' | 'initialPage'> {
+  extends Omit<TabBarProps, 'style' | 'initialTab' | 'bounces'>,
+    Omit<PageViewProps, 'style' | 'initialPage' | 'bounces'> {
   initialIndex?: number;
   style?: ViewStyle;
+  tabBarBounces?: boolean;
+  pageBounces?: boolean;
   tabStyle?: ViewStyle;
   pageStyle?: ViewStyle;
 }

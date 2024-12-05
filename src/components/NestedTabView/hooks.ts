@@ -13,8 +13,8 @@ import {
   NestedTabViewVerifyProps,
   RefreshControllerContextProps,
 } from './type';
-import { TabBarRef } from '../TabBar';
-import { PageViewRef } from '../PageView';
+import { TabBarProps, TabBarRef } from '../TabBar';
+import { PageViewProps, PageViewRef } from '../PageView';
 
 interface ChildInfoType {
   scrollValue: SharedValue<number>;
@@ -117,11 +117,18 @@ export const useVerifyProps = (
     activeTextColor,
     inactiveTextColor,
     tabStyle,
+    tabBarBounces,
+    activeScale,
 
-    scrollEnabled,
-    bounces,
-    gestureBack,
     pageStyle,
+    scrollEnabled,
+    pageBounces,
+    gestureBack,
+    pageMargin,
+    orientation,
+
+    lazy,
+    lazyPreloadNumber,
 
     onTabPress,
     onPageScroll,
@@ -159,7 +166,7 @@ export const useVerifyProps = (
     }
   }
 
-  const tabProps = {
+  const tabProps: TabBarProps = {
     tabs,
     tabBarflex,
     tabScrollEnabled,
@@ -175,14 +182,21 @@ export const useVerifyProps = (
     inactiveTextColor,
     style: { width: contentSize, ...tabStyle },
     initialTab: initialIndex,
+    activeScale,
+    bounces: tabBarBounces,
   };
 
-  const pageProps = {
-    scrollEnabled,
-    bounces,
-    gestureBack,
+  const pageProps: Omit<PageViewProps, 'children'> = {
     style: { flex: 1, width: contentSize, ...pageStyle },
     initialPage: initialIndex,
+    scrollEnabled,
+    bounces: pageBounces,
+    gestureBack,
+
+    pageMargin,
+    orientation,
+    lazy,
+    lazyPreloadNumber,
   };
 
   return {

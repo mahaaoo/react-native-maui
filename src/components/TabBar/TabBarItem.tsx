@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { TabBarItemProps } from './type';
 import Animated, {
@@ -18,11 +18,12 @@ const TabBarItem: React.FC<TabBarItemProps> = (props) => {
     currentIndex,
     activeTextColor = 'black',
     inactiveTextColor = 'black',
+    activeScale = 1,
     onLayout,
     onPress,
   } = props;
 
-  const input = [index - 1, index, index + 1];
+  const input = useMemo(() => [index - 1, index, index + 1], [index]);
 
   const animatedText = useAnimatedStyle(() => {
     return {
@@ -43,7 +44,7 @@ const TabBarItem: React.FC<TabBarItemProps> = (props) => {
           scale: interpolate(
             currentIndex.value,
             input,
-            [0.9, 1, 0.9],
+            [1, activeScale, 1],
             Extrapolation.CLAMP
           ),
         },
@@ -55,6 +56,7 @@ const TabBarItem: React.FC<TabBarItemProps> = (props) => {
     <TouchableOpacity
       onPress={() => onPress(index)}
       onLayout={(event) => onLayout(index, event.nativeEvent.layout)}
+      activeOpacity={1}
       style={[styles.container, { width: width }, style]}
     >
       <Animated.Text style={[titleStyle, animatedText]}>{title}</Animated.Text>

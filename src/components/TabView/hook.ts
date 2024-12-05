@@ -1,6 +1,8 @@
 import React from 'react';
 import { TabViewProps, TabViewVerifyProps } from './type';
 import { Dimensions } from 'react-native';
+import { TabBarProps } from '../TabBar';
+import { PageViewProps } from '../PageView';
 
 const { width } = Dimensions.get('window');
 
@@ -19,12 +21,19 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
     tabBarItemTitleStyle,
     activeTextColor,
     inactiveTextColor,
+    tabBarBounces,
+    activeScale,
 
     children,
 
     scrollEnabled,
-    bounces,
+    pageBounces,
     gestureBack,
+    pageMargin,
+    orientation,
+
+    lazy,
+    lazyPreloadNumber,
 
     onTabPress,
     onPageScroll,
@@ -62,7 +71,7 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
     }
   }
 
-  const tabProps = {
+  const tabProps: TabBarProps = {
     tabs,
     tabBarflex,
     tabScrollEnabled,
@@ -78,14 +87,21 @@ export const useVerifyProps = (props: TabViewProps): TabViewVerifyProps => {
     inactiveTextColor,
     style: { width: contentSize, ...tabStyle },
     initialTab: initialIndex,
+    activeScale,
+    bounces: tabBarBounces,
   };
 
-  const pageProps = {
-    scrollEnabled,
-    bounces,
-    gestureBack,
+  const pageProps: Omit<PageViewProps, 'children'> = {
     style: { flex: 1, width: contentSize, ...pageStyle },
     initialPage: initialIndex,
+    scrollEnabled,
+    bounces: pageBounces,
+    gestureBack,
+
+    pageMargin,
+    orientation,
+    lazy,
+    lazyPreloadNumber,
   };
 
   return {

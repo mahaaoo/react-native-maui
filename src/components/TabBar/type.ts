@@ -1,4 +1,9 @@
-import { DimensionValue, LayoutChangeEvent, TextStyle, ViewStyle } from 'react-native';
+import {
+  DimensionValue,
+  LayoutChangeEvent,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import { SharedValue } from 'react-native-reanimated';
 
 export interface TabBarProps {
@@ -18,6 +23,8 @@ export interface TabBarProps {
   initialTab?: number;
   activeTextColor?: string;
   inactiveTextColor?: string;
+  activeScale?: number;
+  bounces?: boolean;
 
   onTabPress?: (index: number) => void;
   onLayout?: (e: LayoutChangeEvent) => void;
@@ -39,6 +46,7 @@ export interface TabBarItemProps {
   style?: ViewStyle;
   titleStyle?: TextStyle;
   width?: DimensionValue;
+  activeScale?: number;
   onLayout: (index: number, layout: TabBarItemLayout) => void;
   onPress: (index: number) => void;
 }

@@ -32,7 +32,7 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
       <TabBar
         tabs={tabs2}
         tabBarflex="equal-width"
-        scrollEnabled={false}
+        tabScrollEnabled={false}
         spacing={30}
         showSeparator
         separatorComponent={() => (
@@ -62,6 +62,7 @@ const TabBarExample: React.FC<TabBarExampleProps> = (props) => {
         }}
         activeTextColor="red"
         inactiveTextColor="green"
+        activeScale={1.2}
         tabBarItemStyle={{ backgroundColor: 'pink' }}
       />
       <TabBar

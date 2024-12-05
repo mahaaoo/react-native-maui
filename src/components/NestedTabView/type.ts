@@ -22,11 +22,13 @@ export interface NestedTabViewOwnProps {
 }
 
 export interface NestedTabViewProps
-  extends Omit<TabBarProps, 'style' | 'initialTab'>,
-    Omit<PageViewProps, 'style' | 'initialPage'>,
+  extends Omit<TabBarProps, 'style' | 'initialTab' | 'bounces'>,
+    Omit<PageViewProps, 'style' | 'initialPage' | 'bounces'>,
     NestedTabViewOwnProps {
   tabStyle?: ViewStyle;
   pageStyle?: ViewStyle;
+  tabBarBounces?: boolean;
+  pageBounces?: boolean;
 }
 
 export interface NestedTabViewVerifyProps extends NestedTabViewOwnProps {
