@@ -148,7 +148,7 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
   });
 
   return (
-    <View style={[{ height: 55 }, style]} onLayout={handleLayout}>
+    <View style={[styles.tabBarDefaultStyle, style]} onLayout={handleLayout}>
       <ScrollView
         ref={scrollRef}
         horizontal
@@ -203,6 +203,11 @@ const TabBar = forwardRef<TabBarRef, TabBarProps>((props, ref) => {
 TabBar.displayName = 'TabBar';
 
 const styles = StyleSheet.create({
+  tabBarDefaultStyle: {
+    height: 55,
+    borderBottomColor: '#eee',
+    borderBottomWidth: 1,
+  },
   sliderContainer: {
     position: 'absolute',
     left: 0,
