@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text } from 'react-native';
-import { NestedTabView, Nested, NestedRefresh } from 'react-native-maui';
+import { NestedTabView, Nested, NestedRefresh, NestedTabViewRef } from 'react-native-maui';
 
 interface TabViewExampleProps {}
 
 const HeadTabViewExample: React.FC<TabViewExampleProps> = (props) => {
   const {} = props;
-  const ref = useRef();
+  const ref = useRef<NestedTabViewRef>(null);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {

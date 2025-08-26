@@ -91,5 +91,6 @@ export {
   Nested,
   NestedRefresh,
 } from './components/NestedTabView';
+export type { NestedTabViewRef } from './components/NestedTabView';
 export { PageView, PageViewRef } from './components/PageView';
 export { TabBar, TabBarRef } from './components/TabBar';

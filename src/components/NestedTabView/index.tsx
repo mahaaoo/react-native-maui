@@ -30,3 +30,4 @@ const Nested = {
 };
 
 export { NestedTabView, Nested, NestedRefresh };
+export type { NestedTabViewRef } from './type';
