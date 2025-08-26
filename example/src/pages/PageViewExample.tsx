@@ -16,7 +16,7 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
 
   const [status, setStatus] = useState('idle');
   const [current, setCurrent] = useState(0);
-  const [currentTranslate, setCurrentTranslate] = useState();
+  const [currentTranslate, setCurrentTranslate] = useState<number | undefined>(undefined);
   const [mscrollEnabled, setmscrollEnabled] = useState(true);
   return (
     <View style={{ flex: 1 }}>
@@ -36,7 +36,7 @@ const PageViewExample: React.FC<PageViewExampleProps> = (props) => {
         onPageScrollStateChanged={(state) => {
           setStatus(state);
         }}
-        onPageScroll={(translate) => {
+        onPageScroll={(translate: number) => {
           setCurrentTranslate(translate);
         }}
         scrollEnabled={true}

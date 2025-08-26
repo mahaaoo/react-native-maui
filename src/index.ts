@@ -1,3 +1,5 @@
+/// <reference path="./types/react-augment.d.ts" />
+
 export {
   ActionSheet,
   ActionSheetUtil,
