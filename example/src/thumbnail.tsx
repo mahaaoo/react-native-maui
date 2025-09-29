@@ -15,7 +15,6 @@ import {
   SkeletonRect,
   Progress,
   AnimatedNumber,
-  Shadow,
   Icon,
 } from 'react-native-maui';
 import Arrow from './components/Icon/arrow';
@@ -389,14 +388,6 @@ const exampleList: Example[] = [
         activeColor="#d11a2d"
         inactiveColor="white"
       />
-    ),
-  },
-  {
-    title: 'Shadow',
-    content: (
-      <Shadow borderRadius={10} shadowWidth={10} color="white">
-        <View style={styles.shadow} />
-      </Shadow>
     ),
   },
   {

@@ -72,7 +72,6 @@ export { Toast, ToastUtil } from './components/Toast';
 
 export { Progress, CircleProgress } from './components/Progress';
 export { AnimatedNumber, ScrollNumber } from './components/AnimatedNumber';
-export { Shadow } from './components/Shadow';
 export {
   WaterfallList,
   getImageSize,
