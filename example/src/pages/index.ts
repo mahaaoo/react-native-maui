@@ -19,7 +19,6 @@ import PaginationExample from './PaginationExample';
 import ActionSheetExample from './ActionSheetExample';
 import ProgressExample from './ProgressExample';
 import AnimatedNumberExample from './AnimatedNumberExample';
-import ShadowExample from './ShadowExample';
 import IconExample from './IconExample';
 import WaterFallListExample from './WaterfallListExample';
 import PopoverExample from './PopoverExample';
@@ -52,7 +51,6 @@ export default {
   ActionSheetExample,
   ProgressExample,
   AnimatedNumberExample,
-  ShadowExample,
   IconExample,
   WaterFallListExample,
   PopoverExample,
