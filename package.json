@@ -1,6 +1,6 @@
 {
   "name": "react-native-maui",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "React Native UI Library",
   "main": "src/index",
   "scripts": {
@@ -10,7 +10,11 @@
     "testc": "jest --coverage",
     "testu": "jest --updateSnapshot",
     "lint": "eslint ./src --ext .ts,.tsx",
-    "lintfix": "eslint ./src --ext .ts,.tsx --fix"
+    "lintfix": "eslint ./src --ext .ts,.tsx --fix",
+    "release:patch": "npm version patch -m 'chore: bump version to %s' && git push origin main --follow-tags",
+    "release:minor": "npm version minor -m 'chore: bump version to %s' && git push origin main --follow-tags",
+    "release:major": "npm version major -m 'chore: bump version to %s' && git push origin main --follow-tags",
+    "prepublishOnly": "npm run lint && npm run test"
   },
   "keywords": [
     "react-native",

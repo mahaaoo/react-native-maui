@@ -1,0 +1,75 @@
+name: Publish to NPM
+
+on:
+  push:
+    tags:
+      - 'v*' # 当推送 v 开头的标签时触发，如 v1.0.0, v0.1.2
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write # 用于 NPM provenance
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Get version from tag
+        id: tag_version
+        run: |
+          echo "TAG_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          echo "Version: ${GITHUB_REF#refs/tags/v}"
+
+      - name: Verify package.json version matches tag
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          TAG_VERSION=${{ steps.tag_version.outputs.TAG_VERSION }}
+          echo "Package version: $PACKAGE_VERSION"
+          echo "Tag version: $TAG_VERSION"
+          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+            echo "Error: package.json version ($PACKAGE_VERSION) does not match tag version ($TAG_VERSION)"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Publish to NPM
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.tag_version.outputs.TAG_VERSION }}
+          body: |
+            ## Changes in this release
+            Version ${{ steps.tag_version.outputs.TAG_VERSION }} has been published to NPM.
+
+            Install it with:
+            ```bash
+            npm install react-native-maui@${{ steps.tag_version.outputs.TAG_VERSION }}
+            ```
+
+            See [CHANGELOG](https://github.com/mahaaoo/react-native-maui/blob/main/CHANGELOG.md) for details.
+          draft: false
+          prerelease: false
