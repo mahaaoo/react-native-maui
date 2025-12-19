@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 import { withReanimatedTimer } from 'react-native-reanimated/src/reanimated2/jestUtils';
 import {
   useProps,
