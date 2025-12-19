@@ -1,8 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import { navigate } from '../navigate';
 
-import Card from '../components/Card';
 import { exampleList } from '../thumbnail';
 
 import { useTheme } from 'react-native-maui';
@@ -19,29 +24,38 @@ export default function ComponentScreen() {
       <FlatList
         testID="EXAMPLE-FLAT-LIST"
         style={styles.flatList}
+        contentContainerStyle={styles.flatListContent}
         data={exampleList}
-        numColumns={2}
         keyExtractor={(_, index) => `example_${index}`}
         renderItem={({ item }) => {
           return (
-            <Card
-              title={item.title}
-              style={styles.card}
-              content={
-                item.content ? (
-                  item.content
-                ) : (
-                  <Text style={{ color: theme.cardTitleColor }}>
-                    {item.title}
-                  </Text>
-                )
-              }
+            <TouchableOpacity
+              testID={`Navigate-Button-${item.title}`}
+              style={[
+                styles.listItem,
+                { backgroundColor: theme.cardBackgroundColor },
+              ]}
               onPress={() => {
                 navigate(`${item.title}Example`);
               }}
-            />
+            >
+              <Text
+                style={[styles.listItemText, { color: theme.cardTitleColor }]}
+              >
+                {item.title}
+              </Text>
+              <Text style={{ color: theme.clickTextColor }}>›</Text>
+            </TouchableOpacity>
           );
         }}
+        ItemSeparatorComponent={() => (
+          <View
+            style={[
+              styles.separator,
+              { backgroundColor: theme.backgroundColor },
+            ]}
+          />
+        )}
       />
     </View>
   );
@@ -50,13 +64,28 @@ export default function ComponentScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    paddingBottom: 30,
   },
   flatList: {
     flex: 1,
   },
-  card: {
-    margin: 10,
+  flatListContent: {
+    paddingTop: 10,
+    paddingBottom: 100,
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    marginHorizontal: 10,
+    borderRadius: 8,
+  },
+  listItemText: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  separator: {
+    height: 10,
   },
 });
