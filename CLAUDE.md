@@ -134,7 +134,7 @@ ComponentName/
 - 技术约束
 - 实现要点（关键逻辑，非完整实现）
 
-**示例：** 参考 `src/components/Button/REDESIGN.md`
+**示例：** 参考 `src/components/Button/docs/DESIGN.md`
 
 #### 2. API.md - API 参考文档
 
